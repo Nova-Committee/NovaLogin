@@ -3,8 +3,11 @@ package committee.nova.mods.novalogin.network;
 
 import com.mojang.serialization.Codec;
 import committee.nova.mods.novalogin.Const;
-import committee.nova.mods.novalogin.network.pkt.ServerLoginPkt;
-import committee.nova.mods.novalogin.network.pkt.ServerPwdChangePkt;
+import committee.nova.mods.novalogin.network.pkt.client.ClientLoginResponsePkt;
+import committee.nova.mods.novalogin.network.pkt.client.ClientPayloadHandler;
+import committee.nova.mods.novalogin.network.pkt.server.ServerLoginPkt;
+import committee.nova.mods.novalogin.network.pkt.server.ServerPayloadHandler;
+import committee.nova.mods.novalogin.network.pkt.server.ServerPwdChangePkt;
 import net.minecraft.network.FriendlyByteBuf;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -19,7 +22,7 @@ import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
  * @description
  * @date 2024/3/18 13:43
  */
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class NetWorkDispatcher {
     private static final String PROTOCOL_VERSION = Integer.toString(1);
 
@@ -31,8 +34,10 @@ public class NetWorkDispatcher {
 
     @SuppressWarnings("Convert2MethodRef")
     public static void registerPackets(IPayloadRegistrar registrar) {
-        registrar.common(ServerLoginPkt.ID, jsonReader(ServerLoginPkt.CODEC), handler -> handler.server(ServerPayloadHandler.getInstance()::handleLoginTaskPacket));
-        registrar.common(ServerPwdChangePkt.ID, jsonReader(ServerPwdChangePkt.CODEC), handler -> handler.server(ServerPayloadHandler.getInstance()::handlePwdChangeTaskPacket));
+        registrar.play(ClientLoginResponsePkt.ID, jsonReader(ClientLoginResponsePkt.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleLoginResponse(msg, context)));
+
+        registrar.common(ServerLoginPkt.ID, jsonReader(ServerLoginPkt.CODEC), handler -> handler.server(ServerPayloadHandler.INSTANCE::handleLoginPacket));
+        registrar.common(ServerPwdChangePkt.ID, jsonReader(ServerPwdChangePkt.CODEC), handler -> handler.server(ServerPayloadHandler.INSTANCE::handlePwdChangePacket));
     }
 
 

@@ -12,18 +12,20 @@ import java.util.UUID;
  * @date 2024/3/18 2:42
  */
 public interface LoginSave {
-    boolean checkPwd(UUID uuid, String password);
+    boolean checkPwd(String name, String password);
 
-    void unReg(UUID uuid);
+    void unReg(String name);
 
-    boolean isReg(UUID uuid);
+    boolean isReg(String name);
 
-    void reg(UUID uuid, String password);
+    void reg(String name, String password);
 
-    void changePwd(UUID uuid, String newPassword);
+    void changePwd(String name, String newPassword);
 
     boolean dirty();
 
     void save() throws IOException;
+
+    void load() throws IOException;
 
 }

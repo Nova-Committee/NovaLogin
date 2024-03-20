@@ -18,6 +18,7 @@ public class ModBusEvents {
     @SubscribeEvent
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
         //todo
+
     }
 
     @SubscribeEvent

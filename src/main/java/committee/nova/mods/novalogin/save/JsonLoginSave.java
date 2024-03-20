@@ -4,14 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import committee.nova.mods.novalogin.Const;
 import net.neoforged.fml.loading.FMLPaths;
+import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,59 +29,50 @@ import java.util.concurrent.ConcurrentHashMap;
 public class JsonLoginSave implements LoginSave{
     private final Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
     private final Path path;
-    private final Map<UUID, User> users = new ConcurrentHashMap<>();
+    private final Map<String, User> users = new ConcurrentHashMap<>();
     private boolean dirty = false;
 
     public JsonLoginSave(){
         this.path = FMLPaths.GAMEDIR.get().resolve("nova").resolve("login");
         try {
-            if (Files.exists(this.path)){
-                User[] buf = gson.fromJson(Files.newBufferedReader(path, StandardCharsets.UTF_8), User[].class);
-                if (buf != null) {
-                    Arrays.stream(buf).forEach(e -> users.put(e.uuid, e));
-                }
-            }
-            else {
-                if (!Files.exists(path.getParent())) {
-                    Files.createDirectories(path.getParent());
-                }
-                Files.createFile(path);
-            }
-        }catch (IOException ignored){}
+            load();
+        }catch (IOException e){
+            Const.LOGGER.error("加载出错，请检查文件", e);
+        }
     }
 
     @Override
-    public boolean checkPwd(UUID uuid, String password) {
-        if (users.containsKey(uuid)) {
-            return BCrypt.checkpw(password, users.get(uuid).pwd);
+    public boolean checkPwd(String name, String password) {
+        if (users.containsKey(name)) {
+            return BCrypt.checkpw(password, users.get(name).pwd);
         }
         return false;
     }
 
     @Override
-    public void unReg(UUID uuid) {
+    public void unReg(String name) {
         dirty = true;
-        users.remove(uuid);
+        users.remove(name);
     }
 
     @Override
-    public boolean isReg(UUID uuid) {
-        return users.containsKey(uuid);
+    public boolean isReg(String name) {
+        return users.containsKey(name);
     }
 
     @Override
-    public void reg(UUID uuid, String password) {
-        if (!users.containsKey(uuid)) {
-            users.put(uuid, new User(uuid, BCrypt.hashpw(password, BCrypt.gensalt())));
+    public void reg(String name, String password) {
+        if (!users.containsKey(name)) {
+            users.put(name, new User(name, BCrypt.hashpw(password, BCrypt.gensalt())));
             dirty = true;
         }
     }
 
     @Override
-    public void changePwd(UUID uuid, String newPassword) {
-        if (users.containsKey(uuid)) {
+    public void changePwd(String name, String newPassword) {
+        if (users.containsKey(name)) {
             dirty = true;
-            users.put(uuid, new User(uuid, BCrypt.hashpw(newPassword, BCrypt.gensalt())));
+            users.put(name, new User(name, BCrypt.hashpw(newPassword, BCrypt.gensalt())));
         }
     }
 
@@ -90,15 +83,28 @@ public class JsonLoginSave implements LoginSave{
 
     @Override
     public void save() throws IOException {
-        try {
-            Files.writeString(path, gson.toJson(users.values().toArray()), StandardOpenOption.TRUNCATE_EXISTING);
-            dirty = false;
-        } catch (IOException ex) {
-            Const.LOGGER.error("Unable to save users", ex);
-            throw ex;
+        users.forEach(((name, user) -> {
+            try {
+                if (!Files.exists(this.path.resolve(name + ".json"))) Files.createDirectories(path);
+                Files.writeString(path, gson.toJson(user), StandardOpenOption.TRUNCATE_EXISTING);
+            } catch (IOException e) {
+                Const.LOGGER.error("保存出错，请检查文件", e);
+            }
+        }));
+    }
+
+    @Override
+    public void load() throws IOException {
+        if (!Files.exists(this.path)) Files.createDirectories(path);
+        File[] files = path.toFile().listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
+        if (files == null)
+            return;
+        for (File f : files){
+            User user = gson.fromJson(Files.newBufferedReader(f.toPath(), StandardCharsets.UTF_8), User.class);
+            users.put(user.name, user);
         }
     }
 
-    public record User(UUID uuid, String pwd){
+    public record User(String name, String pwd){
     }
 }

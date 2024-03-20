@@ -1,4 +1,4 @@
-package committee.nova.mods.novalogin.network.pkt;
+package committee.nova.mods.novalogin.network.pkt.server;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
  * @date 2024/3/18 13:26
  */
 public record ServerPwdChangePkt(String from , String to) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(Const.MOD_ID, "pwd_change_task");
+    public static final ResourceLocation ID = new ResourceLocation(Const.MOD_ID, "pwd_change");
 
     public static final Codec<ServerPwdChangePkt> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
