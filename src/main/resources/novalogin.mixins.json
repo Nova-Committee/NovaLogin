@@ -3,12 +3,10 @@
   "minVersion": "0.8",
   "package": "committee.nova.mods.novalogin.mixins",
   "compatibilityLevel": "JAVA_8",
-  "refmap": "NovaLogin.refmap.json",
+  "refmap": "novalogin.refmap.json",
   "mixins": [
+    "ServerGamePacketListenerImplMixin",
     "ServerLoginPktMixin"
-  ],
-  "client": [
-    "JoinMultiplayerScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

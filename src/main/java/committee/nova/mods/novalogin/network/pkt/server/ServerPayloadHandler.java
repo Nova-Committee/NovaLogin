@@ -29,7 +29,7 @@ public class ServerPayloadHandler {
                 }
             } else {
                 if (!NovaLogin.SAVE.isReg(name)) {
-                    NovaLogin.SAVE.reg(name, msg.pwd());
+                    //NovaLogin.SAVE.reg(name, msg.pwd());
                     Const.LOGGER.info("Player " + name + "registered!");
                 } else {
                     Const.LOGGER.warn("Player " + name + "has registered!");
@@ -43,7 +43,7 @@ public class ServerPayloadHandler {
         context.workHandler().execute(() -> context.player().ifPresent(player -> {
             String name = player.getGameProfile().getName();
             if (NovaLogin.SAVE.checkPwd(name, msg.from())){
-                NovaLogin.SAVE.changePwd(name, msg.to());
+                //NovaLogin.SAVE.changePwd(name, msg.to());
                 player.displayClientMessage(Component.translatable("novalogin.info.pwd_change_success"), false);
             } else {
                 player.displayClientMessage(Component.translatable("novalogin.info.pwd_change_fail"), false);

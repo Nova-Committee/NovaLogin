@@ -3,11 +3,14 @@ package committee.nova.mods.novalogin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.logging.LogUtils;
+import committee.nova.mods.novalogin.models.LoginUsers;
+import committee.nova.mods.novalogin.models.User;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.slf4j.Logger;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -28,5 +31,6 @@ public class Const {
     }
 
     public static final HashSet<String> mojangAccountNamesCache = new HashSet<>();
+    public static final HashMap<String, User> playerCacheMap = new HashMap<>();
 
 }

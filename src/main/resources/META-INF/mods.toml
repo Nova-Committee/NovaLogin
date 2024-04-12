@@ -41,8 +41,8 @@ authors="${mod_authors}" #optional
 [[mixins]]
 config="novalogin.mixins.json"
 
-[[accessTransformers]]
-file="META-INF/accesstransformer.cfg"
+#[[accessTransformers]]
+#file="META-INF/accesstransformer.cfg"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''${mod_description}'''
