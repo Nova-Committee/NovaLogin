@@ -17,24 +17,11 @@ public class ServerPayloadHandler {
     public static final ServerPayloadHandler INSTANCE = new ServerPayloadHandler();
 
 
-    public void handleLoginPacket(ServerLoginPkt msg, IPayloadContext context) {
+    public void handleLoginPacket(ServerLoginModePkt msg, IPayloadContext context) {
         context.workHandler().execute(() -> context.player().ifPresent(player -> {
-            String name = player.getGameProfile().getName();
-            if (msg.login()){
-                if (NovaLogin.SAVE.isReg(name) && NovaLogin.SAVE.checkPwd(name, msg.pwd())){
-                    Const.LOGGER.info("Player " + name + "logged in!");
-                } else {
-                    Const.LOGGER.warn("Player " + name + "try to login with wrong password!");
-                    context.packetHandler().disconnect(Component.translatable("novalogin.info.no_allow"));
-                }
-            } else {
-                if (!NovaLogin.SAVE.isReg(name)) {
-                    //NovaLogin.SAVE.reg(name, msg.pwd());
-                    Const.LOGGER.info("Player " + name + "registered!");
-                } else {
-                    Const.LOGGER.warn("Player " + name + "has registered!");
-                    context.packetHandler().disconnect(Component.translatable("novalogin.info.no_allow"));
-                }
+            //Const.LOGGER.info(msg.toString());
+            switch (msg.mode()){
+                case 1, 2 -> Const.mojangAccountNamesCache.add(msg.name());
             }
         }));
     }

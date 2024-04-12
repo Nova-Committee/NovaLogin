@@ -3,6 +3,7 @@ package committee.nova.mods.novalogin.handler;
 import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import committee.nova.mods.novalogin.models.User;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -23,20 +24,25 @@ public class OnPlayerConnect {
         User user = new User();
         user.setName(name);
         user.setLastIp(player.getIpAddress());
-        if (Const.mojangAccountNamesCache.contains(name)) {
+        if (OnPlayerPremium.canPremium(player)) {
             user.setAuth(true);
-            playerCacheMap.put(name, user);
+            player.sendSystemMessage(Component.translatable("info.novalogin.premium"), false);
+            if (!playerCacheMap.containsKey(name)) {
+                playerCacheMap.put(name, user);
+            }
             return;
         }
-        playerCacheMap.put(name, user);
+        if (!playerCacheMap.containsKey(name)) {
+            playerCacheMap.put(name, user);
+        }
         if (OnPlayerReLogin.canReLogin(player)) {
-            player.sendSystemMessage(Component.literal("§9您已经在短时间内登陆过，为您跳过验证"), false);
+            player.sendSystemMessage(Component.translatable("info.novalogin.re_login"), false);
             return;
         }
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         playerLogin.setLogin(false);
         player.setInvulnerable(true);
-        player.sendSystemMessage(Component.literal("§9欢迎来到服务器，请先登录。\n§e请使用 /login 登录或者使用 /register 注册"), false);
-        player.connection.send(new ClientboundSetTitleTextPacket(Component.literal("§a验证你的身份!")));
+        player.sendSystemMessage(Component.translatable("info.novalogin.welcome"), false);
+        player.connection.send(new ClientboundSetTitleTextPacket(Component.translatable("info.novalogin.verify")));
     }
 }

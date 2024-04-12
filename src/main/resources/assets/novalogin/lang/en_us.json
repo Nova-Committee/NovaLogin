@@ -1,0 +1,12 @@
+{
+  "info.novalogin.premium": "§9Dear premium user, welcome back.",
+  "info.novalogin.re_login": "§9You've logged in for a short period of time, skipping verification for you",
+  "info.novalogin.welcome":"§9Welcome to the server, in order to play, you must log in.\n§eLog in using /login and register using /register",
+  "info.novalogin.verify": "§aIdentify yourself!",
+  "info.novalogin.cmd.unregister": "§cYou're not registered! Use /register instead.",
+  "info.novalogin.cmd.login_success": "§aLogged in.",
+  "info.novalogin.cmd.pwd_wrong": "§cIncorrect password!",
+  "info.novalogin.cmd.registered": "§cYou're already registered! Use /login instead.",
+  "info.novalogin.cmd.pwd_strict": "§cPasswords don't match! Repeat it correctly.",
+  "info.novalogin.cmd.register_success": "§aSuccessfully registered."
+}

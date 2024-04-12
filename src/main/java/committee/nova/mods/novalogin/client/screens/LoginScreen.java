@@ -1,6 +1,6 @@
 package committee.nova.mods.novalogin.client.screens;
 
-import committee.nova.mods.novalogin.network.pkt.server.ServerLoginPkt;
+import committee.nova.mods.novalogin.network.pkt.server.ServerLoginModePkt;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -84,14 +84,14 @@ public class LoginScreen extends Screen {
                             if (this.pwdSave.selected()) {
 
                             }
-                            this.minecraft.player.connection.send(new ServerLoginPkt(this.pwdIn.getValue(), true));
+                            //this.minecraft.player.connection.send(new ServerLoginModePkt(this.pwdIn.getValue(), true));
                         }).bounds(this.width / 2 - 260, 100, 150, 20)
                         .build()
         );
 
         this.registerButton = this.addRenderableWidget(
                 Button.builder(REG_LABEL, button -> {
-                            this.minecraft.player.connection.send(new ServerLoginPkt(this.pwdIn.getValue(), false));
+                            //this.minecraft.player.connection.send(new ServerLoginModePkt(this.pwdIn.getValue(), false));
                         })
                         .bounds(this.width / 2 - 100, 100, 150, 20)
                         .build()

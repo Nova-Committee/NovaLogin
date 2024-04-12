@@ -65,6 +65,7 @@ public class JsonLoginSave implements LoginSave{
         if (!user.isRegister && !mojangAccountNamesCache.contains(name)) {
             user.setPwd(BCrypt.hashpw(password, BCrypt.gensalt()));
             user.setAuth(false);
+            user.setRegister(true);
             playerCacheMap.put(name, user);
             dirty = true;
         }

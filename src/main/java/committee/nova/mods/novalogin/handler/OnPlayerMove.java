@@ -16,9 +16,8 @@ import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
  * @date 2024/4/12 上午11:35
  */
 public class OnPlayerMove {
-    public static boolean canMove(ServerGamePacketListenerImpl networkHandler) {
-        ServerPlayer player = networkHandler.player;
-        if (Const.mojangAccountNamesCache.contains(player.getGameProfile().getName())) return true;
+    public static boolean canMove(ServerPlayer player) {
+        if (OnPlayerPremium.canPremium(player)) return true;
         if (OnPlayerReLogin.canReLogin(player)) return true;
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         boolean isLoggedIn = playerLogin.isLogin;

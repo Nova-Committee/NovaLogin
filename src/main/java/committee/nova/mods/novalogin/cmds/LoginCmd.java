@@ -6,7 +6,10 @@ import committee.nova.mods.novalogin.NovaLogin;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 
 import static net.minecraft.commands.Commands.argument;
 import static net.minecraft.commands.Commands.literal;
@@ -29,18 +32,18 @@ public class LoginCmd {
                             String username = player.getGameProfile().getName();
 
                             if (!NovaLogin.SAVE.isReg(username)) {
-                                ctx.getSource().sendSuccess(() -> Component.literal("§cYou're not registered! Use /register instead."), false);
+                                ctx.getSource().sendSuccess(() -> Component.translatable("info.novalogin.cmd.unregister"), false);
                             } else if (NovaLogin.SAVE.checkPwd(username, password)) {
                                 LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                                 playerLogin.setLogin(true);
-                                ctx.getSource().sendSuccess(() -> Component.literal("§aLogged in."), false);
+                                ctx.getSource().sendSuccess(() -> Component.translatable("info.novalogin.cmd.login_success"), false);
                                 if (!player.isCreative()) {
                                     player.setInvulnerable(false);
                                 }
-                                //player.connection.send(new ClientboundSoundPacket(SoundEvents.NOTE_BLOCK_PLING, SoundSource.MASTER, player.position(), 100f, 0f));
+                                player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
                             } else {
-                                //player.networkHandler.sendPacket(new PlaySoundIdS2CPacket(new Identifier("minecraft:entity.zombie.attack_iron_door"), SoundCategory.MASTER, player.getPos(), 100f, 0.5f));
-                                ctx.getSource().sendSuccess(() -> Component.literal("§cIncorrect password!"), false);
+                                player.playNotifySound(SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 100f, 0.5f);
+                                ctx.getSource().sendSuccess(() -> Component.translatable("info.novalogin.cmd.pwd_wrong"), false);
                             }
                             return 1;
                         })));

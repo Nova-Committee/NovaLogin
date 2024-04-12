@@ -1,4 +1,4 @@
-package committee.nova.mods.novalogin.network.pkt.server;
+package committee.nova.mods.novalogin.network.pkt.client;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,21 +9,19 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ServerLoginPkt
+ * LoginResponsePkt
  *
  * @author cnlimiter
  * @version 1.0
  * @description
- * @date 2024/3/18 13:26
+ * @date 2024/3/18 20:52
  */
-public record ServerLoginPkt(String pwd, boolean login) implements CustomPacketPayload {
-    public static final ResourceLocation ID = new ResourceLocation(Const.MOD_ID, "login_task");
-
-    public static final Codec<ServerLoginPkt> CODEC = RecordCodecBuilder.create(inst ->
+public record ClientLoginPkt(int mode) implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(Const.MOD_ID, "login");
+    public static final Codec<ClientLoginPkt> CODEC = RecordCodecBuilder.create(inst ->
             inst.group(
-                    Codec.STRING.fieldOf("pwd").forGetter(ServerLoginPkt::pwd),
-                    Codec.BOOL.fieldOf("login").forGetter(ServerLoginPkt::login)
-            ).apply(inst, ServerLoginPkt::new));
+                    Codec.INT.fieldOf("mode").forGetter(ClientLoginPkt::mode)
+            ).apply(inst, ClientLoginPkt::new));
 
     @Override
     public void write(FriendlyByteBuf pBuffer) {

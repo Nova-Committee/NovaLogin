@@ -3,9 +3,9 @@ package committee.nova.mods.novalogin.network;
 
 import com.mojang.serialization.Codec;
 import committee.nova.mods.novalogin.Const;
-import committee.nova.mods.novalogin.network.pkt.client.ClientLoginResponsePkt;
+import committee.nova.mods.novalogin.network.pkt.client.ClientLoginPkt;
 import committee.nova.mods.novalogin.network.pkt.client.ClientPayloadHandler;
-import committee.nova.mods.novalogin.network.pkt.server.ServerLoginPkt;
+import committee.nova.mods.novalogin.network.pkt.server.ServerLoginModePkt;
 import committee.nova.mods.novalogin.network.pkt.server.ServerPayloadHandler;
 import committee.nova.mods.novalogin.network.pkt.server.ServerPwdChangePkt;
 import net.minecraft.network.FriendlyByteBuf;
@@ -34,9 +34,9 @@ public class NetWorkDispatcher {
 
     @SuppressWarnings("Convert2MethodRef")
     public static void registerPackets(IPayloadRegistrar registrar) {
-        registrar.play(ClientLoginResponsePkt.ID, jsonReader(ClientLoginResponsePkt.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleLoginResponse(msg, context)));
+        registrar.play(ClientLoginPkt.ID, jsonReader(ClientLoginPkt.CODEC), handler -> handler.client((msg, context) -> ClientPayloadHandler.handleLoginResponse(msg, context)));
 
-        registrar.common(ServerLoginPkt.ID, jsonReader(ServerLoginPkt.CODEC), handler -> handler.server(ServerPayloadHandler.INSTANCE::handleLoginPacket));
+        registrar.common(ServerLoginModePkt.ID, jsonReader(ServerLoginModePkt.CODEC), handler -> handler.server(ServerPayloadHandler.INSTANCE::handleLoginPacket));
         registrar.common(ServerPwdChangePkt.ID, jsonReader(ServerPwdChangePkt.CODEC), handler -> handler.server(ServerPayloadHandler.INSTANCE::handlePwdChangePacket));
     }
 
