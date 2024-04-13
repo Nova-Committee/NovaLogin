@@ -53,10 +53,12 @@ dependencies {
 Spec<Task> notNeoTask = { Task it -> !it.name.startsWith("neo") } as Spec<Task>
 
 tasks.withType(JavaCompile).matching(notNeoTask).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
     source(project(":common").sourceSets.main.allSource)
 }
 
 tasks.withType(Javadoc).matching(notNeoTask).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
     source(project(":common").sourceSets.main.allJava)
 }
 
