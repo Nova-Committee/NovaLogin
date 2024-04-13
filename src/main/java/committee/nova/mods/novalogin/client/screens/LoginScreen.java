@@ -37,16 +37,16 @@ public class LoginScreen extends Screen {
     @Nullable
     protected Checkbox noRegister;
 
-    private static final Component PWD_SAVE = Component.translatable("novalogin.info.screen.login.pwd_save");
-    private static final Component NO_REG = Component.translatable("novalogin.info.screen.login.no_reg");
-    private static final Component PWD = Component.translatable("novalogin.info.screen.login.pwd");
+    private static final Component PWD_SAVE = new TranslatableComponent("novalogin.info.screen.login.pwd_save");
+    private static final Component NO_REG = new TranslatableComponent("novalogin.info.screen.login.no_reg");
+    private static final Component PWD = new TranslatableComponent("novalogin.info.screen.login.pwd");
 
-    private static final Component REG_LABEL = Component.translatable("novalogin.info.screen.login.label.reg");
-    private static final Component LOG_LABEL = Component.translatable("novalogin.info.screen.login.label.log");
+    private static final Component REG_LABEL = new TranslatableComponent("novalogin.info.screen.login.label.reg");
+    private static final Component LOG_LABEL = new TranslatableComponent("novalogin.info.screen.login.label.log");
 
 
     public LoginScreen(Screen previous, ServerData serverData) {
-        super(Component.translatable("novalogin.info.screen.login.title"));
+        super(new TranslatableComponent("novalogin.info.screen.login.title"));
         this.previous = previous;
         this.serverData = serverData;
     }

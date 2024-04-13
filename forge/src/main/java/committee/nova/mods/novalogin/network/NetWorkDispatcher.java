@@ -6,9 +6,8 @@ import committee.nova.mods.novalogin.network.pkt.ServerLoginModePkt;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.network.Channel;
-import net.minecraftforge.network.ChannelBuilder;
-import net.minecraftforge.network.SimpleChannel;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 /**
  * NetWorkDispatcher
@@ -20,19 +19,17 @@ import net.minecraftforge.network.SimpleChannel;
  */
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class NetWorkDispatcher {
-    private static final int PROTOCOL_VERSION = 1;
-    public static final SimpleChannel CHANNEL = ChannelBuilder.named(Const.rl("main"))
-            .networkProtocolVersion(PROTOCOL_VERSION)
-            .acceptedVersions(Channel.VersionTest.exact(PROTOCOL_VERSION))
-            .simpleChannel();
+    public static int id = 0;
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(Const.rl("main"), () -> {
+        return "1.0";
+    }, (s) -> {
+        return true;
+    }, (s) -> {
+        return true;
+    });;
 
     @SubscribeEvent
     public static void init(FMLCommonSetupEvent event) {
-        CHANNEL.messageBuilder(ServerLoginModePkt.class)
-                .decoder(ServerLoginModePkt::new)
-                .encoder(ServerLoginModePkt::toBytes)
-                .consumerMainThread(ServerLoginModePkt::handle)
-                .add()
-        ;
+        CHANNEL.registerMessage(id++, ServerLoginModePkt.class, ServerLoginModePkt::toBytes, ServerLoginModePkt::new, ServerLoginModePkt::handle);
     }
 }

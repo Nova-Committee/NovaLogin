@@ -31,9 +31,9 @@ public class ServerPayloadHandler {
             String name = player.getGameProfile().getName();
             if (NovaLogin.SAVE.checkPwd(name, msg.from())){
                 //NovaLogin.SAVE.changePwd(name, msg.to());
-                player.displayClientMessage(Component.translatable("novalogin.info.pwd_change_success"), false);
+                player.displayClientMessage(new TranslatableComponent("novalogin.info.pwd_change_success"), false);
             } else {
-                player.displayClientMessage(Component.translatable("novalogin.info.pwd_change_fail"), false);
+                player.displayClientMessage(new TranslatableComponent("novalogin.info.pwd_change_fail"), false);
             }
         }));
     }

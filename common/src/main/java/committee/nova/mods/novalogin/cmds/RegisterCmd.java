@@ -6,6 +6,7 @@ import committee.nova.mods.novalogin.CommonClass;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -28,23 +29,23 @@ public class RegisterCmd {
                         .then(argument("confirmPassword", StringArgumentType.word())
                                 .executes(ctx -> {
                                     String password = StringArgumentType.getString(ctx, "newPassword");
-                                    ServerPlayer player = ctx.getSource().getPlayer();
+                                    ServerPlayer player = ctx.getSource().getPlayerOrException();
                                     String username = player.getGameProfile().getName();
 
                                     if (CommonClass.SAVE.isReg(username)) {
-                                        ctx.getSource().sendSuccess(() -> Component.translatable("info.novalogin.cmd.registered"), false);
+                                        ctx.getSource().sendSuccess(new TranslatableComponent("info.novalogin.cmd.registered"), false);
                                         return 1;
                                     }
                                     if (!password.equals(StringArgumentType.getString(ctx, "confirmPassword"))) {
-                                        ctx.getSource().sendSuccess(() -> Component.translatable("info.novalogin.cmd.pwd_strict"), false);
+                                        ctx.getSource().sendSuccess(new TranslatableComponent("info.novalogin.cmd.pwd_strict"), false);
                                         return 1;
                                     }
                                     CommonClass.SAVE.reg(player, password);
                                     LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                                     playerLogin.setLogin(true);
                                     player.setInvulnerable(false);
-                                    player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
-                                    ctx.getSource().sendSuccess(() -> Component.translatable("info.novalogin.cmd.register_success"), false);
+                                    player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING, SoundSource.MASTER, 100f, 0f);
+                                    ctx.getSource().sendSuccess(new TranslatableComponent("info.novalogin.cmd.register_success"), false);
                                     return 1;
                                 }))));
     }

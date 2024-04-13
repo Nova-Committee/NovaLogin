@@ -2,8 +2,10 @@ package committee.nova.mods.novalogin.network.pkt;
 
 import committee.nova.mods.novalogin.Const;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
+
+import java.util.function.Supplier;
 
 /**
  * ServerLoginModePkt
@@ -32,12 +34,15 @@ public class ServerLoginModePkt {
         pb.writeInt(this.mode);
     }
 
-    public static void handle(ServerLoginModePkt msg, CustomPayloadEvent.Context ctx){
-        if(ctx.getDirection() == NetworkDirection.PLAY_TO_SERVER) {
-            switch (msg.mode){
-                case 1, 2 -> Const.mojangAccountNamesCache.add(msg.name);
+    public static void handle(ServerLoginModePkt msg, Supplier<NetworkEvent.Context> ctx){
+        ctx.get().enqueueWork(() -> {
+            if(ctx.get().getDirection() == NetworkDirection.PLAY_TO_SERVER) {
+                switch (msg.mode){
+                    case 1, 2 -> Const.mojangAccountNamesCache.add(msg.name);
+                }
             }
-        }
-        ctx.setPacketHandled(true);
+        });
+
+        ctx.get().setPacketHandled(true);
     }
 }

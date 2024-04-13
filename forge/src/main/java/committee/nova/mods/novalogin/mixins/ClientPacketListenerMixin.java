@@ -31,7 +31,7 @@ public abstract class ClientPacketListenerMixin {
             case LEGACY -> pkt = new ServerLoginModePkt(Minecraft.getInstance().getUser().getName(), 0);
             default -> pkt = new ServerLoginModePkt(Minecraft.getInstance().getUser().getName(), -1);
         }
-        NetWorkDispatcher.CHANNEL.send(pkt, PacketDistributor.SERVER.noArg());
+        NetWorkDispatcher.CHANNEL.sendToServer(pkt);
     }
 
 }
