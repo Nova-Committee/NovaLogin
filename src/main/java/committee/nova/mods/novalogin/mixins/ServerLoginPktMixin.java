@@ -71,8 +71,10 @@ public abstract class ServerLoginPktMixin {
 
                 String url = "https://api.mojang.com/users/profiles/minecraft/" + playerName;
 
-//                var con = HttpUtils.connect(url, 5000, null);
-//                int code = con.getResponseCode();//校验该用户名是否已经拥有正版
+                var con = HttpUtils.connect(url, 5000, null);
+                int code = con.getResponseCode();//校验该用户名是否已经拥有正版
+                String msg = HttpUtils.getResponseMsg(con);
+                con.disconnect();
                 //mojangAccountNamesCache.forEach(Const.LOGGER::info);
 
                 if (mojangAccountNamesCache.contains(playerName)) {
@@ -80,33 +82,23 @@ public abstract class ServerLoginPktMixin {
                     mojangAccountNamesCache.add(playerName);
                     return;
                 }
-                if (((playerCacheMap.containsKey(playerName) && !playerCacheMap.get(playerName).isAuth))) {
-                    LOGGER.info("Player {} is cached as offline player", playerName);
-                    this.startClientVerification(UUIDUtil.createOfflineProfile(playerName));
-                    ci.cancel();
-                } else {
-                    LOGGER.info("Player {} doesn't have a Mojang account, cached as offline player", playerName);
-                    this.startClientVerification(UUIDUtil.createOfflineProfile(playerName));
-                    ci.cancel();
-//                    if (code == HttpURLConnection.HTTP_OK) {
-//                        var re = GSON.fromJson(JsonParser.parseString(HttpUtils.getResponseMsg(con)), MojangResponse.class);
-//                        // 玩家有正版
-//                        con.disconnect();
-//                        LOGGER.info("Player {} has a Mojang account", playerName);
-//
-//                        // 缓存
-//                        mojangAccountNamesCache.add(playerName);
-//                        //构造正版玩家信息
-////                    this.startClientVerification(new GameProfile(UUID.fromString(re.getId()), playerName));
-////                    ci.cancel();
-//                    } else if (code == HttpURLConnection.HTTP_NO_CONTENT || code == HttpURLConnection.HTTP_NOT_FOUND) {
-//                        // 玩家没有正版
-//                        con.disconnect();
-//                        LOGGER.info("Player {} doesn't have a Mojang account, cached as offline player", playerName);
-//                        this.startClientVerification(UUIDUtil.createOfflineProfile(playerName));
-//                        ci.cancel();
-//                    }
+
+                GameProfile gameProfile = UUIDUtil.createOfflineProfile(playerName);
+                if (code == HttpURLConnection.HTTP_OK) {
+                    var re = GSON.fromJson(JsonParser.parseString(msg), MojangResponse.class);
+                    StringBuilder uuid = new StringBuilder(re.getId());
+                    uuid.insert(8,"-");
+                    uuid.insert(12,"-");
+                    uuid.insert(16,"-");
+                    uuid.insert(20,"-");
+                    // 玩家有正版
+                    LOGGER.info("Player {} {} has a Mojang account", playerName, uuid);
+                    //构造正版玩家信息
+                    gameProfile = new GameProfile(UUID.fromString(uuid.toString()), playerName);
                 }
+
+                this.startClientVerification(gameProfile);
+                ci.cancel();
 
             } else {
                 this.startClientVerification(UUIDUtil.createOfflineProfile(playerName));

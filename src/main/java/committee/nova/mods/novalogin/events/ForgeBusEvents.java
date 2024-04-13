@@ -64,42 +64,29 @@ public class ForgeBusEvents {
     @SubscribeEvent
     public static void onPlayerInteract1(PlayerInteractEvent.EntityInteract event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            OnPlayerAction.canInteract(serverPlayer);
+            if (OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerInteract2(PlayerInteractEvent.RightClickBlock event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            OnPlayerAction.canInteract(serverPlayer);
+            if (OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerInteract3(PlayerInteractEvent.RightClickItem event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            OnPlayerAction.canInteract(serverPlayer);
+            if (OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public static void onPlayerInteract4(PlayerInteractEvent.RightClickEmpty event) {
+    public static void onPlayerInteract4(PlayerInteractEvent.LeftClickBlock event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            OnPlayerAction.canInteract(serverPlayer);
+            if (OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
         }
     }
 
-    @SubscribeEvent
-    public static void onPlayerInteract5(PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            OnPlayerAction.canInteract(serverPlayer);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onPlayerInteract6(PlayerInteractEvent.LeftClickEmpty event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            OnPlayerAction.canInteract(serverPlayer);
-        }
-    }
 }
