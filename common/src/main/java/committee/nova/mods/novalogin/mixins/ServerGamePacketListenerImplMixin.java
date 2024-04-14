@@ -2,7 +2,8 @@ package committee.nova.mods.novalogin.mixins;
 
 import committee.nova.mods.novalogin.handler.OnGameMessage;
 import committee.nova.mods.novalogin.handler.OnPlayerMove;
-import net.minecraft.network.protocol.game.*;
+import net.minecraft.network.protocol.game.ServerboundChatPacket;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,8 +12,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
 
 /**
  * ServerGamePacketListenerImplMixin

@@ -1,9 +1,7 @@
 package committee.nova.mods.novalogin.handler;
 
-import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import committee.nova.mods.novalogin.models.User;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.level.ServerPlayer;

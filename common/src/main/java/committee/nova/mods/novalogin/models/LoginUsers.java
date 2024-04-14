@@ -1,6 +1,5 @@
 package committee.nova.mods.novalogin.models;
 
-import lombok.AllArgsConstructor;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;

@@ -11,10 +11,12 @@ import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import javax.annotation.Nullable;
 import java.net.HttpURLConnection;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -37,8 +39,12 @@ public abstract class ServerLoginPktMixin {
     @Final
     MinecraftServer server;
 
+
+    @Shadow @Nullable
+    GameProfile gameProfile;
+
     @Shadow
-    abstract void startClientVerification(GameProfile gameProfile);
+    ServerLoginPacketListenerImpl.State state;
 
     @Inject(
             method = "handleHello",
@@ -70,7 +76,7 @@ public abstract class ServerLoginPktMixin {
                     return;
                 }
 
-                GameProfile gameProfile = UUIDUtil.createOfflineProfile(playerName);
+                GameProfile gameProfile = novaLogin$createOfflineProfile(playerName);
                 if (code == HttpURLConnection.HTTP_OK) {
                     var re = GSON.fromJson(JsonParser.parseString(msg), MojangResponse.class);
                     StringBuilder uuid = new StringBuilder(re.getId());
@@ -83,12 +89,13 @@ public abstract class ServerLoginPktMixin {
 
                     gameProfile = new GameProfile(UUID.fromString(uuid.toString()), playerName);
                 }
-
-                this.startClientVerification(gameProfile);
+                this.state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
+                this.gameProfile = gameProfile;
                 ci.cancel();
 
             } else {
-                this.startClientVerification(UUIDUtil.createOfflineProfile(playerName));
+                this.state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
+                this.gameProfile = novaLogin$createOfflineProfile(playerName);
                 ci.cancel();
             }
         } catch (Exception e) {
@@ -96,5 +103,9 @@ public abstract class ServerLoginPktMixin {
         }
     }
 
-
+    @Unique
+    protected GameProfile novaLogin$createOfflineProfile(String name) {
+        UUID uuid = UUIDUtil.createOfflinePlayerUUID(name);
+        return new GameProfile(uuid, name);
+    }
 }
