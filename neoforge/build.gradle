@@ -40,7 +40,7 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 jarJar.enable()
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neoforge_version}"
+    implementation "net.neoforged:forge:${minecraft_version}-${neoforge_version}"
     compileOnly project(":common")
 
     compileOnly ("org.projectlombok:lombok:1.18.24")
