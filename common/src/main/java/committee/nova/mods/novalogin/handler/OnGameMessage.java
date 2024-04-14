@@ -18,9 +18,9 @@ public class OnGameMessage {
         if (OnPlayerReLogin.canReLogin(player)) return true;
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         String message = packet.message();
-        if (!playerLogin.isLogin && (message.startsWith("/login") || message.startsWith("/register"))) {
+        if (!playerLogin.login && (message.startsWith("/login") || message.startsWith("/register"))) {
             return true;
         }
-        return playerLogin.isLogin;
+        return playerLogin.login;
     }
 }

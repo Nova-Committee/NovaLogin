@@ -32,9 +32,9 @@ public class NetWorkDispatcher {
 
     private static void receiveLoginModeToServer() {
         ServerPlayNetworking.registerGlobalReceiver(LOGIN_MODE, (server, player, handler, buf, responseSender) -> {
+            String name = buf.readUtf();
+            int mode = buf.readInt();
             server.execute(() -> {
-                String name = buf.readUtf();
-                int mode = buf.readInt();
                 switch (mode){
                     case 1, 2 -> Const.mojangAccountNamesCache.add(name);
                 }

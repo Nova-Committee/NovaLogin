@@ -22,6 +22,7 @@ public class OnPlayerLeave {
         user.setLastLeaveTime(System.currentTimeMillis());
 
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
+        if (playerLogin.login) playerLogin.setReLogin(true);
         playerLogin.setLogin(false);
     }
 }

@@ -16,6 +16,6 @@ public class OnPlayerAction {
         if (OnPlayerPremium.canPremium(player)) return true;
         if (OnPlayerReLogin.canReLogin(player)) return true;
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
-        return playerLogin.isLogin;
+        return playerLogin.login;
     }
 }

@@ -26,7 +26,7 @@ public class LoginCmd {
         dispatcher.register(literal("login")
                 .then(argument("password", StringArgumentType.word())
                         .executes(ctx -> {
-                            ServerPlayer player = ctx.getSource().getPlayer();
+                            ServerPlayer player = ctx.getSource().getPlayerOrException();
                             String password = StringArgumentType.getString(ctx, "password");
                             String username = player.getGameProfile().getName();
 

@@ -16,7 +16,7 @@ public class OnPlayerMove {
         if (OnPlayerPremium.canPremium(player)) return true;
         if (OnPlayerReLogin.canReLogin(player)) return true;
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
-        boolean isLoggedIn = playerLogin.isLogin;
+        boolean isLoggedIn = playerLogin.login;
         if (!isLoggedIn) {
             player.teleportTo(player.getX(), player.getY(), player.getZ()); // 同步
         }

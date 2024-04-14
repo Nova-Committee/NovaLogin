@@ -28,7 +28,7 @@ public class RegisterCmd {
                         .then(argument("confirmPassword", StringArgumentType.word())
                                 .executes(ctx -> {
                                     String password = StringArgumentType.getString(ctx, "newPassword");
-                                    ServerPlayer player = ctx.getSource().getPlayer();
+                                    ServerPlayer player = ctx.getSource().getPlayerOrException();
                                     String username = player.getGameProfile().getName();
 
                                     if (CommonClass.SAVE.isReg(username)) {

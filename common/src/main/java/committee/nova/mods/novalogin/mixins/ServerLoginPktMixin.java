@@ -39,12 +39,11 @@ public abstract class ServerLoginPktMixin {
     @Final
     MinecraftServer server;
 
-
     @Shadow @Nullable
-    GameProfile gameProfile;
+    public GameProfile gameProfile;
 
     @Shadow
-    ServerLoginPacketListenerImpl.State state;
+    public ServerLoginPacketListenerImpl.State state;
 
     @Inject(
             method = "handleHello",
