@@ -17,9 +17,7 @@ import java.io.IOException;
 public class NovaLoginNeo {
     public static final IProxy proxy = FMLEnvironment.dist == Dist.CLIENT ? new ClientProxy() : new ServerProxy();
 
-    public NovaLoginNeo(IEventBus eventBus) throws IOException {
-        CommonClass.SAVE = new JsonLoginSave(FMLPaths.GAMEDIR.get());
-        CommonClass.SAVE.load();
-        CommonClass.init();
+    public NovaLoginNeo(IEventBus eventBus) {
+        CommonClass.init(FMLPaths.GAMEDIR.get());
     }
 }

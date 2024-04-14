@@ -1,12 +1,8 @@
 package committee.nova.mods.novalogin.handler;
 
-import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
-
-import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
 
 /**
  * OnGameMessage
@@ -22,9 +18,9 @@ public class OnGameMessage {
         if (OnPlayerReLogin.canReLogin(player)) return true;
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         String message = packet.message();
-        if (!playerLogin.isLogin && (message.startsWith("/login") || message.startsWith("/register"))) {
+        if (!playerLogin.login && (message.startsWith("/login") || message.startsWith("/register"))) {
             return true;
         }
-        return playerLogin.isLogin;
+        return playerLogin.login;
     }
 }

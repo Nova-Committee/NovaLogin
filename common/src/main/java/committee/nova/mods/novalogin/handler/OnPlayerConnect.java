@@ -1,9 +1,7 @@
 package committee.nova.mods.novalogin.handler;
 
-import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import committee.nova.mods.novalogin.models.User;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,14 +25,15 @@ public class OnPlayerConnect {
         if (OnPlayerPremium.canPremium(player)) {
             user.setAuth(true);
             player.sendSystemMessage(Component.translatable("info.novalogin.premium"), false);
-            if (!playerCacheMap.containsKey(name)) {
-                playerCacheMap.put(name, user);
-            }
+            playerCacheMap.put(name, user);
             return;
         }
-        if (!playerCacheMap.containsKey(name)) {
-            playerCacheMap.put(name, user);
+
+        if (playerCacheMap.containsKey(name)) {
+            user = playerCacheMap.get(name);
         }
+        playerCacheMap.put(name, user);
+
         if (OnPlayerReLogin.canReLogin(player)) {
             player.sendSystemMessage(Component.translatable("info.novalogin.re_login"), false);
             return;

@@ -17,11 +17,11 @@ public class ServerPayloadHandler {
 
 
     public void handleLoginPacket(ServerLoginModePkt msg, IPayloadContext context) {
-        context.workHandler().execute(() -> context.player().ifPresent(player -> {
-            //Const.LOGGER.info(msg.toString());
-            switch (msg.mode()){
-                case 1, 2 -> Const.mojangAccountNamesCache.add(msg.name());
+        context.workHandler().execute(() -> {
+                switch (msg.mode()){
+                    case 1, 2 -> Const.mojangAccountNamesCache.add(msg.name());
+                }
             }
-        }));
+        );
     }
 }
