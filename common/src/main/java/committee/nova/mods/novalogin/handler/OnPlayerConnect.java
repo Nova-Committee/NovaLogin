@@ -32,14 +32,15 @@ public class OnPlayerConnect {
         if (OnPlayerPremium.canPremium(player)) {
             user.setAuth(true);
             player.sendMessage(new TranslatableComponent("info.novalogin.premium"), ChatType.SYSTEM, Util.NIL_UUID);
-            if (!playerCacheMap.containsKey(name)) {
-                playerCacheMap.put(name, user);
-            }
+            playerCacheMap.put(name, user);
             return;
         }
-        if (!playerCacheMap.containsKey(name)) {
-            playerCacheMap.put(name, user);
+
+        if (playerCacheMap.containsKey(name)) {
+            user = playerCacheMap.get(name);
         }
+        playerCacheMap.put(name, user);
+
         if (OnPlayerReLogin.canReLogin(player)) {
             player.sendMessage(new TranslatableComponent("info.novalogin.re_login"), ChatType.SYSTEM, Util.NIL_UUID);
             return;

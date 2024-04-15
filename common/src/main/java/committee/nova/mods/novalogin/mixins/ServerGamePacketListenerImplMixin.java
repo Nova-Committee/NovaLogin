@@ -25,7 +25,6 @@ import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerGamePacketListenerImplMixin {
 
-    @Shadow public ServerPlayer player;
     @Unique
     ServerGamePacketListenerImpl novaLogin$play =  (ServerGamePacketListenerImpl) (Object) this;
 
@@ -35,15 +34,15 @@ public abstract class ServerGamePacketListenerImplMixin {
             shift = At.Shift.AFTER
     ), cancellable = true)
     public void onPlayerMove(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
-        if (!OnPlayerMove.canMove(this.player)) {
+        if (!OnPlayerMove.canMove(novaLogin$play.player)) {
             ci.cancel();
         }
     }
 
 
-    @Inject(method = "handleChat", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "handleChat(Lnet/minecraft/network/protocol/game/ServerboundChatPacket;)V", at = @At("HEAD"), cancellable = true)
     public void onGameMessage(ServerboundChatPacket packet, CallbackInfo ci) {
-        if (!OnGameMessage.canSendMessage(this.player, packet)) {
+        if (!OnGameMessage.canSendMessage(novaLogin$play.player, packet)) {
             ci.cancel();
         }
     }
