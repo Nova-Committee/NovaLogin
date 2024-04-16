@@ -1,7 +1,6 @@
 package committee.nova.mods.novalogin.utils;
 
-import org.jetbrains.annotations.Nullable;
-
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,7 +35,7 @@ public class HttpUtils {
     }
     public static int getResponseCode(HttpURLConnection con) {
         try {
-            var code = con.getResponseCode();
+            int code = con.getResponseCode();
             con.disconnect();
             return code;
         } catch (Exception e) {

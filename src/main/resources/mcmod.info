@@ -1,0 +1,16 @@
+[
+  {
+    "modid": "novalogin",
+    "name": "NovaLogin",
+    "description": "A simple login mod.",
+    "version": "${version}",
+    "mcversion": "1.12.2",
+    "url": "",
+    "updateUrl": "",
+    "authorList": ["cnlimiter"],
+    "credits": "",
+    "logoFile": "logo.png",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

@@ -1,24 +1,14 @@
 package committee.nova.mods.novalogin.events;
 
 import committee.nova.mods.novalogin.Const;
-import committee.nova.mods.novalogin.NovaLogin;
-import committee.nova.mods.novalogin.cmds.LoginCmd;
-import committee.nova.mods.novalogin.cmds.RegisterCmd;
 import committee.nova.mods.novalogin.handler.OnPlayerAction;
 import committee.nova.mods.novalogin.handler.OnPlayerConnect;
 import committee.nova.mods.novalogin.handler.OnPlayerLeave;
-import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.server.ServerStartedEvent;
-import net.neoforged.neoforge.event.server.ServerStoppedEvent;
-
-import java.io.IOException;
-
-import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 /**
  * ModBusEvents
@@ -28,64 +18,57 @@ import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
  * @description
  * @date 2024/3/18 2:11
  */
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Const.MOD_ID)
 public class ForgeBusEvents {
 
     @SubscribeEvent
-    public static void onCmdRegister(RegisterCommandsEvent event){
-        LoginCmd.register(event.getDispatcher());
-        RegisterCmd.register(event.getDispatcher());
-    }
-
-    @SubscribeEvent
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
+        if (event.player instanceof EntityPlayerMP){
+            EntityPlayerMP serverPlayer = (EntityPlayerMP) event.player;
             OnPlayerConnect.listen(serverPlayer);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerLoginOut(PlayerEvent.PlayerLoggedOutEvent event){
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
+        if (event.player instanceof EntityPlayerMP){
+            EntityPlayerMP serverPlayer = (EntityPlayerMP) event.player;
             OnPlayerLeave.listen(serverPlayer);
         }
 
     }
 
-    @SubscribeEvent
-    public static void onServerStarted(ServerStartedEvent event) throws IOException {
-    }
 
-    @SubscribeEvent
-    public static void onServerStopped(ServerStoppedEvent event) throws IOException {
-        NovaLogin.SAVE.save();
-    }
 
     @SubscribeEvent
     public static void onPlayerInteract1(PlayerInteractEvent.EntityInteract event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
+        if (event.getEntity() instanceof EntityPlayerMP){
+            EntityPlayerMP serverPlayer = (EntityPlayerMP) event.getEntity();
+            if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerInteract2(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
+        if (event.getEntity() instanceof EntityPlayerMP){
+            EntityPlayerMP serverPlayer = (EntityPlayerMP) event.getEntity();
+            if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerInteract3(PlayerInteractEvent.RightClickItem event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
+        if (event.getEntity() instanceof EntityPlayerMP){
+            EntityPlayerMP serverPlayer = (EntityPlayerMP) event.getEntity();
+            if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerInteract4(PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
+        if (event.getEntity() instanceof EntityPlayerMP){
+            EntityPlayerMP serverPlayer = (EntityPlayerMP) event.getEntity();
+            if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
         }
     }
 

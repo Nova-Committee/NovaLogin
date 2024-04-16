@@ -2,14 +2,12 @@ package committee.nova.mods.novalogin;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mojang.logging.LogUtils;
-import committee.nova.mods.novalogin.models.LoginUsers;
 import committee.nova.mods.novalogin.models.User;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import org.slf4j.Logger;
+import net.minecraft.util.ResourceLocation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -22,9 +20,11 @@ import java.util.HashSet;
  * @date 2024/3/18 2:29
  */
 public class Const {
-    public static final String MOD_ID = "novalogin";
-    public static final Logger LOGGER = LogUtils.getLogger();
-    public static final MinecraftServer SERVER = ServerLifecycleHooks.getCurrentServer();
+    public static final @Nonnull String MOD_NAME = "NovaLogin";
+    public static final @Nonnull String MOD_ID = "novalogin";
+    public static final @Nonnull String VERSION = "0.1.0";
+    public static final @Nonnull String DEPENDENCIES = "required-after:mixinbooter";
+    public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
     public static Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     public static ResourceLocation rl(String name){
         return new ResourceLocation(MOD_ID, name);

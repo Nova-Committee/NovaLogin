@@ -1,19 +1,15 @@
 package committee.nova.mods.novalogin.mixins;
 
 import committee.nova.mods.novalogin.handler.OnGameMessage;
-import committee.nova.mods.novalogin.handler.OnPlayerAction;
 import committee.nova.mods.novalogin.handler.OnPlayerMove;
-import net.minecraft.network.protocol.game.*;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.network.play.client.CPacketChatMessage;
+import net.minecraft.network.play.client.CPacketVehicleMove;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
 
 /**
  * ServerGamePacketListenerImplMixin
@@ -23,94 +19,27 @@ import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
  * @description
  * @date 2024/4/12 上午11:33
  */
-@Mixin(ServerGamePacketListenerImpl.class)
+@Mixin(NetHandlerPlayServer.class)
 public abstract class ServerGamePacketListenerImplMixin {
 
-    @Shadow public ServerPlayer player;
     @Unique
-    ServerGamePacketListenerImpl novaLogin$play =  (ServerGamePacketListenerImpl) (Object) this;
+    NetHandlerPlayServer novaLogin$play =  (NetHandlerPlayServer) (Object) this;
 
-    @Inject(method = "handleMovePlayer", at = @At(
+    @Inject(method = "processVehicleMove", at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/network/protocol/PacketUtils;ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/server/level/ServerLevel;)V",
+            target = "Lnet/minecraft/network/PacketThreadUtil;checkThreadAndEnqueue(Lnet/minecraft/network/Packet;Lnet/minecraft/network/INetHandler;Lnet/minecraft/util/IThreadListener;)V",
             shift = At.Shift.AFTER
     ), cancellable = true)
-    public void onPlayerMove(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
-        if (!OnPlayerMove.canMove(this.player)) {
+    public void onPlayerMove(CPacketVehicleMove packet, CallbackInfo ci) {
+        if (!OnPlayerMove.canMove(novaLogin$play.player)) {
             ci.cancel();
         }
     }
 
-    @Inject(method = "handleInteract", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/protocol/PacketUtils;ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/server/level/ServerLevel;)V",
-            shift = At.Shift.AFTER
-    ), cancellable = true)
-    public void onPlayerAction1(ServerboundInteractPacket packet, CallbackInfo ci) {
-        if (!OnPlayerAction.canInteract(this.player)) {
-            ci.cancel();
-        }
-    }
 
-    @Inject(method = "handleUseItem", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/protocol/PacketUtils;ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/server/level/ServerLevel;)V",
-            shift = At.Shift.AFTER
-    ), cancellable = true)
-    public void onPlayerAction2(ServerboundUseItemPacket arg, CallbackInfo ci) {
-        if (!OnPlayerAction.canInteract(this.player)) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "handleUseItemOn", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/protocol/PacketUtils;ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/server/level/ServerLevel;)V",
-            shift = At.Shift.AFTER
-    ), cancellable = true)
-    public void onPlayerAction3(ServerboundUseItemOnPacket arg, CallbackInfo ci) {
-        if (!OnPlayerAction.canInteract(this.player)) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "handlePlayerAction", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/protocol/PacketUtils;ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/server/level/ServerLevel;)V",
-            shift = At.Shift.AFTER
-    ), cancellable = true)
-    public void onPlayerAction4(ServerboundPlayerActionPacket arg, CallbackInfo ci) {
-        if (!OnPlayerAction.canInteract(this.player)) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "handleContainerClick", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/protocol/PacketUtils;ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/server/level/ServerLevel;)V",
-            shift = At.Shift.AFTER
-    ), cancellable = true)
-    public void onPlayerAction5(ServerboundContainerClickPacket arg, CallbackInfo ci) {
-        if (!OnPlayerAction.canInteract(this.player)) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "handleSetCreativeModeSlot",
-            at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/network/protocol/PacketUtils;ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/server/level/ServerLevel;)V",
-            shift = At.Shift.AFTER
-    ), cancellable = true)
-    public void onPlayerAction6(ServerboundSetCreativeModeSlotPacket arg, CallbackInfo ci) {
-        if (!OnPlayerAction.canInteract(this.player)) {
-            ci.cancel();
-        }
-    }
-
-    @Inject(method = "handleChat", at = @At("HEAD"), cancellable = true)
-    public void onGameMessage(ServerboundChatPacket packet, CallbackInfo ci) {
-        if (!OnGameMessage.canSendMessage(this.player, packet)) {
+    @Inject(method = "processChatMessage", at = @At("HEAD"), cancellable = true)
+    public void onGameMessage(CPacketChatMessage packet, CallbackInfo ci) {
+        if (!OnGameMessage.canSendMessage(novaLogin$play.player, packet.getMessage())) {
             ci.cancel();
         }
     }

@@ -1,9 +1,13 @@
 package committee.nova.mods.novalogin.handler;
 
 import committee.nova.mods.novalogin.Const;
-import net.minecraft.server.level.ServerPlayer;
+import committee.nova.mods.novalogin.models.LoginUsers;
+import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 /**
  * OnPlayerReLogin
@@ -14,8 +18,10 @@ import java.time.*;
  * @date 2024/4/12 下午1:42
  */
 public class OnPlayerReLogin {
-    public static boolean canReLogin(ServerPlayer player) {
+    public static boolean canReLogin(EntityPlayerMP player) {
         String name = player.getGameProfile().getName();
+        LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
+        if (!playerLogin.reLogin) return false;
         long timestamp = Const.playerCacheMap.get(name).lastLeaveTime;
         if (timestamp != 0){
             LocalDateTime start = Instant.ofEpochMilli(timestamp).atZone(ZoneOffset.ofHours(8)).toLocalDateTime();

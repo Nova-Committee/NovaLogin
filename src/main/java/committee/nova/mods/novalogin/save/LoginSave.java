@@ -1,9 +1,8 @@
 package committee.nova.mods.novalogin.save;
 
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * LoginSave
@@ -20,9 +19,9 @@ public interface LoginSave {
 
     boolean isReg(String name);
 
-    void reg(ServerPlayer player, String password);
+    void reg(EntityPlayerMP player, String password);
 
-    void changePwd(ServerPlayer player, String newPassword);
+    void changePwd(EntityPlayerMP player, String newPassword);
 
     boolean dirty();
 

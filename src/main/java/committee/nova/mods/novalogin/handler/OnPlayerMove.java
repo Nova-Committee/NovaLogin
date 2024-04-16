@@ -1,11 +1,7 @@
 package committee.nova.mods.novalogin.handler;
 
-import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
-
-import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
  * OnPlayerMove
@@ -16,13 +12,13 @@ import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
  * @date 2024/4/12 上午11:35
  */
 public class OnPlayerMove {
-    public static boolean canMove(ServerPlayer player) {
+    public static boolean canMove(EntityPlayerMP player) {
         if (OnPlayerPremium.canPremium(player)) return true;
         if (OnPlayerReLogin.canReLogin(player)) return true;
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
-        boolean isLoggedIn = playerLogin.isLogin;
+        boolean isLoggedIn = playerLogin.login;
         if (!isLoggedIn) {
-            player.teleportTo(player.getX(), player.getY(), player.getZ()); // 同步
+            player.setPositionAndUpdate(player.posX, player.posY, player.posZ); // 同步
         }
         return isLoggedIn;
     }

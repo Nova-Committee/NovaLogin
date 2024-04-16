@@ -2,8 +2,8 @@ package committee.nova.mods.novalogin.save;
 
 import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.User;
-import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.fml.loading.FMLPaths;
+import net.minecraft.entity.player.EntityPlayerMP;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
 import static committee.nova.mods.novalogin.Const.playerCacheMap;
@@ -30,12 +29,12 @@ public class JsonLoginSave implements LoginSave{
     private final Path path;
     private boolean dirty = false;
 
-    public JsonLoginSave(){
-        this.path = FMLPaths.GAMEDIR.get().resolve("nova").resolve("login");
+    public JsonLoginSave(Path gamePath){
+        this.path = gamePath.resolve("nova").resolve("login");
         try {
             load();
         }catch (IOException e){
-            Const.LOGGER.error("加载出错，请检查文件", e);
+            Const.LOGGER.error("Loading Error:", e);
         }
     }
 
@@ -59,7 +58,7 @@ public class JsonLoginSave implements LoginSave{
     }
 
     @Override
-    public void reg(ServerPlayer player, String password) {
+    public void reg(EntityPlayerMP player, String password) {
         String name = player.getGameProfile().getName();
         User user = playerCacheMap.get(name);
         if (!user.isRegister && !mojangAccountNamesCache.contains(name)) {
@@ -72,7 +71,7 @@ public class JsonLoginSave implements LoginSave{
     }
 
     @Override
-    public void changePwd(ServerPlayer player, String newPassword) {
+    public void changePwd(EntityPlayerMP player, String newPassword) {
         String name = player.getGameProfile().getName();
         if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name)) {
             dirty = true;
@@ -95,9 +94,9 @@ public class JsonLoginSave implements LoginSave{
                     Files.createDirectories(path);
                     Files.createFile(this.path.resolve(name + ".json"));
                 }
-                Files.writeString(this.path.resolve(name + ".json"), Const.GSON.toJson(user), StandardOpenOption.TRUNCATE_EXISTING);
+                FileUtils.writeStringToFile(this.path.resolve(name + ".json").toFile(), Const.GSON.toJson(user), StandardCharsets.UTF_8);
             } catch (IOException e) {
-                Const.LOGGER.error("保存出错，请检查文件", e);
+                Const.LOGGER.error("Save Error:", e);
             }
         }));
     }

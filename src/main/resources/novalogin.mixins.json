@@ -2,8 +2,8 @@
   "required": true,
   "minVersion": "0.8",
   "package": "committee.nova.mods.novalogin.mixins",
-  "compatibilityLevel": "JAVA_8",
   "refmap": "novalogin.refmap.json",
+  "compatibilityLevel": "JAVA_8",
   "mixins": [
     "ServerGamePacketListenerImplMixin",
     "ServerLoginPktMixin"
@@ -12,6 +12,7 @@
     "defaultRequire": 1
   },
   "client": [
-    "ClientPacketListenerMixin"
+    "ClientPacketListenerMixin",
+    "SessionMixin"
   ]
 }

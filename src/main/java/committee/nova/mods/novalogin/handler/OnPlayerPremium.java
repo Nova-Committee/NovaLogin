@@ -1,12 +1,7 @@
 package committee.nova.mods.novalogin.handler;
 
 import committee.nova.mods.novalogin.Const;
-import net.minecraft.server.level.ServerPlayer;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
  * OnPlayerPremium
@@ -17,7 +12,7 @@ import java.time.ZoneOffset;
  * @date 2024/4/12 下午9:14
  */
 public class OnPlayerPremium {
-    public static boolean canPremium(ServerPlayer player) {
+    public static boolean canPremium(EntityPlayerMP player) {
         return Const.mojangAccountNamesCache.contains(player.getGameProfile().getName());
     }
 }
