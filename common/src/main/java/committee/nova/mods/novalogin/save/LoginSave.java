@@ -26,8 +26,8 @@ public interface LoginSave {
 
     boolean dirty();
 
-    void save() throws IOException;
+    void save();
 
-    void load() throws IOException;
+    void load();
 
 }

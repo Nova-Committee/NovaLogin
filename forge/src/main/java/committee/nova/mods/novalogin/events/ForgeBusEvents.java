@@ -1,6 +1,7 @@
 package committee.nova.mods.novalogin.events;
 
 import committee.nova.mods.novalogin.CommonClass;
+import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.cmds.LoginCmd;
 import committee.nova.mods.novalogin.cmds.RegisterCmd;
 import committee.nova.mods.novalogin.handler.OnPlayerAction;
@@ -55,7 +56,8 @@ public class ForgeBusEvents {
 
     @SubscribeEvent
     public static void onServerStopped(ServerStoppedEvent event) throws IOException {
-        CommonClass.SAVE.save();
+        Const.SAVE.save();
+        Const.CONFIG.save();
     }
 
     @SubscribeEvent

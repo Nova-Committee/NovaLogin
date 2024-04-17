@@ -60,11 +60,8 @@ public class FabricBusEvents {
 
     private static void onServerStopped() {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
-            try {
-                CommonClass.SAVE.save();
-            } catch (IOException e) {
-                Const.LOGGER.error(e.getMessage());
-            }
+            Const.SAVE.save();
+            Const.CONFIG.save();
         });
     }
 

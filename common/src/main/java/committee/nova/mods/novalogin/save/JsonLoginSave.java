@@ -29,8 +29,8 @@ public class JsonLoginSave implements LoginSave{
     private final Path path;
     private boolean dirty = false;
 
-    public JsonLoginSave(Path gamePath){
-        this.path = gamePath.resolve("nova").resolve("login");
+    public JsonLoginSave(Path novaPath){
+        this.path = novaPath;
         try {
             load();
         }catch (IOException e){
@@ -87,7 +87,7 @@ public class JsonLoginSave implements LoginSave{
     }
 
     @Override
-    public void save() throws IOException {
+    public void save(){
         playerCacheMap.forEach(((name, user) -> {
             try {
                 if (!Files.exists(this.path.resolve(name + ".json"))) {
@@ -102,14 +102,17 @@ public class JsonLoginSave implements LoginSave{
     }
 
     @Override
-    public void load() throws IOException {
-        if (!Files.exists(this.path)) Files.createDirectories(path);
+    public void load(){
+        try {
         File[] files = path.toFile().listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
         if (files == null)
             return;
         for (File f : files){
             User user = Const.GSON.fromJson(Files.newBufferedReader(f.toPath(), StandardCharsets.UTF_8), User.class);
             playerCacheMap.put(user.name, user);
+        }
+        } catch (IOException e) {
+            Const.LOGGER.error("Load Error:", e);
         }
     }
 
