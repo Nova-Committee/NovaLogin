@@ -15,8 +15,9 @@ import lombok.Data;
 public class ModConfig {
     @SerializedName("uuid_trans")
     private boolean uuidTrans = false;
-    @SerializedName("status")
-    private Status status = new Status();
+
+    @SerializedName("out_time")
+    private int outTime = 600;
 
 
     public String getConfigName() {

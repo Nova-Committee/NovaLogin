@@ -31,11 +31,7 @@ public class JsonLoginSave implements LoginSave{
 
     public JsonLoginSave(Path novaPath){
         this.path = novaPath;
-        try {
-            load();
-        }catch (IOException e){
-            Const.LOGGER.error("Loading Error:", e);
-        }
+        load();
     }
 
     @Override

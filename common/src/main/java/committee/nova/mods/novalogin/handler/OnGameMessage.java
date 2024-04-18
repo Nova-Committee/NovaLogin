@@ -13,11 +13,10 @@ import net.minecraft.server.level.ServerPlayer;
  * @date 2024/4/12 上午11:39
  */
 public class OnGameMessage {
-    public static boolean canSendMessage(ServerPlayer player, ServerboundChatPacket packet) {
+    public static boolean canSendMessage(ServerPlayer player, String message) {
         if (OnPlayerPremium.canPremium(player)) return true;
         if (OnPlayerReLogin.canReLogin(player)) return true;
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
-        String message = packet.getMessage();
         if (!playerLogin.login && (message.startsWith("/login") || message.startsWith("/register"))) {
             return true;
         }
