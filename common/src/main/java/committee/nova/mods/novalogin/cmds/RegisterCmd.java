@@ -3,6 +3,7 @@ package committee.nova.mods.novalogin.cmds;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import committee.nova.mods.novalogin.CommonClass;
+import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
@@ -32,7 +33,7 @@ public class RegisterCmd {
                                     ServerPlayer player = ctx.getSource().getPlayerOrException();
                                     String username = player.getGameProfile().getName();
 
-                                    if (CommonClass.SAVE.isReg(username)) {
+                                    if (Const.SAVE.isReg(username)) {
                                         ctx.getSource().sendSuccess(new TranslatableComponent("info.novalogin.cmd.registered"), false);
                                         return 1;
                                     }
@@ -40,7 +41,7 @@ public class RegisterCmd {
                                         ctx.getSource().sendSuccess(new TranslatableComponent("info.novalogin.cmd.pwd_strict"), false);
                                         return 1;
                                     }
-                                    CommonClass.SAVE.reg(player, password);
+                                    Const.SAVE.reg(player, password);
                                     LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                                     playerLogin.setLogin(true);
                                     player.setInvulnerable(false);

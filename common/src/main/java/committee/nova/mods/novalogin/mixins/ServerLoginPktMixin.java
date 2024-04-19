@@ -8,7 +8,6 @@ import committee.nova.mods.novalogin.utils.HttpUtils;
 import net.minecraft.DefaultUncaughtExceptionHandler;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.login.ClientboundHelloPacket;
 import net.minecraft.network.protocol.login.ServerboundHelloPacket;
 import net.minecraft.network.protocol.login.ServerboundKeyPacket;
@@ -16,7 +15,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.util.Crypt;
 import net.minecraft.util.CryptException;
-import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.Validate;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,7 +46,7 @@ import static committee.nova.mods.novalogin.Const.*;
  *
  * @author cnlimiter
  * @version 1.0
- * @description from EasyAuth
+ * @description
  * @date 2024/3/19 13:02
  */
 @Mixin(ServerLoginPacketListenerImpl.class)
@@ -87,42 +85,62 @@ public abstract class ServerLoginPktMixin {
             method = "handleHello",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/network/protocol/login/ServerboundHelloPacket;getGameProfile()Lcom/mojang/authlib/GameProfile;",
+                    target = "Lnet/minecraft/server/MinecraftServer;usesAuthentication()Z",
                     shift = At.Shift.BEFORE
-            )
-    )
+            ),
+            cancellable = true)
     public void novalogin$handleHello(ServerboundHelloPacket pPacket, CallbackInfo ci) {
         this.gameProfile = pPacket.getGameProfile();
         String playerName = pPacket.getGameProfile().getName();
         Pattern pattern = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-Z0-9]{6,25}$");
-        Validate.validState(!pattern.matcher(playerName).matches(), "Invalid characters in username");
+        //Validate.validState(!pattern.matcher(playerName).matches(), "Invalid characters in username");
+        if (this.server.usesAuthentication()) {
+            this.state = ServerLoginPacketListenerImpl.State.KEY;
+            this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.nonce));
+        } else {
+            if (CONFIG.config.isUuidTrans()){
+                novaLogin$useOnlineProfile(playerName);
+            } else {
+                novaLogin$useOfflineProfile(playerName);
+            }
+        }
+        ci.cancel();
     }
 
 
     @Unique
     private void novaLogin$useOfflineProfile(String playerName) {
+        LOGGER.info("Username '{}' tried to join with an offline UUID", playerName);
         this.state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
         this.gameProfile = novaLogin$createOfflineProfile(playerName);
-        LOGGER.info("Username '{}' tried to join with an offline UUID", playerName);
     }
 
     @Unique
-    private void novaLogin$useOnlineProfile(int code, String msg, String playerName) {
+    private void novaLogin$useOnlineProfile(String playerName) {
         GameProfile gameProfile = novaLogin$createOfflineProfile(playerName);
-        if (code == HttpURLConnection.HTTP_OK) {
-            var re = GSON.fromJson(JsonParser.parseString(msg), MojangResponse.class);
-            StringBuilder uuid = new StringBuilder(re.getId());
-            uuid.insert(8,"-");
-            uuid.insert(12,"-");
-            uuid.insert(16,"-");
-            uuid.insert(20,"-");
+        String url = "https://api.mojang.com/users/profiles/minecraft/" + playerName;
+        try {
+            HttpURLConnection  con = HttpUtils.connect(url, 5000, null);
+            int  code = con.getResponseCode();
+            String  msg = HttpUtils.getResponseMsg(con);
+            con.disconnect();
+            if (code == HttpURLConnection.HTTP_OK) {
+                var re = GSON.fromJson(JsonParser.parseString(msg), MojangResponse.class);
+                StringBuilder uuid = new StringBuilder(re.getId());
+                uuid.insert(8,"-");
+                uuid.insert(12,"-");
+                uuid.insert(16,"-");
+                uuid.insert(20,"-");
 
-            LOGGER.info("Player {} has a Mojang account, use online UUID {}", playerName, uuid);
+                LOGGER.info("Player {} has a Mojang account, use online UUID {}", playerName, uuid);
 
-            gameProfile = new GameProfile(UUID.fromString(uuid.toString()), playerName);
+                gameProfile = new GameProfile(UUID.fromString(uuid.toString()), playerName);
+            }
+            this.state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
+            this.gameProfile = gameProfile;
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage());
         }
-        this.state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
-        this.gameProfile = gameProfile;
     }
 
     @Unique
@@ -170,20 +188,6 @@ public abstract class ServerLoginPktMixin {
                 String playerName = gameProfile.getName();
                 UUID id = gameProfile.getId();
 
-                String url = "https://api.mojang.com/users/profiles/minecraft/" + playerName;
-
-                HttpURLConnection con = null;
-                int code = 0;
-                String msg = "";
-                try {
-                    con = HttpUtils.connect(url, 5000, null);
-                    code = con.getResponseCode();
-                    msg = HttpUtils.getResponseMsg(con);
-                    con.disconnect();
-                } catch (IOException e) {
-                    LOGGER.error(e.getMessage());
-                }
-
                 try {
                     gameProfile = server
                             .getSessionService()
@@ -192,24 +196,21 @@ public abstract class ServerLoginPktMixin {
                         LOGGER
                                 .info(
                                         "UUID of player {} is {}",
-                                        playerName,
-                                        id
+                                        gameProfile.getName(),
+                                        gameProfile.getId()
                                 );
-                        mojangAccountNamesCache.add(playerName);
+                        mojangAccountNamesCache.add(gameProfile.getName());
                         state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
-                    } else if (server.isSingleplayer()){
+                    } else {
                         if (CONFIG.config.isUuidTrans()){
-                            novaLogin$useOnlineProfile(code, msg, playerName);
+                            novaLogin$useOnlineProfile(playerName);
                         } else {
                             novaLogin$useOfflineProfile(playerName);
                         }
-                    } else {
-                        disconnect(new TranslatableComponent("multiplayer.disconnect.unverified_username"));
-                        LOGGER.error("Username '{}' tried to join with an invalid session", playerName);
                     }
                 } catch (AuthenticationUnavailableException e) {
                     if (CONFIG.config.isUuidTrans()){
-                        novaLogin$useOnlineProfile(code, msg, playerName);
+                        novaLogin$useOnlineProfile(playerName);
                     } else {
                         novaLogin$useOfflineProfile(playerName);
                     }

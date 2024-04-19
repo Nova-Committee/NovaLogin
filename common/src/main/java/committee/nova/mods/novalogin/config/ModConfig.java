@@ -14,7 +14,7 @@ import lombok.Data;
 @Data
 public class ModConfig {
     @SerializedName("uuid_trans")
-    private boolean uuidTrans = false;
+    private boolean uuidTrans = true;
 
     @SerializedName("out_time")
     private int outTime = 600;

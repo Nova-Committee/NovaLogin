@@ -17,7 +17,7 @@ import net.minecraftforge.network.simple.SimpleChannel;
  * @description
  * @date 2024/3/18 13:43
  */
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+//@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class NetWorkDispatcher {
     public static int id = 0;
     public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(Const.rl("main"), () -> {
