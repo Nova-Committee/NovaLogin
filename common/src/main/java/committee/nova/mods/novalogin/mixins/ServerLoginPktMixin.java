@@ -94,7 +94,7 @@ public abstract class ServerLoginPktMixin {
         String playerName = pPacket.getGameProfile().getName();
         Pattern pattern = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-Z0-9]{6,25}$");
         //Validate.validState(!pattern.matcher(playerName).matches(), "Invalid characters in username");
-        if (this.server.usesAuthentication()) {
+        if (this.server.usesAuthentication() && !this.connection.isMemoryConnection()) {
             this.state = ServerLoginPacketListenerImpl.State.KEY;
             this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.nonce));
         } else {

@@ -28,9 +28,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ClientHandshakePktMixin {
 
 
-    @Shadow protected abstract MinecraftSessionService getMinecraftSessionService();
+    @Shadow
+    @Final
+    private Minecraft minecraft;
 
-    @Shadow @Final private Minecraft minecraft;
+    @Shadow
+    protected abstract MinecraftSessionService getMinecraftSessionService();
 
     @Inject(
             method = "authenticateServer",
@@ -42,15 +45,14 @@ public abstract class ClientHandshakePktMixin {
         try {
             this.getMinecraftSessionService().joinServer(this.minecraft.getUser().getGameProfile(), this.minecraft.getUser().getAccessToken(), serverId);
             cir.setReturnValue(null);
-        } catch (AuthenticationUnavailableException var3) {
+        } catch (AuthenticationUnavailableException exception) {
             cir.setReturnValue(new TranslatableComponent("disconnect.loginFailedInfo", new TranslatableComponent("disconnect.loginFailedInfo.serversUnavailable")));
-        } catch (InvalidCredentialsException var4) {
+        } catch (InvalidCredentialsException exception) {
             cir.setReturnValue(null);
-        } catch (InsufficientPrivilegesException var5) {
+        } catch (InsufficientPrivilegesException exception) {
             cir.setReturnValue(new TranslatableComponent("disconnect.loginFailedInfo", new TranslatableComponent("disconnect.loginFailedInfo.insufficientPrivileges")));
         } catch (AuthenticationException var6) {
             cir.setReturnValue(new TranslatableComponent("disconnect.loginFailedInfo", var6.getMessage()));
         }
     }
-
 }

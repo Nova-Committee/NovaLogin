@@ -9,6 +9,8 @@ import committee.nova.mods.novalogin.handler.OnPlayerConnect;
 import committee.nova.mods.novalogin.handler.OnPlayerLeave;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.item.ItemEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -47,7 +49,6 @@ public class ForgeBusEvents {
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
             OnPlayerLeave.listen(serverPlayer);
         }
-
     }
 
     @SubscribeEvent
@@ -83,6 +84,13 @@ public class ForgeBusEvents {
 
     @SubscribeEvent
     public static void onPlayerInteract4(PlayerInteractEvent.LeftClickBlock event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer){
+            if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerInteract5(PlayerContainerEvent.Open event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
             if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
         }

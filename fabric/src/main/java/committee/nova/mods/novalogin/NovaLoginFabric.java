@@ -11,6 +11,5 @@ public class NovaLoginFabric implements ModInitializer {
     public void onInitialize() {
         CommonClass.init(FabricLoader.getInstance().getGameDir());
         FabricBusEvents.init();
-        NetWorkDispatcher.init();
     }
 }

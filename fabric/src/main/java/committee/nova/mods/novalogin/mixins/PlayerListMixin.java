@@ -1,6 +1,6 @@
 package committee.nova.mods.novalogin.mixins;
 
-import committee.nova.mods.novalogin.events.IEvents;
+import committee.nova.mods.novalogin.events.callbacks.IEvents;
 import net.minecraft.network.Connection;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.PlayerList;
@@ -20,11 +20,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = PlayerList.class, priority = 1001)
 public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At(value = "TAIL"))
-    public void mcbot$placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci) {
+    public void novalogin$placeNewPlayer(Connection connection, ServerPlayer serverPlayer, CallbackInfo ci) {
         IEvents.PLAYER_LOGGED_IN.invoker().onPlayerLoggedIn(serverPlayer.getCommandSenderWorld(), serverPlayer);
     }
     @Inject(method = "remove", at = @At(value = "HEAD"))
-    public void mcbot$removePlayer(ServerPlayer player, CallbackInfo ci) {
+    public void novalogin$removePlayer(ServerPlayer player, CallbackInfo ci) {
         IEvents.PLAYER_LOGGED_OUT.invoker().onPlayerLoggedOut(player.getCommandSenderWorld(), player);
     }
 }
