@@ -8,5 +8,7 @@
   "info.novalogin.cmd.pwd_wrong": "§cIncorrect password!",
   "info.novalogin.cmd.registered": "§cYou're already registered! Use /login instead.",
   "info.novalogin.cmd.pwd_strict": "§cPasswords don't match! Repeat it correctly.",
-  "info.novalogin.cmd.register_success": "§aSuccessfully registered."
+  "info.novalogin.cmd.register_success": "§aSuccessfully registered.",
+  "info.novalogin.cmd.change_pwd_success": "§aSuccessfully changed password.",
+  "info.novalogin.cmd.change_pwd_failed": "§cYou're not login! Use /login instead."
 }

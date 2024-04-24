@@ -26,10 +26,10 @@ import static net.minecraft.commands.Commands.literal;
 public class RegisterCmd {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal("register")
-                .then(argument("newPassword", StringArgumentType.word())
+                .then(argument("password", StringArgumentType.word())
                         .then(argument("confirmPassword", StringArgumentType.word())
                                 .executes(ctx -> {
-                                    String password = StringArgumentType.getString(ctx, "newPassword");
+                                    String password = StringArgumentType.getString(ctx, "password");
                                     ServerPlayer player = ctx.getSource().getPlayerOrException();
                                     String username = player.getGameProfile().getName();
 

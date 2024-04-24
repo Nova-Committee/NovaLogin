@@ -7,6 +7,8 @@
   "info.novalogin.cmd.login_success": "§a登录成功.",
   "info.novalogin.cmd.pwd_wrong": "§c密码错误!",
   "info.novalogin.cmd.registered": "§c您已经注册过了! 请使用 /login 登录.",
-  "info.novalogin.cmd.pwd_strict": "§c两次密码不一致! 请重新注册.",
-  "info.novalogin.cmd.register_success": "§a注册成功."
+  "info.novalogin.cmd.pwd_strict": "§c两次密码不一致! 请重新使用命令.",
+  "info.novalogin.cmd.register_success": "§a注册成功.",
+  "info.novalogin.cmd.change_pwd_success": "§a成功更换密码.",
+  "info.novalogin.cmd.change_pwd_failed": "§c您还未登录! 请使用 /login 登录."
 }

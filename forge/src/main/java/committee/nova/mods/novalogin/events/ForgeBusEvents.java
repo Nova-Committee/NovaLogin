@@ -2,6 +2,7 @@ package committee.nova.mods.novalogin.events;
 
 import committee.nova.mods.novalogin.CommonClass;
 import committee.nova.mods.novalogin.Const;
+import committee.nova.mods.novalogin.cmds.ChangePwdCmd;
 import committee.nova.mods.novalogin.cmds.LoginCmd;
 import committee.nova.mods.novalogin.cmds.RegisterCmd;
 import committee.nova.mods.novalogin.handler.OnPlayerAction;
@@ -35,6 +36,7 @@ public class ForgeBusEvents {
     public static void onCmdRegister(RegisterCommandsEvent event){
         LoginCmd.register(event.getDispatcher());
         RegisterCmd.register(event.getDispatcher());
+        ChangePwdCmd.register(event.getDispatcher());
     }
 
     @SubscribeEvent
