@@ -46,6 +46,18 @@ subprojects {
             name = 'BlameJared Maven (JEI / CraftTweaker / Bookshelf)'
             url = 'https://maven.blamejared.com'
         }
+        maven {
+            name = "novaRepositoryReleases"
+            url = "https://maven.nova-committee.cn/releases"
+        }
+    }
+
+    dependencies {
+        implementation("org.mindrot:jbcrypt:0.4")
+        implementation("javax.mail:mail:1.4.4")
+        //implementation("cn.evole.config:AtomConfig-Yaml:0.2.0")
+        compileOnly ("org.projectlombok:lombok:1.18.24")
+        annotationProcessor ("org.projectlombok:lombok:1.18.24")
     }
 
     tasks.withType(JavaCompile).configureEach {

@@ -15,9 +15,9 @@ dependencies {
     implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
     compileOnly project(":common")
 
-    compileOnly ("org.projectlombok:lombok:1.18.24")
-    annotationProcessor ("org.projectlombok:lombok:1.18.24")
-    implementation include("org.mindrot:jbcrypt:0.4")
+    include("org.mindrot:jbcrypt:0.4")
+    include("javax.mail:mail:1.4.4")
+    //include("cn.evole.config:AtomConfig-Yaml:0.2.0")
 }
 
 loom {
