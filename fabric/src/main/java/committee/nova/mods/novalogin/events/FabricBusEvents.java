@@ -8,7 +8,9 @@ import committee.nova.mods.novalogin.events.callbacks.IEvents;
 import committee.nova.mods.novalogin.handler.OnPlayerAction;
 import committee.nova.mods.novalogin.handler.OnPlayerConnect;
 import committee.nova.mods.novalogin.handler.OnPlayerLeave;
+import committee.nova.mods.novalogin.network.NetWorkDispatcher;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.*;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,14 +47,18 @@ public class FabricBusEvents {
     }
 
     private static void onPlayerLoginIn() {
-        IEvents.PLAYER_LOGGED_IN.register((world, player) -> {
-            OnPlayerConnect.listen(player);
+        ServerEntityEvents.ENTITY_LOAD.register((player, world) -> {
+            if (player instanceof ServerPlayer serverPlayer) {
+                if (OnPlayerConnect.listen(serverPlayer)) NetWorkDispatcher.sendLoginActionToClient(serverPlayer);
+            }
         });
     }
 
     private static void onPlayerLoginOut() {
-        IEvents.PLAYER_LOGGED_OUT.register((world, player) -> {
-            OnPlayerLeave.listen(player);
+        ServerEntityEvents.ENTITY_UNLOAD.register((player, world) -> {
+            if (player instanceof ServerPlayer serverPlayer) {
+                OnPlayerLeave.listen(serverPlayer);
+            }
         });
     }
 

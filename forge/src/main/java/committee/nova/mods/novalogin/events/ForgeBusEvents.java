@@ -8,6 +8,8 @@ import committee.nova.mods.novalogin.cmds.RegisterCmd;
 import committee.nova.mods.novalogin.handler.OnPlayerAction;
 import committee.nova.mods.novalogin.handler.OnPlayerConnect;
 import committee.nova.mods.novalogin.handler.OnPlayerLeave;
+import committee.nova.mods.novalogin.net.ClientLoginActionPkt;
+import committee.nova.mods.novalogin.network.NetWorkDispatcher;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.item.ItemEvent;
@@ -18,6 +20,7 @@ import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.io.IOException;
 
@@ -42,7 +45,7 @@ public class ForgeBusEvents {
     @SubscribeEvent
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            OnPlayerConnect.listen(serverPlayer);
+            if (OnPlayerConnect.listen(serverPlayer)) NetWorkDispatcher.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientLoginActionPkt());
         }
     }
 

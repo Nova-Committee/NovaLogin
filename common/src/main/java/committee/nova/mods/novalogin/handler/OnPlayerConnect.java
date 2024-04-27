@@ -1,17 +1,12 @@
 package committee.nova.mods.novalogin.handler;
 
-import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import committee.nova.mods.novalogin.models.User;
-import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.level.ServerPlayer;
-
-import java.util.UUID;
 
 import static committee.nova.mods.novalogin.Const.playerCacheMap;
 
@@ -24,7 +19,7 @@ import static committee.nova.mods.novalogin.Const.playerCacheMap;
  * @date 2024/4/12 下午12:56
  */
 public class OnPlayerConnect {
-    public static void listen(ServerPlayer player) {
+    public static boolean listen(ServerPlayer player) {
         String name = player.getGameProfile().getName();
         User user = new User();
         user.setName(name);
@@ -33,7 +28,7 @@ public class OnPlayerConnect {
             user.setAuth(true);
             player.sendMessage(new TranslatableComponent("info.novalogin.premium"), ChatType.SYSTEM, Util.NIL_UUID);
             playerCacheMap.put(name, user);
-            return;
+            return false;
         }
 
         if (playerCacheMap.containsKey(name)) {
@@ -43,12 +38,13 @@ public class OnPlayerConnect {
 
         if (OnPlayerReLogin.canReLogin(player)) {
             player.sendMessage(new TranslatableComponent("info.novalogin.re_login"), ChatType.SYSTEM, Util.NIL_UUID);
-            return;
+            return false;
         }
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         playerLogin.setLogin(false);
         player.setInvulnerable(true);
         player.sendMessage(new TranslatableComponent("info.novalogin.welcome"), ChatType.SYSTEM, Util.NIL_UUID);
         player.connection.send(new ClientboundSetTitleTextPacket(new TranslatableComponent("info.novalogin.verify")));
+        return true;
     }
 }
