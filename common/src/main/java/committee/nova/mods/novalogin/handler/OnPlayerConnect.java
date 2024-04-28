@@ -17,7 +17,7 @@ import static committee.nova.mods.novalogin.Const.playerCacheMap;
  * @date 2024/4/12 下午12:56
  */
 public class OnPlayerConnect {
-    public static void listen(ServerPlayer player) {
+    public static boolean listen(ServerPlayer player) {
         String name = player.getGameProfile().getName();
         User user = new User();
         user.setName(name);
@@ -26,7 +26,7 @@ public class OnPlayerConnect {
             user.setAuth(true);
             player.sendSystemMessage(Component.translatable("info.novalogin.premium"), false);
             playerCacheMap.put(name, user);
-            return;
+            return false;
         }
 
         if (playerCacheMap.containsKey(name)) {
@@ -36,12 +36,13 @@ public class OnPlayerConnect {
 
         if (OnPlayerReLogin.canReLogin(player)) {
             player.sendSystemMessage(Component.translatable("info.novalogin.re_login"), false);
-            return;
+            return false;
         }
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         playerLogin.setLogin(false);
         player.setInvulnerable(true);
         player.sendSystemMessage(Component.translatable("info.novalogin.welcome"), false);
         player.connection.send(new ClientboundSetTitleTextPacket(Component.translatable("info.novalogin.verify")));
+        return true;
     }
 }

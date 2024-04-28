@@ -39,7 +39,7 @@ public abstract class ServerGamePacketListenerImplMixin {
 
     @Inject(method = "handleChat", at = @At("HEAD"), cancellable = true)
     public void onGameMessage(ServerboundChatPacket packet, CallbackInfo ci) {
-        if (!OnGameMessage.canSendMessage(novaLogin$play.player, packet)) {
+        if (!OnGameMessage.canSendMessage(novaLogin$play.player, packet.message())) {
             ci.cancel();
         }
     }

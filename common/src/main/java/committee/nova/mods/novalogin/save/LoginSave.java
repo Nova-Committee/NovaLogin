@@ -2,8 +2,6 @@ package committee.nova.mods.novalogin.save;
 
 import net.minecraft.server.level.ServerPlayer;
 
-import java.io.IOException;
-
 /**
  * LoginSave
  *
@@ -25,8 +23,8 @@ public interface LoginSave {
 
     boolean dirty();
 
-    void save() throws IOException;
+    void save();
 
-    void load() throws IOException;
+    void load();
 
 }

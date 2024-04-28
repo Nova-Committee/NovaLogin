@@ -21,30 +21,36 @@ import static net.minecraft.commands.Commands.literal;
  * @description
  * @date 2024/4/12 上午11:46
  */
-public class LoginCmd {
+public class ChangePwdCmd {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        dispatcher.register(literal("login")
-                .then(argument("password", StringArgumentType.word())
+        dispatcher.register(literal("changepwd")
+                .then(argument("newPassword", StringArgumentType.word())
+                        .then(argument("confirmNewPassword", StringArgumentType.word())
                         .executes(ctx -> {
                             ServerPlayer player = ctx.getSource().getPlayerOrException();
-                            String password = StringArgumentType.getString(ctx, "password");
+                            String newPassword = StringArgumentType.getString(ctx, "newPassword");
                             String username = player.getGameProfile().getName();
 
                             if (!Const.SAVE.isReg(username)) {
                                 ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.unregister"), false);
-                            } else if (Const.SAVE.checkPwd(username, password)) {
-                                LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
-                                playerLogin.setLogin(true);
-                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.login_success"), false);
-                                if (!player.isCreative()) {
-                                    player.setInvulnerable(false);
-                                }
+                                return 1;
+                            }
+
+                            if (!newPassword.equals(StringArgumentType.getString(ctx, "confirmNewPassword"))) {
+                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.pwd_strict"), false);
+                                return 1;
+                            }
+
+                            LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
+                            if (playerLogin.login) {
+                                Const.SAVE.changePwd(player, newPassword);
                                 player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
+                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.change_pwd_success"), false);
                             } else {
                                 player.playNotifySound(SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 100f, 0.5f);
-                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.pwd_wrong"), false);
+                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.change_pwd_failed"), false);
                             }
                             return 1;
-                        })));
+                        }))));
     }
 }

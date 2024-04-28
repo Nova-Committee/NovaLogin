@@ -2,7 +2,12 @@ package committee.nova.mods.novalogin.network;
 
 
 import committee.nova.mods.novalogin.Const;
-import committee.nova.mods.novalogin.network.pkt.ServerLoginModePkt;
+import committee.nova.mods.novalogin.net.ClientLoginActionPkt;
+import committee.nova.mods.novalogin.net.ServerLoginActionPkt;
+import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
+import committee.nova.mods.novalogin.network.pkt.ForgeClientLoginActionPkt;
+import committee.nova.mods.novalogin.network.pkt.ForgeServerLoginActionPkt;
+import committee.nova.mods.novalogin.network.pkt.ForgeServerRegisterActionPkt;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -30,6 +35,9 @@ public class NetWorkDispatcher {
 
     @SubscribeEvent
     public static void init(FMLCommonSetupEvent event) {
-        CHANNEL.registerMessage(id++, ServerLoginModePkt.class, ServerLoginModePkt::toBytes, ServerLoginModePkt::new, ServerLoginModePkt::handle);
+        CHANNEL.registerMessage(id++, ServerRegisterActionPkt.class, ServerRegisterActionPkt::toBytes, ServerRegisterActionPkt::new, ForgeServerRegisterActionPkt::handle);
+        CHANNEL.registerMessage(id++, ServerLoginActionPkt.class, ServerLoginActionPkt::toBytes, ServerLoginActionPkt::new, ForgeServerLoginActionPkt::handle);
+        CHANNEL.registerMessage(id++, ClientLoginActionPkt.class, ClientLoginActionPkt::toBytes, ClientLoginActionPkt::new, ForgeClientLoginActionPkt::handle);
     }
+
 }
