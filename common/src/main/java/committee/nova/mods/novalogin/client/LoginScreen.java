@@ -6,6 +6,7 @@ import committee.nova.mods.novalogin.Const;
 import lombok.Data;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -13,8 +14,12 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
+
+import javax.annotation.Nonnull;
 
 /**
  * LoginScreen
@@ -26,10 +31,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class LoginScreen extends Screen {
     private Button loginButton;
+    private CycleButton<Boolean> pwdFormattedButton;
+    private boolean pwdVisible = false;
+
     public EditBox usernameField;
     public EditBox passwordField;
-    private static final Component USERNAME_LABEL = new TranslatableComponent("info.novalogin.gui.login.username");
-    private static final Component PASSWORD_LABEL = new TranslatableComponent("info.novalogin.gui.login.password");
+    private static final Component USERNAME_LABEL = new TranslatableComponent("info.novalogin.gui.username");
+    private static final Component PASSWORD_LABEL = new TranslatableComponent("info.novalogin.gui.password");
 
     protected LoginScreen() {
         super(new TranslatableComponent("info.novalogin.gui.login"));
@@ -45,12 +53,28 @@ public abstract class LoginScreen extends Screen {
     protected void init() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.usernameField = new EditBox(this.font, this.width / 2 - 100, 66, 200, 20, USERNAME_LABEL);
-        this.usernameField.setFocus(true);
+        this.usernameField.setEditable(false);
+        this.usernameField.setMaxLength(50);
         this.usernameField.setValue(this.minecraft.player.getName().getString());
         this.usernameField.setResponder(string -> this.updateAddButtonStatus());
         this.addWidget(this.usernameField);
+
+        this.pwdFormattedButton = CycleButton.booleanBuilder(new TranslatableComponent("info.novalogin.gui.pwd_visible"), new TranslatableComponent("info.novalogin.gui.pwd_invisible"))
+                .displayOnlyValue()
+                .withInitialValue(pwdVisible)
+                .create(this.width / 2 + 100, 106, 20, 20, new TranslatableComponent("info.novalogin.gui.pwd_visible_s"), (cycleButton, aBoolean) -> this.pwdVisible = aBoolean);
+        this.addRenderableWidget(this.pwdFormattedButton);
+
         this.passwordField = new EditBox(this.font, this.width / 2 - 100, 106, 200, 20, PASSWORD_LABEL);
-        this.passwordField.setMaxLength(128);
+        this.passwordField.setMaxLength(50);
+        this.passwordField.setFormatter((s, integer) -> {
+            if (this.pwdVisible) {
+               return FormattedCharSequence.forward(s, Style.EMPTY);
+            } else {
+                return FormattedCharSequence.forward("•".repeat(s.length()), Style.EMPTY);
+            }
+        });
+        this.usernameField.setFocus(true);
         this.passwordField.setValue("password");
         this.passwordField.setResponder(string -> this.updateAddButtonStatus());
         this.addWidget(this.passwordField);
@@ -112,5 +136,4 @@ public abstract class LoginScreen extends Screen {
     protected void onAdd() {
 
     }
-
 }

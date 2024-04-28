@@ -12,6 +12,9 @@
   "info.novalogin.cmd.change_pwd_success": "§aSuccessfully changed password.",
   "info.novalogin.cmd.change_pwd_failed": "§cYou're not login! Use /login instead.",
   "info.novalogin.gui.login": "§aLogin",
-  "info.novalogin.gui.login.username": "§aUserName",
-  "info.novalogin.gui.login.password": "§aPassword"
+  "info.novalogin.gui.username": "§aUserName",
+  "info.novalogin.gui.password": "§aPassword",
+  "info.novalogin.gui.pwd_visible_s": "[+]",
+  "info.novalogin.gui.pwd_visible": "§9[√]",
+  "info.novalogin.gui.pwd_invisible": "§c[×]"
 }
