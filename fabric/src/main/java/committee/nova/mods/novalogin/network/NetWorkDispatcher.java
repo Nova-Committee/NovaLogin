@@ -3,6 +3,7 @@ package committee.nova.mods.novalogin.network;
 import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.client.FabricLoginScreen;
 import committee.nova.mods.novalogin.net.ServerLoginActionPkt;
+import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -21,10 +22,12 @@ import net.minecraft.server.level.ServerPlayer;
 public class NetWorkDispatcher {
     public static ResourceLocation LOGIN_ACTION_SERVER = Const.rl("login_action_server");
     public static ResourceLocation LOGIN_ACTION_CLIENT = Const.rl("login_action_client");
+    public static ResourceLocation REGISTER_ACTION_SERVER = Const.rl("register_action_server");
 
     public static void init(){
         receiveLoginActionFromClient();
         receiveLoginActionFromServer();
+        receiveRegisterActionFromClient();
     }
 
     public static void sendLoginActionToServer(String username, String password) {
@@ -32,6 +35,14 @@ public class NetWorkDispatcher {
         buf.writeUtf(username);
         buf.writeUtf(password);
         ClientPlayNetworking.send(LOGIN_ACTION_SERVER, buf);
+    }
+
+    public static void sendRegisterActionToServer(String username, String password, String confirmPassword) {
+        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
+        buf.writeUtf(username);
+        buf.writeUtf(password);
+        buf.writeUtf(confirmPassword);
+        ClientPlayNetworking.send(REGISTER_ACTION_SERVER, buf);
     }
 
     public static void sendLoginActionToClient(ServerPlayer player) {
@@ -48,6 +59,18 @@ public class NetWorkDispatcher {
             });
         });
     }
+
+    private static void receiveRegisterActionFromClient() {
+        ServerPlayNetworking.registerGlobalReceiver(REGISTER_ACTION_SERVER, (server, player, handler, buf, responseSender) -> {
+            String username = buf.readUtf();
+            String password = buf.readUtf();
+            String confirmPassword = buf.readUtf();
+            server.execute(() -> {
+                ServerRegisterActionPkt.run(username, password, confirmPassword, player);
+            });
+        });
+    }
+
 
     private static void receiveLoginActionFromServer() {
         ClientPlayNetworking.registerGlobalReceiver(LOGIN_ACTION_CLIENT, (client, handler, buf, responseSender) -> {

@@ -2,8 +2,6 @@ package committee.nova.mods.novalogin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.realmsclient.RealmsMainScreen;
-import committee.nova.mods.novalogin.Const;
-import lombok.Data;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
@@ -19,8 +17,6 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-
 /**
  * LoginScreen
  *
@@ -29,43 +25,42 @@ import javax.annotation.Nonnull;
  * @description
  * @date 2024/4/27 上午12:07
  */
-public abstract class LoginScreen extends Screen {
-    private Button loginButton;
+public abstract class RegisterScreen extends Screen {
+    private Button registerButton;
     private CycleButton<Boolean> pwdFormattedButton;
     private boolean pwdVisible = false;
 
     public EditBox usernameField;
     public EditBox passwordField;
+    public EditBox confirmPasswordField;
     private static final Component USERNAME_LABEL = new TranslatableComponent("info.novalogin.gui.username");
     private static final Component PASSWORD_LABEL = new TranslatableComponent("info.novalogin.gui.password");
+    private static final Component CONFIRM_PASSWORD_LABEL = new TranslatableComponent("info.novalogin.gui.confirm_password");
 
-    protected LoginScreen() {
-        super(new TranslatableComponent("info.novalogin.gui.login"));
+    private Screen parentScreen;
+    protected RegisterScreen(Screen parentScreen) {
+        super(new TranslatableComponent("info.novalogin.gui.register"));
+        this.parentScreen = parentScreen;
     }
 
     @Override
     public void tick() {
         this.usernameField.tick();
         this.passwordField.tick();
+        this.confirmPasswordField.tick();
     }
 
     @Override
     protected void init() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-        this.usernameField = new EditBox(this.font, this.width / 2 - 100, 66, 200, 20, USERNAME_LABEL);
+        this.usernameField = new EditBox(this.font, this.width / 2 - 100, 60, 200, 20, USERNAME_LABEL);
         this.usernameField.setEditable(false);
         this.usernameField.setMaxLength(50);
         this.usernameField.setValue(this.minecraft.player.getName().getString());
         this.usernameField.setResponder(string -> this.updateAddButtonStatus());
         this.addWidget(this.usernameField);
 
-        this.pwdFormattedButton = CycleButton.booleanBuilder(new TranslatableComponent("info.novalogin.gui.pwd_visible"), new TranslatableComponent("info.novalogin.gui.pwd_invisible"))
-                .displayOnlyValue()
-                .withInitialValue(pwdVisible)
-                .create(this.width / 2 + 100, 106, 20, 20, new TranslatableComponent("info.novalogin.gui.pwd_visible_s"), (cycleButton, aBoolean) -> this.pwdVisible = aBoolean);
-        this.addRenderableWidget(this.pwdFormattedButton);
-
-        this.passwordField = new EditBox(this.font, this.width / 2 - 100, 106, 200, 20, PASSWORD_LABEL);
+        this.passwordField = new EditBox(this.font, this.width / 2 - 100, 100, 200, 20, PASSWORD_LABEL);
         this.passwordField.setMaxLength(50);
         this.passwordField.setFormatter((s, integer) -> {
             if (this.pwdVisible) {
@@ -75,16 +70,39 @@ public abstract class LoginScreen extends Screen {
             }
         });
         this.usernameField.setFocus(true);
-        this.passwordField.setValue("password");
+        this.passwordField.setValue("");
         this.passwordField.setResponder(string -> this.updateAddButtonStatus());
         this.addWidget(this.passwordField);
 
-        this.loginButton = this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20,
-                new TranslatableComponent("info.novalogin.gui.login"), button -> this.onAdd()));
+        this.confirmPasswordField = new EditBox(this.font, this.width / 2 - 100, 140, 200, 20, CONFIRM_PASSWORD_LABEL);
+        this.confirmPasswordField.setMaxLength(50);
+        this.confirmPasswordField.setFormatter((s, integer) -> {
+            if (this.pwdVisible) {
+                return FormattedCharSequence.forward(s, Style.EMPTY);
+            } else {
+                return FormattedCharSequence.forward("•".repeat(s.length()), Style.EMPTY);
+            }
+        });
+        this.confirmPasswordField.setValue("");
+        this.confirmPasswordField.setResponder(string -> this.updateAddButtonStatus());
+        this.addWidget(this.confirmPasswordField);
+
+
+        this.pwdFormattedButton = CycleButton.booleanBuilder(new TranslatableComponent("info.novalogin.gui.pwd_visible"), new TranslatableComponent("info.novalogin.gui.pwd_invisible"))
+                .displayOnlyValue()
+                .withInitialValue(pwdVisible)
+                .create(this.width / 2 + 100, 140, 20, 20, new TranslatableComponent("info.novalogin.gui.pwd_visible_s"), (cycleButton, aBoolean) -> this.pwdVisible = aBoolean);
+        this.addRenderableWidget(this.pwdFormattedButton);
+
+
+        this.registerButton = this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20,
+                new TranslatableComponent("info.novalogin.gui.register_login"), button -> this.onRegister()));
 
         this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120 + 18, 100, 20,
-                new TranslatableComponent("info.novalogin.gui.register"), button -> this.onRegister(minecraft)
-                ));
+                CommonComponents.GUI_BACK, button -> {
+                    this.minecraft.setScreen(this.parentScreen);
+                })
+        );
 
         this.addRenderableWidget(new Button(this.width / 2, this.height / 4 + 120 + 18, 100, 20,
                 CommonComponents.GUI_CANCEL, button -> {
@@ -112,9 +130,11 @@ public abstract class LoginScreen extends Screen {
     public void resize(@NotNull Minecraft minecraft, int i, int j) {
         String string = this.usernameField.getValue();
         String string2 = this.passwordField.getValue();
+        String string3 = this.confirmPasswordField.getValue();
         this.init(minecraft, i, j);
         this.usernameField.setValue(string);
         this.passwordField.setValue(string2);
+        this.confirmPasswordField.setValue(string3);
     }
 
     @Override
@@ -126,22 +146,20 @@ public abstract class LoginScreen extends Screen {
     public void render(@NotNull PoseStack poseStack, int i, int j, float f) {
         this.renderBackground(poseStack);
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 17, 0xFFFFFF);
-        drawString(poseStack, this.font, USERNAME_LABEL, this.width / 2 - 100, 53, 0xA0A0A0);
-        drawString(poseStack, this.font, PASSWORD_LABEL, this.width / 2 - 100, 94, 0xA0A0A0);
+        drawString(poseStack, this.font, USERNAME_LABEL, this.width / 2 - 100, 47, 0xA0A0A0);
+        drawString(poseStack, this.font, PASSWORD_LABEL, this.width / 2 - 100, 88, 0xA0A0A0);
+        drawString(poseStack, this.font, CONFIRM_PASSWORD_LABEL, this.width / 2 - 100, 129, 0xA0A0A0);
         this.usernameField.render(poseStack, i, j, f);
         this.passwordField.render(poseStack, i, j, f);
+        this.confirmPasswordField.render(poseStack, i, j, f);
         super.render(poseStack, i, j, f);
     }
 
     private void updateAddButtonStatus() {
-        this.loginButton.active = !this.passwordField.getValue().isEmpty();
+        this.registerButton.active = !this.passwordField.getValue().isEmpty();
     }
 
-    protected void onAdd() {
-
-    }
-
-    protected void onRegister(Minecraft minecraft) {
+    protected void onRegister() {
 
     }
 }

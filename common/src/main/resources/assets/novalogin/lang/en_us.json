@@ -14,6 +14,9 @@
   "info.novalogin.gui.login": "§aLogin",
   "info.novalogin.gui.username": "§aUserName",
   "info.novalogin.gui.password": "§aPassword",
+  "info.novalogin.gui.confirm_password": "§aConfirm Password",
+  "info.novalogin.gui.register": "§aRegister",
+  "info.novalogin.gui.register_login": "§aRegister And Login",
   "info.novalogin.gui.pwd_visible_s": "[+]",
   "info.novalogin.gui.pwd_visible": "§9[√]",
   "info.novalogin.gui.pwd_invisible": "§c[×]"
