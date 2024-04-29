@@ -1,10 +1,12 @@
 package committee.nova.mods.novalogin.network;
 
 import committee.nova.mods.novalogin.Const;
-import committee.nova.mods.novalogin.client.FabricLoginScreen;
 import committee.nova.mods.novalogin.net.ServerLoginActionPkt;
 import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
+import committee.nova.mods.novalogin.network.pkt.FabricClientLoginHandler;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
@@ -26,10 +28,14 @@ public class NetWorkDispatcher {
 
     public static void init(){
         receiveLoginActionFromClient();
-        receiveLoginActionFromServer();
         receiveRegisterActionFromClient();
     }
 
+    public static void clientInit(){
+        receiveLoginActionFromServer();
+    }
+
+    @Environment(EnvType.CLIENT)
     public static void sendLoginActionToServer(String username, String password) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeUtf(username);
@@ -37,6 +43,7 @@ public class NetWorkDispatcher {
         ClientPlayNetworking.send(LOGIN_ACTION_SERVER, buf);
     }
 
+    @Environment(EnvType.CLIENT)
     public static void sendRegisterActionToServer(String username, String password, String confirmPassword) {
         FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
         buf.writeUtf(username);
@@ -72,11 +79,10 @@ public class NetWorkDispatcher {
     }
 
 
+    @Environment(EnvType.CLIENT)
     private static void receiveLoginActionFromServer() {
         ClientPlayNetworking.registerGlobalReceiver(LOGIN_ACTION_CLIENT, (client, handler, buf, responseSender) -> {
-            client.execute(() -> {
-                client.setScreen(new FabricLoginScreen());
-            });
+            client.execute(() -> FabricClientLoginHandler.handlePacket(client));
         });
     }
 }

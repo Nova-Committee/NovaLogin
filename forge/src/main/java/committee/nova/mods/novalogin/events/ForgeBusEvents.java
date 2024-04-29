@@ -1,6 +1,5 @@
 package committee.nova.mods.novalogin.events;
 
-import committee.nova.mods.novalogin.CommonClass;
 import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.cmds.ChangePwdCmd;
 import committee.nova.mods.novalogin.cmds.LoginCmd;
@@ -8,11 +7,10 @@ import committee.nova.mods.novalogin.cmds.RegisterCmd;
 import committee.nova.mods.novalogin.handler.OnPlayerAction;
 import committee.nova.mods.novalogin.handler.OnPlayerConnect;
 import committee.nova.mods.novalogin.handler.OnPlayerLeave;
-import committee.nova.mods.novalogin.net.ClientLoginActionPkt;
 import committee.nova.mods.novalogin.network.NetWorkDispatcher;
+import committee.nova.mods.novalogin.network.pkt.ForgeClientLoginActionPkt;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
-import net.minecraftforge.event.entity.item.ItemEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -45,7 +43,7 @@ public class ForgeBusEvents {
     @SubscribeEvent
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (OnPlayerConnect.listen(serverPlayer)) NetWorkDispatcher.CHANNEL.send(PacketDistributor.ALL.noArg(), new ClientLoginActionPkt());
+            if (OnPlayerConnect.listen(serverPlayer)) NetWorkDispatcher.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ForgeClientLoginActionPkt());
         }
     }
 

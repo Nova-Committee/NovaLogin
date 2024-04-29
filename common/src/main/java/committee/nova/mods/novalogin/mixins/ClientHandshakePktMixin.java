@@ -25,8 +25,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(ClientHandshakePacketListenerImpl.class)
 public abstract class ClientHandshakePktMixin {
-
-
+    
     @Shadow
     @Final
     private Minecraft minecraft;

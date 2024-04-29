@@ -17,6 +17,9 @@
     "entrypoints": {
         "main": [
             "committee.nova.mods.novalogin.NovaLoginFabric"
+        ],
+        "client": [
+            "committee.nova.mods.novalogin.ClientNovaLoginFabric"
         ]
     },
     "mixins": [
@@ -24,13 +27,10 @@
         "${mod_id}.fabric.mixins.json"
     ],
     "depends": {
-        "fabricloader": ">=${fabric_loader_version}",
+        "fabricloader": "*",
         "fabric-api": "*",
         "minecraft": "${minecraft_version}",
-        "java": ">=17"
-    },
-    "suggests": {
-        "another-mod": "*"
+        "java": "*"
     }
 }
   

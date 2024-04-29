@@ -3,6 +3,8 @@ package committee.nova.mods.novalogin.client;
 import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
 import committee.nova.mods.novalogin.network.NetWorkDispatcher;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
  * ForgeRegisterScreen
@@ -12,6 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
  * @description
  * @date 2024/4/28 上午10:31
  */
+@OnlyIn(Dist.CLIENT)
 public class ForgeRegisterScreen extends RegisterScreen{
     protected ForgeRegisterScreen(Screen parentScreen) {
         super(parentScreen);

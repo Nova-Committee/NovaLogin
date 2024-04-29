@@ -68,7 +68,8 @@ public abstract class ServerLoginPktMixin {
     @Shadow @Nullable
     public GameProfile gameProfile;
 
-    @Shadow @Final public Connection connection;
+    @Shadow @Final
+    Connection connection;
 
     @Shadow public abstract void disconnect(Component $$0);
 
