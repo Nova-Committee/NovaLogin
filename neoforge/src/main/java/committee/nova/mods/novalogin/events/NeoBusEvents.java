@@ -1,11 +1,13 @@
 package committee.nova.mods.novalogin.events;
 
-import committee.nova.mods.novalogin.CommonClass;
+import committee.nova.mods.novalogin.Const;
+import committee.nova.mods.novalogin.cmds.ChangePwdCmd;
 import committee.nova.mods.novalogin.cmds.LoginCmd;
 import committee.nova.mods.novalogin.cmds.RegisterCmd;
 import committee.nova.mods.novalogin.handler.OnPlayerAction;
 import committee.nova.mods.novalogin.handler.OnPlayerConnect;
 import committee.nova.mods.novalogin.handler.OnPlayerLeave;
+import committee.nova.mods.novalogin.network.client.NeoClientLoginActionPkt;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -32,12 +34,13 @@ public class NeoBusEvents {
     public static void onCmdRegister(RegisterCommandsEvent event){
         LoginCmd.register(event.getDispatcher());
         RegisterCmd.register(event.getDispatcher());
+        ChangePwdCmd.register(event.getDispatcher());
     }
 
     @SubscribeEvent
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            OnPlayerConnect.listen(serverPlayer);
+            if (OnPlayerConnect.listen(serverPlayer)) serverPlayer.connection.send(new NeoClientLoginActionPkt(""));
         }
     }
 
@@ -55,7 +58,8 @@ public class NeoBusEvents {
 
     @SubscribeEvent
     public static void onServerStopped(ServerStoppedEvent event) throws IOException {
-        CommonClass.SAVE.save();
+        Const.SAVE.save();
+        Const.CONFIG.save();
     }
 
     @SubscribeEvent

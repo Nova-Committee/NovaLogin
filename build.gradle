@@ -9,7 +9,7 @@ subprojects {
     java.toolchain.languageVersion = JavaLanguageVersion.of(17)
     java.withSourcesJar()
     java.withJavadocJar()
-        
+
     jar {
         from(rootProject.file("LICENSE")) {
             rename { "${it}_${mod_name}" }
@@ -46,6 +46,18 @@ subprojects {
             name = 'BlameJared Maven (JEI / CraftTweaker / Bookshelf)'
             url = 'https://maven.blamejared.com'
         }
+        maven {
+            name = "novaRepositoryReleases"
+            url = "https://maven.nova-committee.cn/releases"
+        }
+    }
+
+    dependencies {
+        implementation("org.mindrot:jbcrypt:0.4")
+        implementation("javax.mail:mail:1.4.4")
+        //implementation("cn.evole.config:AtomConfig-Yaml:0.2.0")
+        compileOnly ("org.projectlombok:lombok:1.18.24")
+        annotationProcessor ("org.projectlombok:lombok:1.18.24")
     }
 
     tasks.withType(JavaCompile).configureEach {
@@ -65,13 +77,13 @@ subprojects {
                 "minecraft_version_range": minecraft_version_range,
                 "fabric_version": fabric_version,
                 "fabric_loader_version": fabric_loader_version,
+                "neoforge_version": neoforge_version,
+                "neoforge_loader_version_range": neoforge_loader_version_range,
                 "mod_name": mod_name,
                 "mod_author": mod_author,
                 "mod_id": mod_id,
                 "license": license,
                 "description": project.description,
-                "neoforge_version": neoforge_version,
-                "neoforge_loader_version_range": neoforge_loader_version_range,
                 "credits": credits
         ]
 

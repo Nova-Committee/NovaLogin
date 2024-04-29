@@ -43,10 +43,8 @@ dependencies {
     implementation "net.neoforged:neoforge:${neoforge_version}"
     compileOnly project(":common")
 
-    compileOnly ("org.projectlombok:lombok:1.18.24")
-    annotationProcessor ("org.projectlombok:lombok:1.18.24")
-    implementation("org.mindrot:jbcrypt:0.4")
     jarJar ("org.mindrot:jbcrypt:[0.4,)")
+    jarJar ("javax.mail:mail:[1.4.4,)")
 }
 
 // NeoGradle compiles the game, but we don't want to add our common code to the game's code

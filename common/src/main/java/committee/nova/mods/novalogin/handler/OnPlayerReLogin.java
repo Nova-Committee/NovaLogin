@@ -4,7 +4,10 @@ import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import net.minecraft.server.level.ServerPlayer;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 /**
  * OnPlayerReLogin
@@ -19,7 +22,7 @@ public class OnPlayerReLogin {
         String name = player.getGameProfile().getName();
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         if (!playerLogin.reLogin) return false;
-        long timestamp = Const.playerCacheMap.get(name).lastLeaveTime;
+        long timestamp = Const.playerStorageMap.get(name).lastLeaveTime;
         if (timestamp != 0){
             LocalDateTime start = Instant.ofEpochMilli(timestamp).atZone(ZoneOffset.ofHours(8)).toLocalDateTime();
             LocalDateTime end = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneOffset.ofHours(8)).toLocalDateTime();

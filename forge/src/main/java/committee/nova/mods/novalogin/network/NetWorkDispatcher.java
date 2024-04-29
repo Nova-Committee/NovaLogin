@@ -2,12 +2,18 @@ package committee.nova.mods.novalogin.network;
 
 
 import committee.nova.mods.novalogin.Const;
-import committee.nova.mods.novalogin.network.pkt.ServerLoginModePkt;
+import committee.nova.mods.novalogin.net.ServerLoginActionPkt;
+import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
+import committee.nova.mods.novalogin.network.pkt.ForgeClientLoginActionPkt;
+import committee.nova.mods.novalogin.network.pkt.ForgeServerLoginActionPkt;
+import committee.nova.mods.novalogin.network.pkt.ForgeServerRegisterActionPkt;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.network.Channel;
 import net.minecraftforge.network.ChannelBuilder;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.SimpleChannel;
 
 /**
@@ -28,11 +34,28 @@ public class NetWorkDispatcher {
 
     @SubscribeEvent
     public static void init(FMLCommonSetupEvent event) {
-        CHANNEL.messageBuilder(ServerLoginModePkt.class)
-                .decoder(ServerLoginModePkt::new)
-                .encoder(ServerLoginModePkt::toBytes)
-                .consumerMainThread(ServerLoginModePkt::handle)
+        CHANNEL.messageBuilder(ServerRegisterActionPkt.class, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ServerRegisterActionPkt::new)
+                .encoder(ServerRegisterActionPkt::toBytes)
+                .consumerMainThread(ForgeServerRegisterActionPkt::handle)
+                .add()
+        ;
+        CHANNEL.messageBuilder(ServerLoginActionPkt.class, NetworkDirection.PLAY_TO_SERVER)
+                .decoder(ServerLoginActionPkt::new)
+                .encoder(ServerLoginActionPkt::toBytes)
+                .consumerMainThread(ForgeServerLoginActionPkt::handle)
+                .add()
+        ;
+        CHANNEL.messageBuilder(ForgeClientLoginActionPkt.class, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ForgeClientLoginActionPkt::new)
+                .encoder(ForgeClientLoginActionPkt::toBytes)
+                .consumerMainThread(ForgeClientLoginActionPkt::handle)
                 .add()
         ;
     }
+
+    @SubscribeEvent
+    public static void initClient(FMLClientSetupEvent event) {
+    }
+
 }

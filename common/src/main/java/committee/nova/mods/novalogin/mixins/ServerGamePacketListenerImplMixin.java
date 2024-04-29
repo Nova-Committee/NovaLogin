@@ -2,17 +2,14 @@ package committee.nova.mods.novalogin.mixins;
 
 import committee.nova.mods.novalogin.handler.OnGameMessage;
 import committee.nova.mods.novalogin.handler.OnPlayerMove;
-import net.minecraft.network.protocol.game.*;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.protocol.game.ServerboundChatPacket;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
 
 /**
  * ServerGamePacketListenerImplMixin
@@ -25,7 +22,6 @@ import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
 @Mixin(ServerGamePacketListenerImpl.class)
 public abstract class ServerGamePacketListenerImplMixin {
 
-    @Shadow public ServerPlayer player;
     @Unique
     ServerGamePacketListenerImpl novaLogin$play =  (ServerGamePacketListenerImpl) (Object) this;
 
@@ -35,7 +31,7 @@ public abstract class ServerGamePacketListenerImplMixin {
             shift = At.Shift.AFTER
     ), cancellable = true)
     public void onPlayerMove(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
-        if (!OnPlayerMove.canMove(this.player)) {
+        if (!OnPlayerMove.canMove(novaLogin$play.player)) {
             ci.cancel();
         }
     }
@@ -43,7 +39,7 @@ public abstract class ServerGamePacketListenerImplMixin {
 
     @Inject(method = "handleChat", at = @At("HEAD"), cancellable = true)
     public void onGameMessage(ServerboundChatPacket packet, CallbackInfo ci) {
-        if (!OnGameMessage.canSendMessage(this.player, packet)) {
+        if (!OnGameMessage.canSendMessage(novaLogin$play.player, packet.message())) {
             ci.cancel();
         }
     }

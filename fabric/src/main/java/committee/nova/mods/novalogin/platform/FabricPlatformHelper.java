@@ -1,7 +1,6 @@
 package committee.nova.mods.novalogin.platform;
 
 import committee.nova.mods.novalogin.platform.services.IPlatformHelper;
-import committee.nova.mods.novalogin.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class FabricPlatformHelper implements IPlatformHelper {

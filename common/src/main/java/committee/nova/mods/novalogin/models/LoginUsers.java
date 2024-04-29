@@ -33,7 +33,7 @@ public class LoginUsers extends HashMap<String, LoginUsers.LoginUser> {
         public boolean login = false;
         @Setter
         public boolean reLogin = false;
-        LoginUser(ServerPlayer player) {
+        public LoginUser(ServerPlayer player) {
             this.player = player;
         }
 

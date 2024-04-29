@@ -81,16 +81,17 @@ dependencies {
     compileOnly project(":common")
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT:processor")
 
-    compileOnly ("org.projectlombok:lombok:1.18.24")
-    annotationProcessor ("org.projectlombok:lombok:1.18.24")
-    implementation("org.mindrot:jbcrypt:0.4")
     jarJar ("org.mindrot:jbcrypt:[0.4,)")
+    jarJar ("javax.mail:mail:[1.4.4,)")
+    //jarJar ("cn.evole.config:AtomConfig-Yaml:[0.2.0,)")
 }
 
 tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
     source(project(":common").sourceSets.main.allSource)
 }
 tasks.withType(Javadoc).configureEach {
+    options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
     source(project(":common").sourceSets.main.allJava)
 }
 tasks.named("sourcesJar", Jar) {

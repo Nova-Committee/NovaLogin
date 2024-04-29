@@ -1,0 +1,38 @@
+common:
+  uuidTrans: true
+  outTime: 600
+email:
+  #是否开启邮箱功能
+  enable: true
+  #是否开启强制绑定邮箱功能(玩家登录后如果没有绑定就强制绑定)
+  forceBind: false
+  #是否开启邮箱绑定日志
+  logger: true
+  address:
+    #邮件服务器地址(如果不懂请不要更改)
+    ip: "smtp.qq.com"
+    #端口
+    port: 465
+    #使用SSL
+    useSsl: true
+  auth:
+    #登录账户(请与发件人邮箱一致)
+    account: "123456@qq.com"
+    #邮箱授权码(不是QQ密码,如果不知道请查看插件教程)
+    password: "123456"
+  content: #发件设置
+    #发件人邮箱(请与登录账户一致)
+    sendEmailAddress: "123456@qq.com"
+    #邮件标题(可以修改为服务器名称)
+    sendEmailTitle: "NovaLogin验证码"
+    #邮件模板的html文件(文件在插件根目录内容可以打开修改)
+    sendEmailFile: "text.html"
+setting:
+  #验证码长度
+  codeLength: 6
+  #验证码过期时间(单位为分钟)
+  codeTime: 5
+  #玩家登录之后强制绑定(玩家登录后如果没有绑定邮箱就强制绑定)
+  forceBind: false
+  #邮箱正则的正则表达式 (没有特殊需求 请不要修改)
+  regx: "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$"
