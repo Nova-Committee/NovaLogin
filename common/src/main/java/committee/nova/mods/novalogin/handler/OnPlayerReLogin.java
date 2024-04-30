@@ -22,7 +22,7 @@ public class OnPlayerReLogin {
         String name = player.getGameProfile().getName();
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         if (!playerLogin.reLogin) return false;
-        long timestamp = Const.playerCacheMap.get(name).lastLeaveTime;
+        long timestamp = Const.playerStorageMap.get(name).lastLeaveTime;
         if (timestamp != 0){
             LocalDateTime start = Instant.ofEpochMilli(timestamp).atZone(ZoneOffset.ofHours(8)).toLocalDateTime();
             LocalDateTime end = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneOffset.ofHours(8)).toLocalDateTime();

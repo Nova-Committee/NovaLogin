@@ -19,5 +19,6 @@
   "info.novalogin.gui.register_login": "§aRegister And Login",
   "info.novalogin.gui.pwd_visible_s": "[+]",
   "info.novalogin.gui.pwd_visible": "§9[√]",
-  "info.novalogin.gui.pwd_invisible": "§c[×]"
+  "info.novalogin.gui.pwd_invisible": "§c[×]",
+  "info.novalogin.is_in": "§cPlayer with this name already logged in!"
 }

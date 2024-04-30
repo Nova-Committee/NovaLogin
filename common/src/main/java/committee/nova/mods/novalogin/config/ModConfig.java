@@ -24,6 +24,9 @@ public class ModConfig {
     @SerializedName("mail")
     private MailConfig mail = new MailConfig();
 
+    @SerializedName("yggdrasil")
+    private YggdrasilConfig yggdrasil = new YggdrasilConfig();
+
     @Data
     public static class MailConfig {
         @Expose String protocol = "smtp";
@@ -41,6 +44,16 @@ public class ModConfig {
         private boolean uuidTrans = true;
         @SerializedName("out_time")
         private int outTime = 600;
+    }
+
+    @Data
+    public static class YggdrasilConfig {
+        @SerializedName("enable")
+        private boolean enable = false;
+        @SerializedName("api_url")
+        private String apiUrl = "https://littleskin.cn/api/yggdrasil";
+        @SerializedName("api_name")
+        private String apiName = "LittleSkin";
     }
 
 }

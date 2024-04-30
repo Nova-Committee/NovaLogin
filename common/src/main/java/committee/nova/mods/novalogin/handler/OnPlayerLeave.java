@@ -16,7 +16,7 @@ import net.minecraft.server.level.ServerPlayer;
 public class OnPlayerLeave {
     public static void listen(ServerPlayer player) {
         String name = player.getGameProfile().getName();
-        User user = Const.playerCacheMap.get(name);
+        User user = Const.playerStorageMap.get(name);
         if (OnPlayerPremium.canPremium(player)) user.setAuth(true);
         user.setLastIp(player.getIpAddress());
         user.setLastLeaveTime(System.currentTimeMillis());

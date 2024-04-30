@@ -29,8 +29,9 @@ public class Const {
         return new ResourceLocation(MOD_ID, name);
     }
 
+    public static final HashSet<String> yggdrasilNamesCache = new HashSet<>();
     public static final HashSet<String> mojangAccountNamesCache = new HashSet<>();
-    public static final HashMap<String, User> playerCacheMap = new HashMap<>();
+    public static final HashMap<String, User> playerStorageMap = new HashMap<>();
 
 
     public static ConfigHandler CONFIG;

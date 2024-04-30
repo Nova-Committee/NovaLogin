@@ -5,6 +5,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.exceptions.AuthenticationUnavailableException;
 import committee.nova.mods.novalogin.models.MojangResponse;
 import committee.nova.mods.novalogin.utils.HttpUtils;
+import committee.nova.mods.novalogin.utils.YggdrasilUtils;
 import net.minecraft.DefaultUncaughtExceptionHandler;
 import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -195,6 +196,9 @@ public abstract class ServerLoginPktMixin {
                     gameProfile = server
                             .getSessionService()
                             .hasJoinedServer(new GameProfile(null, playerName), session, this.getAddress());
+                    GameProfile yggdrasil = YggdrasilUtils
+                            .getSessionService()
+                            .hasJoinedServer(new GameProfile(null, playerName), session, this.getAddress());
                     if (gameProfile != null) {
                         LOGGER
                                 .info(
@@ -203,6 +207,12 @@ public abstract class ServerLoginPktMixin {
                                         gameProfile.getId()
                                 );
                         mojangAccountNamesCache.add(gameProfile.getName());
+                        state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
+                    } else if (yggdrasil != null && YggdrasilUtils.isEnable()) {
+                        gameProfile = yggdrasil;
+                        LOGGER
+                                .info("{}, UUID of player {} is {}", YggdrasilUtils.getName(), gameProfile.getName(), gameProfile.getId());
+                        yggdrasilNamesCache.add(gameProfile.getName());
                         state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
                     } else {
                         if (CONFIG.config.getCommon().isUuidTrans()){

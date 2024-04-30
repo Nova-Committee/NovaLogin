@@ -19,5 +19,7 @@
   "info.novalogin.gui.register_login": "§a注册并登录",
   "info.novalogin.gui.pwd_visible_s": "[+]",
   "info.novalogin.gui.pwd_visible": "§9[√]",
-  "info.novalogin.gui.pwd_invisible": "§c[×]"
+  "info.novalogin.gui.pwd_invisible": "§c[×]",
+  "info.novalogin.is_in": "§c此用户名用户已经登陆了!"
+
 }
