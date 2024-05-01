@@ -1,7 +1,6 @@
 package committee.nova.mods.novalogin.handler;
 
 import committee.nova.mods.novalogin.models.LoginUsers;
-import net.minecraft.network.protocol.game.ServerboundChatPacket;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
@@ -14,8 +13,9 @@ import net.minecraft.server.level.ServerPlayer;
  */
 public class OnGameMessage {
     public static boolean canSendMessage(ServerPlayer player, String message) {
-        if (OnPlayerPremium.canPremium(player)) return true;
         if (OnPlayerReLogin.canReLogin(player)) return true;
+        if (OnPlayerPremium.canYggdrasil(player)) return true;
+        if (OnPlayerPremium.canPremium(player)) return true;
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         if (!playerLogin.login && (message.startsWith("/login") || message.startsWith("/register"))) {
             return true;

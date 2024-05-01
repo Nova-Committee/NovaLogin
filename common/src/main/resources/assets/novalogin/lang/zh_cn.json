@@ -1,5 +1,6 @@
 {
   "info.novalogin.premium": "§9尊敬的正版用户，欢迎您回来",
+  "info.novalogin.yggdrasil": "§9尊敬的%s用户，欢迎您回来",
   "info.novalogin.re_login": "§9您已经在短时间内登陆过，为您跳过验证",
   "info.novalogin.welcome":"§9欢迎来到服务器，请先登录。\n§e请使用 /login 登录或者使用 /register 注册",
   "info.novalogin.verify": "§a验证你的身份!",

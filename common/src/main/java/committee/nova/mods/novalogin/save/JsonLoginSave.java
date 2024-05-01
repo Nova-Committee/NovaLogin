@@ -14,8 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
-import static committee.nova.mods.novalogin.Const.playerCacheMap;
+import static committee.nova.mods.novalogin.Const.*;
 
 /**
  * JsonLoginSave
@@ -36,7 +35,7 @@ public class JsonLoginSave implements LoginSave{
 
     @Override
     public boolean checkPwd(String name, String password) {
-        if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name)) {
+        if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name)) {
             return BCrypt.checkpw(password, playerCacheMap.get(name).pwd);
         }
         return false;
@@ -50,16 +49,17 @@ public class JsonLoginSave implements LoginSave{
 
     @Override
     public boolean isReg(String name) {
-        return playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name);
+        return playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name);
     }
 
     @Override
     public void reg(ServerPlayer player, String password) {
         String name = player.getGameProfile().getName();
         User user = playerCacheMap.get(name);
-        if (!user.isRegister && !mojangAccountNamesCache.contains(name)) {
+        if (!user.isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name)) {
             user.setPwd(BCrypt.hashpw(password, BCrypt.gensalt()));
-            user.setAuth(false);
+            user.setPremium(false);
+            user.setYggdrasil(false);
             user.setRegister(true);
             playerCacheMap.put(name, user);
             dirty = true;
@@ -69,7 +69,7 @@ public class JsonLoginSave implements LoginSave{
     @Override
     public void changePwd(ServerPlayer player, String newPassword) {
         String name = player.getGameProfile().getName();
-        if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name)) {
+        if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name)) {
             dirty = true;
             User user = playerCacheMap.get(name);
             user.setPwd(BCrypt.hashpw(newPassword, BCrypt.gensalt()));

@@ -1,7 +1,6 @@
 package committee.nova.mods.novalogin.client;
 
-import committee.nova.mods.novalogin.network.NetWorkDispatcher;
-import committee.nova.mods.novalogin.save.LocalUserSave;
+import committee.nova.mods.novalogin.network.ClientNetWorkHandler;
 import net.minecraft.client.Minecraft;
 
 /**
@@ -16,7 +15,7 @@ public class FabricLoginScreen extends LoginScreen{
 
     @Override
     protected void onAdd() {
-        NetWorkDispatcher.sendLoginActionToServer(this.usernameField.getValue(), this.passwordField.getValue());
+        ClientNetWorkHandler.sendLoginActionToServer(this.usernameField.getValue(), this.passwordField.getValue());
     }
 
     @Override
