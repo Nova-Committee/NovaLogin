@@ -2,6 +2,7 @@ package committee.nova.mods.novalogin.handler;
 
 import committee.nova.mods.novalogin.models.LoginUsers;
 import committee.nova.mods.novalogin.models.User;
+import committee.nova.mods.novalogin.utils.YggdrasilUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,7 +28,7 @@ public class OnPlayerConnect {
         user.setName(name);
         user.setLastIp(player.getIpAddress());
         if (OnPlayerPremium.canPremium(player)) {
-            user.setAuth(true);
+            user.setPremium(true);
             player.sendSystemMessage(Component.translatable("info.novalogin.premium"), false);
             playerStorageMap.put(name, user);
             return false;
@@ -35,18 +36,18 @@ public class OnPlayerConnect {
 
         if (OnPlayerPremium.canYggdrasil(player)){
             user.setYggdrasil(true);
-            player.sendMessage(new TranslatableComponent("info.novalogin.yggdrasil", YggdrasilUtils.getOtherName()), ChatType.SYSTEM, Util.NIL_UUID);
-            playerCacheMap.put(name, user);
+            player.sendSystemMessage(Component.translatable("info.novalogin.yggdrasil", YggdrasilUtils.getOtherName()), false);
+            playerStorageMap.put(name, user);
             return false;
         }
 
-        if (playerCacheMap.containsKey(name)) {
-            user = playerCacheMap.get(name);
+        if (playerStorageMap.containsKey(name)) {
+            user = playerStorageMap.get(name);
         }
-        playerCacheMap.put(name, user);
+        playerStorageMap.put(name, user);
 
         if (OnPlayerReLogin.canReLogin(player)) {
-            player.sendMessage(new TranslatableComponent("info.novalogin.re_login"), ChatType.SYSTEM, Util.NIL_UUID);
+            player.sendSystemMessage(Component.translatable("info.novalogin.re_login"), false);
             return false;
         }
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);

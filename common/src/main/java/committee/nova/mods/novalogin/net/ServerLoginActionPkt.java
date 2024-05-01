@@ -40,12 +40,12 @@ public class ServerLoginActionPkt {
 
     public static boolean run(String username, String password, ServerPlayer player) {
         if (!Const.loginSave.isReg(username)) {
-            player.sendMessage(Component.translatable("info.novalogin.cmd.unregister"), ChatType.SYSTEM, Util.NIL_UUID);
+            player.sendSystemMessage(Component.translatable("info.novalogin.cmd.unregister"), false);
             return false;
         } else if (Const.loginSave.checkPwd(username, password)) {
             LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
             playerLogin.setLogin(true);
-            player.sendMessage(Component.translatable("info.novalogin.cmd.login_success"), ChatType.SYSTEM, Util.NIL_UUID);
+            player.sendSystemMessage(Component.translatable("info.novalogin.cmd.login_success"), false);
             if (!player.isCreative()) {
                 player.setInvulnerable(false);
             }

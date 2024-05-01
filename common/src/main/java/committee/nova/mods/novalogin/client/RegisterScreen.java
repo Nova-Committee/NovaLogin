@@ -103,7 +103,7 @@ public abstract class RegisterScreen extends Screen {
         this.registerButton = this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20,
                 Component.translatable("info.novalogin.gui.register_login"), button -> this.onRegister()));
 
-        this.rememberPassword = new Checkbox(this.width / 2 + 100, this.height / 4 + 96 + 18, 20, 20, new TranslatableComponent("info.novalogin.gui.remember_password"), true);
+        this.rememberPassword = new Checkbox(this.width / 2 + 100, this.height / 4 + 96 + 18, 20, 20, Component.translatable("info.novalogin.gui.remember_password"), true);
         this.addRenderableWidget(this.rememberPassword);
         Const.configHandler.config.getCommon().setLoadLocalPwd(this.rememberPassword.selected());
 

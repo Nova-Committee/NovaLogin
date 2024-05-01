@@ -9,7 +9,7 @@ import committee.nova.mods.novalogin.handler.OnPlayerAction;
 import committee.nova.mods.novalogin.handler.OnPlayerConnect;
 import committee.nova.mods.novalogin.handler.OnPlayerLeave;
 import committee.nova.mods.novalogin.network.ServerNetWorkHandler;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
@@ -39,7 +39,7 @@ public class FabricBusEvents {
 
 
     private static void onCmdRegister() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, r) -> {
+        CommandRegistrationCallback.EVENT.register((dispatcher, r, selection) -> {
             LoginCmd.register(dispatcher);
             RegisterCmd.register(dispatcher);
             ChangePwdCmd.register(dispatcher);

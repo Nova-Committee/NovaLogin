@@ -19,7 +19,7 @@ import static committee.nova.mods.novalogin.Const.yggdrasilNamesCache;
 public class OnPlayerLeave {
     public static void listen(ServerPlayer player) {
         String name = player.getGameProfile().getName();
-        User user = Const.playerCacheMap.get(name);
+        User user = Const.playerStorageMap.get(name);
         if (OnPlayerPremium.canYggdrasil(player)) {
             user.setYggdrasil(true);
             yggdrasilNamesCache.remove(name);
