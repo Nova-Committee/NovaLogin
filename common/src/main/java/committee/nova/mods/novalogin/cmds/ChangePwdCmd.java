@@ -32,23 +32,23 @@ public class ChangePwdCmd {
                             String username = player.getGameProfile().getName();
 
                             if (!Const.loginSave.isReg(username)) {
-                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.unregister"), false);
+                                ctx.getSource().sendSuccess(Component.translatable("info.novalogin.cmd.unregister"), false);
                                 return 1;
                             }
 
                             if (!newPassword.equals(StringArgumentType.getString(ctx, "confirmNewPassword"))) {
-                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.pwd_strict"), false);
+                                ctx.getSource().sendSuccess(Component.translatable("info.novalogin.cmd.pwd_strict"), false);
                                 return 1;
                             }
 
                             LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                             if (playerLogin.login) {
                                 Const.loginSave.changePwd(player, newPassword);
-                                player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
-                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.change_pwd_success"), false);
+                                player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING, SoundSource.MASTER, 100f, 0f);
+                                ctx.getSource().sendSuccess(Component.translatable("info.novalogin.cmd.change_pwd_success"), false);
                             } else {
                                 player.playNotifySound(SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 100f, 0.5f);
-                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.change_pwd_failed"), false);
+                                ctx.getSource().sendSuccess(Component.translatable("info.novalogin.cmd.change_pwd_failed"), false);
                             }
                             return 1;
                         }))));

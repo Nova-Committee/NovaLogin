@@ -16,6 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.util.Crypt;
 import net.minecraft.util.CryptException;
+import net.minecraft.world.entity.player.ProfilePublicKey;
 import org.apache.commons.lang3.Validate;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -74,7 +75,9 @@ public abstract class ServerLoginPktMixin {
 
     @Shadow public abstract void disconnect(Component $$0);
 
-    @Shadow @Final private byte[] challenge;
+    @Shadow @Nullable private ProfilePublicKey.Data profilePublicKeyData;
+
+    @Shadow @Final private byte[] nonce;
 
     @ModifyConstant(
             method = "tick",
@@ -100,7 +103,7 @@ public abstract class ServerLoginPktMixin {
         //Validate.validState(!pattern.matcher(playerName).matches(), "Invalid characters in username");
         if (this.server.usesAuthentication() && !this.connection.isMemoryConnection()) {
             this.state = ServerLoginPacketListenerImpl.State.KEY;
-            this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.challenge));
+            this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.nonce));
         } else {
             if (configHandler.config.getCommon().isUuidTrans()){
                 novaLogin$useOnlineProfile(playerName);
@@ -171,9 +174,15 @@ public abstract class ServerLoginPktMixin {
         final String session;
         try {
             PrivateKey privateKey = this.server.getKeyPair().getPrivate();
-            if (!packet.isChallengeValid(this.challenge, privateKey)) {
+            if (this.profilePublicKeyData != null) {
+                ProfilePublicKey publicKey = new ProfilePublicKey(this.profilePublicKeyData);
+                if (!packet.isChallengeSignatureValid(this.nonce, publicKey)) {
+                    throw new IllegalStateException("Protocol error");
+                }
+            } else if (!packet.isNonceValid(this.nonce, privateKey)) {
                 throw new IllegalStateException("Protocol error");
             }
+
 
             SecretKey secretKey = packet.getSecretKey(privateKey);
             Cipher cipher = Crypt.getCipher(2, secretKey);

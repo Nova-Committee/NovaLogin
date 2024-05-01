@@ -53,7 +53,7 @@ public class ServerRegisterActionPkt {
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         playerLogin.setLogin(true);
         player.setInvulnerable(false);
-        player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
+        player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING, SoundSource.MASTER, 100f, 0f);
         player.sendSystemMessage(Component.translatable("info.novalogin.cmd.register_success"), false);
     }
 }

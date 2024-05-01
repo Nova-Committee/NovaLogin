@@ -31,18 +31,18 @@ public class LoginCmd {
                             String username = player.getGameProfile().getName();
 
                             if (!Const.loginSave.isReg(username)) {
-                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.unregister"), false);
+                                ctx.getSource().sendSuccess(Component.translatable("info.novalogin.cmd.unregister"), false);
                             } else if (Const.loginSave.checkPwd(username, password)) {
                                 LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                                 playerLogin.setLogin(true);
-                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.login_success"), false);
+                                ctx.getSource().sendSuccess(Component.translatable("info.novalogin.cmd.login_success"), false);
                                 if (!player.isCreative()) {
                                     player.setInvulnerable(false);
                                 }
-                                player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
+                                player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING, SoundSource.MASTER, 100f, 0f);
                             } else {
                                 player.playNotifySound(SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 100f, 0.5f);
-                                ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.pwd_wrong"), false);
+                                ctx.getSource().sendSuccess(Component.translatable("info.novalogin.cmd.pwd_wrong"), false);
                             }
                             return 1;
                         })));

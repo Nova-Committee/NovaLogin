@@ -32,19 +32,19 @@ public class RegisterCmd {
                                     String username = player.getGameProfile().getName();
 
                                     if (Const.loginSave.isReg(username)) {
-                                        ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.registered"), false);
+                                        ctx.getSource().sendSuccess(Component.translatable("info.novalogin.cmd.registered"), false);
                                         return 1;
                                     }
                                     if (!password.equals(StringArgumentType.getString(ctx, "confirmPassword"))) {
-                                        ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.pwd_strict"), false);
+                                        ctx.getSource().sendSuccess(Component.translatable("info.novalogin.cmd.pwd_strict"), false);
                                         return 1;
                                     }
                                     Const.loginSave.reg(player, password);
                                     LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                                     playerLogin.setLogin(true);
                                     player.setInvulnerable(false);
-                                    player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
-                                    ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.register_success"), false);
+                                    player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING, SoundSource.MASTER, 100f, 0f);
+                                    ctx.getSource().sendSuccess(Component.translatable("info.novalogin.cmd.register_success"), false);
                                     return 1;
                                 }))));
     }

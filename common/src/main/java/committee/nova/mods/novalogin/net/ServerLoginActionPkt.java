@@ -48,7 +48,7 @@ public class ServerLoginActionPkt {
             if (!player.isCreative()) {
                 player.setInvulnerable(false);
             }
-            player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
+            player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING, SoundSource.MASTER, 100f, 0f);
         } else {
             player.playNotifySound(SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 100f, 0.5f);
             player.sendSystemMessage(Component.translatable("info.novalogin.cmd.pwd_wrong"), false);

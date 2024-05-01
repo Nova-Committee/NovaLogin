@@ -1,8 +1,8 @@
 package committee.nova.mods.novalogin.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.realmsclient.RealmsMainScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
@@ -51,6 +51,7 @@ public abstract class RegisterScreen extends Screen {
 
     @Override
     protected void init() {
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
         this.usernameField = new EditBox(this.font, this.width / 2 - 100, 60, 200, 20, USERNAME_LABEL);
         this.usernameField.setEditable(false);
         this.usernameField.setMaxLength(50);
@@ -67,7 +68,7 @@ public abstract class RegisterScreen extends Screen {
                 return FormattedCharSequence.forward("•".repeat(s.length()), Style.EMPTY);
             }
         });
-        this.usernameField.setFocused(true);
+        this.usernameField.setFocus(true);
         this.passwordField.setValue("");
         this.passwordField.setResponder(string -> this.updateAddButtonStatus());
         this.addWidget(this.passwordField);
@@ -93,36 +94,35 @@ public abstract class RegisterScreen extends Screen {
         this.addRenderableWidget(this.pwdFormattedButton);
 
 
-        this.registerButton = this.addRenderableWidget(
-                Button.builder(Component.translatable("info.novalogin.gui.register_login"), button -> this.onRegister())
-                        .bounds(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20)
-                        .build());
+        this.registerButton = this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20,
+                Component.translatable("info.novalogin.gui.register_login"), button -> this.onRegister()));
 
-        this.addRenderableWidget(
-                Button.builder(CommonComponents.GUI_BACK, button -> this.minecraft.setScreen(this.parentScreen))
-                        .bounds(this.width / 2 - 100, this.height / 4 + 120 + 18, 100, 20)
-                        .build());
+        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120 + 18, 100, 20,
+                        CommonComponents.GUI_BACK, button -> {
+                    this.minecraft.setScreen(this.parentScreen);
+                })
+        );
 
-        this.addRenderableWidget(
-                Button.builder(CommonComponents.GUI_CANCEL, (button) -> {
-                    boolean bl = this.minecraft.isLocalServer();
-                    boolean bl2 = this.minecraft.isConnectedToRealms();
-                    button.active = false;
-                    this.minecraft.level.disconnect();
-                    if (bl) {
-                        this.minecraft.clearLevel(new GenericDirtMessageScreen(Component.translatable("menu.savingLevel")));
-                    } else {
-                        this.minecraft.clearLevel();
-                    }
-                    TitleScreen titleScreen = new TitleScreen();
-                    if (bl) {
-                        this.minecraft.setScreen(titleScreen);
-                    } else if (bl2) {
-                        this.minecraft.setScreen(new RealmsMainScreen(titleScreen));
-                    } else {
-                        this.minecraft.setScreen(new JoinMultiplayerScreen(titleScreen));
-                    }
-                }).bounds(this.width / 2, this.height / 4 + 120 + 18, 100, 20).build());
+        this.addRenderableWidget(new Button(this.width / 2, this.height / 4 + 120 + 18, 100, 20,
+                CommonComponents.GUI_CANCEL, button -> {
+            boolean bl = this.minecraft.isLocalServer();
+            boolean bl2 = this.minecraft.isConnectedToRealms();
+            button.active = false;
+            this.minecraft.level.disconnect();
+            if (bl) {
+                this.minecraft.clearLevel(new GenericDirtMessageScreen(Component.translatable("menu.savingLevel")));
+            } else {
+                this.minecraft.clearLevel();
+            }
+            TitleScreen titleScreen = new TitleScreen();
+            if (bl) {
+                this.minecraft.setScreen(titleScreen);
+            } else if (bl2) {
+                this.minecraft.setScreen(new RealmsMainScreen(titleScreen));
+            } else {
+                this.minecraft.setScreen(new JoinMultiplayerScreen(titleScreen));
+            }
+        }));
     }
 
     @Override
@@ -137,12 +137,17 @@ public abstract class RegisterScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics poseStack, int i, int j, float f) {
+    public void removed() {
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+    }
+
+    @Override
+    public void render(@NotNull PoseStack poseStack, int i, int j, float f) {
         this.renderBackground(poseStack);
-        poseStack.drawCenteredString(this.font, this.title, this.width / 2, 17, 0xFFFFFF);
-        poseStack.drawString(this.font, USERNAME_LABEL, this.width / 2 - 100, 47, 0xA0A0A0);
-        poseStack.drawString(this.font, PASSWORD_LABEL, this.width / 2 - 100, 88, 0xA0A0A0);
-        poseStack.drawString(this.font, CONFIRM_PASSWORD_LABEL, this.width / 2 - 100, 129, 0xA0A0A0);
+        drawCenteredString(poseStack, this.font, this.title, this.width / 2, 17, 0xFFFFFF);
+        drawString(poseStack, this.font, USERNAME_LABEL, this.width / 2 - 100, 47, 0xA0A0A0);
+        drawString(poseStack, this.font, PASSWORD_LABEL, this.width / 2 - 100, 88, 0xA0A0A0);
+        drawString(poseStack, this.font, CONFIRM_PASSWORD_LABEL, this.width / 2 - 100, 129, 0xA0A0A0);
         this.usernameField.render(poseStack, i, j, f);
         this.passwordField.render(poseStack, i, j, f);
         this.confirmPasswordField.render(poseStack, i, j, f);
