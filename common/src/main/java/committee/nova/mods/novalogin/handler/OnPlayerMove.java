@@ -13,8 +13,9 @@ import net.minecraft.server.level.ServerPlayer;
  */
 public class OnPlayerMove {
     public static boolean canMove(ServerPlayer player) {
-        if (OnPlayerPremium.canPremium(player)) return true;
         if (OnPlayerReLogin.canReLogin(player)) return true;
+        if (OnPlayerPremium.canYggdrasil(player)) return true;
+        if (OnPlayerPremium.canPremium(player)) return true;
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         boolean isLoggedIn = playerLogin.login;
         if (!isLoggedIn) {

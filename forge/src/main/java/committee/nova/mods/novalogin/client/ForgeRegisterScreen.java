@@ -23,5 +23,6 @@ public class ForgeRegisterScreen extends RegisterScreen{
     @Override
     protected void onRegister() {
         NetWorkDispatcher.CHANNEL.sendToServer(new ServerRegisterActionPkt(this.usernameField.getValue(), this.passwordField.getValue(), this.confirmPasswordField.getValue()));
+        super.onRegister();
     }
 }

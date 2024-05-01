@@ -16,14 +16,14 @@ import java.net.Proxy;
  * @date 2024/5/1 上午1:05
  */
 public class YggdrasilUtils {
-    public static boolean isEnable() {
+    public static boolean isOtherEnable() {
         return Const.configHandler.config.getYggdrasil().isEnable();
     }
 
-    public static String getName(){
-       return Const.configHandler.config.getYggdrasil().getApiName();
+    public static String getOtherName(){
+        return Const.configHandler.config.getYggdrasil().getApiName();
     }
-    public static MinecraftSessionService getSessionService() {
+    public static MinecraftSessionService getOtherSessionService() {
         return new YggdrasilAuthenticationService(Proxy.NO_PROXY,
                 Environment.create(
                         Const.configHandler.config.getYggdrasil().getApiUrl() + "/authserver",
@@ -32,5 +32,15 @@ public class YggdrasilUtils {
                         "https://api.minecraftservices.com",
                         Const.configHandler.config.getYggdrasil().getApiName()
                 )).createMinecraftSessionService();
+    }
+
+    public static MinecraftSessionService getMinecraftSessionService() {
+        return new YggdrasilAuthenticationService(Proxy.NO_PROXY, Environment.create(
+                "https://authserver.mojang.com",
+                "https://api.mojang.com",
+                "https://sessionserver.mojang.com",
+                "https://api.minecraftservices.com",
+                "Minecraft Official"
+        )).createMinecraftSessionService();
     }
 }

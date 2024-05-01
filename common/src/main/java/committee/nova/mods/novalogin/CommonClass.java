@@ -2,6 +2,7 @@ package committee.nova.mods.novalogin;
 
 import committee.nova.mods.novalogin.config.ConfigHandler;
 import committee.nova.mods.novalogin.save.JsonLoginSave;
+import committee.nova.mods.novalogin.save.LocalUserSave;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,4 +23,9 @@ public class CommonClass {
             Const.LOGGER.error("Failed to load file", e);
         }
     }
+
+    public static void clientInit() {
+        LocalUserSave.load();
+    }
+
 }

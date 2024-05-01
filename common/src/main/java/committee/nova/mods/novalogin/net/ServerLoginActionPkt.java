@@ -38,9 +38,10 @@ public class ServerLoginActionPkt {
         buf.writeUtf(password);
     }
 
-    public static void run(String username, String password, ServerPlayer player) {
+    public static boolean run(String username, String password, ServerPlayer player) {
         if (!Const.loginSave.isReg(username)) {
             player.sendSystemMessage(Component.translatable("info.novalogin.cmd.unregister"), false);
+            return false;
         } else if (Const.loginSave.checkPwd(username, password)) {
             LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
             playerLogin.setLogin(true);
@@ -49,9 +50,11 @@ public class ServerLoginActionPkt {
                 player.setInvulnerable(false);
             }
             player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
+            return true;
         } else {
             player.playNotifySound(SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 100f, 0.5f);
             player.sendSystemMessage(Component.translatable("info.novalogin.cmd.pwd_wrong"), false);
+            return false;
         }
     }
 }

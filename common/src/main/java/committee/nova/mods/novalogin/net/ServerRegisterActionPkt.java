@@ -42,12 +42,14 @@ public class ServerRegisterActionPkt {
         buf.writeUtf(confirmPassword);
     }
 
-    public static void run(String username, String password, String confirmPassword, ServerPlayer player) {
+    public static boolean run(String username, String password, String confirmPassword, ServerPlayer player) {
         if (Const.loginSave.isReg(username)) {
             player.sendSystemMessage(Component.translatable("info.novalogin.cmd.registered"), false);
+            return false;
         }
         if (!password.equals(confirmPassword)) {
             player.sendSystemMessage(Component.translatable("info.novalogin.cmd.pwd_strict"), false);
+            return false;
         }
         Const.loginSave.reg(player, password);
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
@@ -55,5 +57,6 @@ public class ServerRegisterActionPkt {
         player.setInvulnerable(false);
         player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
         player.sendSystemMessage(Component.translatable("info.novalogin.cmd.register_success"), false);
+        return true;
     }
 }

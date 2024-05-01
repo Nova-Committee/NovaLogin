@@ -59,7 +59,7 @@ public class JsonLoginSave implements LoginSave{
         User user = playerStorageMap.get(name);
         if (!user.isRegister && !mojangAccountNamesCache.contains(name)) {
             user.setPwd(BCrypt.hashpw(password, BCrypt.gensalt()));
-            user.setAuth(false);
+            user.setPremium(false);
             user.setRegister(true);
             playerStorageMap.put(name, user);
             dirty = true;

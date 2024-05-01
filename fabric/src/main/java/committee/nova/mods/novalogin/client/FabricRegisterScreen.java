@@ -1,6 +1,6 @@
 package committee.nova.mods.novalogin.client;
 
-import committee.nova.mods.novalogin.network.NetWorkDispatcher;
+import committee.nova.mods.novalogin.network.ClientNetWorkHandler;
 import net.minecraft.client.gui.screens.Screen;
 
 /**
@@ -18,6 +18,7 @@ public class FabricRegisterScreen extends RegisterScreen{
 
     @Override
     protected void onRegister() {
-        NetWorkDispatcher.sendRegisterActionToServer(this.usernameField.getValue(), this.passwordField.getValue(), this.confirmPasswordField.getValue());
+        ClientNetWorkHandler.sendRegisterActionToServer(this.usernameField.getValue(), this.passwordField.getValue(), this.confirmPasswordField.getValue());
+        super.onRegister();
     }
 }

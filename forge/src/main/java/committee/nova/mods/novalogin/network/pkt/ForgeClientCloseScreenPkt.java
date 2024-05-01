@@ -15,20 +15,20 @@ import java.util.function.Supplier;
  * @description
  * @date 2024/4/28 上午1:02
  */
-public class ForgeClientLoginActionPkt{
-    public ForgeClientLoginActionPkt() {}
+public class ForgeClientCloseScreenPkt {
+    public ForgeClientCloseScreenPkt() {}
 
 
-    public ForgeClientLoginActionPkt(FriendlyByteBuf buf) {
+    public ForgeClientCloseScreenPkt(FriendlyByteBuf buf) {
     }
 
     public void toBytes(FriendlyByteBuf buf) {
 
     }
 
-    public static void handle(ForgeClientLoginActionPkt msg, Supplier<NetworkEvent.Context> ctx){
+    public static void handle(ForgeClientCloseScreenPkt msg, Supplier<NetworkEvent.Context> ctx){
         ctx.get().enqueueWork(() -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ForgeClientPktHandler.handleLogin(msg, ctx));
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ForgeClientPktHandler.handleCloseScreen(msg, ctx));
         });
         ctx.get().setPacketHandled(true);
     }

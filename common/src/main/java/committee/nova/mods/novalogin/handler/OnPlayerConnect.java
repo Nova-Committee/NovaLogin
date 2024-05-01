@@ -2,6 +2,7 @@ package committee.nova.mods.novalogin.handler;
 
 import committee.nova.mods.novalogin.models.LoginUsers;
 import committee.nova.mods.novalogin.models.User;
+import committee.nova.mods.novalogin.utils.YggdrasilUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,11 +28,19 @@ public class OnPlayerConnect {
         user.setName(name);
         user.setLastIp(player.getIpAddress());
         if (OnPlayerPremium.canPremium(player)) {
-            user.setAuth(true);
+            user.setPremium(true);
             player.sendSystemMessage(Component.translatable("info.novalogin.premium"), false);
             playerStorageMap.put(name, user);
             return false;
         }
+
+        if (OnPlayerPremium.canYggdrasil(player)){
+            user.setYggdrasil(true);
+            player.sendSystemMessage(Component.translatable("info.novalogin.yggdrasil", YggdrasilUtils.getOtherName()), false);
+            playerStorageMap.put(name, user);
+            return false;
+        }
+
 
         if (playerStorageMap.containsKey(name)) {
             user = playerStorageMap.get(name);

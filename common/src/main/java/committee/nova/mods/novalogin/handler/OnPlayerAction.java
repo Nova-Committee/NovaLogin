@@ -13,8 +13,9 @@ import net.minecraft.server.level.ServerPlayer;
  */
 public class OnPlayerAction {
     public static boolean canInteract(ServerPlayer player) {
-        if (OnPlayerPremium.canPremium(player)) return true;
         if (OnPlayerReLogin.canReLogin(player)) return true;
+        if (OnPlayerPremium.canYggdrasil(player)) return true;
+        if (OnPlayerPremium.canPremium(player)) return true;
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         return playerLogin.login;
     }
