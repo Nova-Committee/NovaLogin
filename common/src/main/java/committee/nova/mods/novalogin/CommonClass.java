@@ -16,8 +16,8 @@ public class CommonClass {
         try {
             novaPath = gamePath.resolve("nova").resolve("login");
             if (!Files.exists(novaPath)) Files.createDirectories(novaPath);
-            Const.SAVE = new JsonLoginSave(novaPath);
-            Const.CONFIG = new ConfigHandler(novaPath);
+            Const.loginSave = new JsonLoginSave(novaPath);
+            Const.configHandler = new ConfigHandler(novaPath);
         } catch (IOException e) {
             Const.LOGGER.error("Failed to load file", e);
         }

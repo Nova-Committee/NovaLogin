@@ -60,8 +60,8 @@ public class ForgeBusEvents {
 
     @SubscribeEvent
     public static void onServerStopped(ServerStoppedEvent event) throws IOException {
-        Const.SAVE.save();
-        Const.CONFIG.save();
+        Const.loginSave.save();
+        Const.configHandler.save();
     }
 
     @SubscribeEvent

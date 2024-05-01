@@ -44,6 +44,8 @@ public class ModConfig {
         private boolean uuidTrans = true;
         @SerializedName("out_time")
         private int outTime = 600;
+        @SerializedName("re_login_time")
+        private int reLoginTime = 2;
     }
 
     @Data

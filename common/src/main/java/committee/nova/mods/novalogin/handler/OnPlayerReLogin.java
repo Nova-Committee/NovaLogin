@@ -26,7 +26,7 @@ public class OnPlayerReLogin {
         if (timestamp != 0){
             LocalDateTime start = Instant.ofEpochMilli(timestamp).atZone(ZoneOffset.ofHours(8)).toLocalDateTime();
             LocalDateTime end = Instant.ofEpochMilli(System.currentTimeMillis()).atZone(ZoneOffset.ofHours(8)).toLocalDateTime();
-            return Duration.between(start, end).toMinutes() < 2;
+            return Duration.between(start, end).toMinutes() < Const.configHandler.config.getCommon().getReLoginTime();
         }
         return false;
     }

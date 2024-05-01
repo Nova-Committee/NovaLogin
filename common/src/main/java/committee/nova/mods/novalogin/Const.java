@@ -34,7 +34,7 @@ public class Const {
     public static final HashMap<String, User> playerStorageMap = new HashMap<>();
 
 
-    public static ConfigHandler CONFIG;
-    public static JsonLoginSave SAVE;
+    public static ConfigHandler configHandler;
+    public static JsonLoginSave loginSave;
     public static Path novaPath;
 }

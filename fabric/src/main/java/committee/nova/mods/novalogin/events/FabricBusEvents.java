@@ -70,8 +70,8 @@ public class FabricBusEvents {
 
     private static void onServerStopped() {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
-            Const.SAVE.save();
-            Const.CONFIG.save();
+            Const.loginSave.save();
+            Const.configHandler.save();
         });
     }
 

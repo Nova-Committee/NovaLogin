@@ -31,7 +31,7 @@ public class ChangePwdCmd {
                             String newPassword = StringArgumentType.getString(ctx, "newPassword");
                             String username = player.getGameProfile().getName();
 
-                            if (!Const.SAVE.isReg(username)) {
+                            if (!Const.loginSave.isReg(username)) {
                                 ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.unregister"), false);
                                 return 1;
                             }
@@ -43,7 +43,7 @@ public class ChangePwdCmd {
 
                             LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                             if (playerLogin.login) {
-                                Const.SAVE.changePwd(player, newPassword);
+                                Const.loginSave.changePwd(player, newPassword);
                                 player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING.value(), SoundSource.MASTER, 100f, 0f);
                                 ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.change_pwd_success"), false);
                             } else {

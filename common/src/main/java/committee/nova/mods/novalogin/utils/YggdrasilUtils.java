@@ -17,20 +17,20 @@ import java.net.Proxy;
  */
 public class YggdrasilUtils {
     public static boolean isEnable() {
-        return Const.CONFIG.config.getYggdrasil().isEnable();
+        return Const.configHandler.config.getYggdrasil().isEnable();
     }
 
     public static String getName(){
-       return Const.CONFIG.config.getYggdrasil().getApiName();
+       return Const.configHandler.config.getYggdrasil().getApiName();
     }
     public static MinecraftSessionService getSessionService() {
         return new YggdrasilAuthenticationService(Proxy.NO_PROXY,
                 Environment.create(
-                        Const.CONFIG.config.getYggdrasil().getApiUrl() + "/authserver",
+                        Const.configHandler.config.getYggdrasil().getApiUrl() + "/authserver",
                         "https://api.mojang.com",
-                        Const.CONFIG.config.getYggdrasil().getApiUrl() + "/sessionserver",
+                        Const.configHandler.config.getYggdrasil().getApiUrl() + "/sessionserver",
                         "https://api.minecraftservices.com",
-                        Const.CONFIG.config.getYggdrasil().getApiName()
+                        Const.configHandler.config.getYggdrasil().getApiName()
                 )).createMinecraftSessionService();
     }
 }

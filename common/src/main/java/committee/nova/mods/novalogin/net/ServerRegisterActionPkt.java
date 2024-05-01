@@ -43,13 +43,13 @@ public class ServerRegisterActionPkt {
     }
 
     public static void run(String username, String password, String confirmPassword, ServerPlayer player) {
-        if (Const.SAVE.isReg(username)) {
+        if (Const.loginSave.isReg(username)) {
             player.sendSystemMessage(Component.translatable("info.novalogin.cmd.registered"), false);
         }
         if (!password.equals(confirmPassword)) {
             player.sendSystemMessage(Component.translatable("info.novalogin.cmd.pwd_strict"), false);
         }
-        Const.SAVE.reg(player, password);
+        Const.loginSave.reg(player, password);
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         playerLogin.setLogin(true);
         player.setInvulnerable(false);

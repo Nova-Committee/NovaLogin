@@ -39,9 +39,9 @@ public class ServerLoginActionPkt {
     }
 
     public static void run(String username, String password, ServerPlayer player) {
-        if (!Const.SAVE.isReg(username)) {
+        if (!Const.loginSave.isReg(username)) {
             player.sendSystemMessage(Component.translatable("info.novalogin.cmd.unregister"), false);
-        } else if (Const.SAVE.checkPwd(username, password)) {
+        } else if (Const.loginSave.checkPwd(username, password)) {
             LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
             playerLogin.setLogin(true);
             player.sendSystemMessage(Component.translatable("info.novalogin.cmd.login_success"), false);

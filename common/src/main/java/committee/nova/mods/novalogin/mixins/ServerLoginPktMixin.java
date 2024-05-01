@@ -81,7 +81,7 @@ public abstract class ServerLoginPktMixin {
             constant = @Constant(intValue = 600)
     )
     public int novalogin$tick(int constant){
-        return CONFIG.config.getCommon().getOutTime();
+        return configHandler.config.getCommon().getOutTime();
     }
 
 
@@ -102,7 +102,7 @@ public abstract class ServerLoginPktMixin {
             this.state = ServerLoginPacketListenerImpl.State.KEY;
             this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.challenge));
         } else {
-            if (CONFIG.config.getCommon().isUuidTrans()){
+            if (configHandler.config.getCommon().isUuidTrans()){
                 novaLogin$useOnlineProfile(playerName);
             } else {
                 novaLogin$useOfflineProfile(playerName);
@@ -215,14 +215,14 @@ public abstract class ServerLoginPktMixin {
                         yggdrasilNamesCache.add(gameProfile.getName());
                         state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
                     } else {
-                        if (CONFIG.config.getCommon().isUuidTrans()){
+                        if (configHandler.config.getCommon().isUuidTrans()){
                             novaLogin$useOnlineProfile(playerName);
                         } else {
                             novaLogin$useOfflineProfile(playerName);
                         }
                     }
                 } catch (AuthenticationUnavailableException e) {
-                    if (CONFIG.config.getCommon().isUuidTrans()){
+                    if (configHandler.config.getCommon().isUuidTrans()){
                         novaLogin$useOnlineProfile(playerName);
                     } else {
                         novaLogin$useOfflineProfile(playerName);
