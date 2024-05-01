@@ -2,11 +2,9 @@ package committee.nova.mods.novalogin.cmds;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import committee.nova.mods.novalogin.CommonClass;
 import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -32,9 +30,9 @@ public class LoginCmd {
                             String password = StringArgumentType.getString(ctx, "password");
                             String username = player.getGameProfile().getName();
 
-                            if (!Const.SAVE.isReg(username)) {
+                            if (!Const.loginSave.isReg(username)) {
                                 ctx.getSource().sendSuccess(new TranslatableComponent("info.novalogin.cmd.unregister"), false);
-                            } else if (Const.SAVE.checkPwd(username, password)) {
+                            } else if (Const.loginSave.checkPwd(username, password)) {
                                 LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                                 playerLogin.setLogin(true);
                                 ctx.getSource().sendSuccess(new TranslatableComponent("info.novalogin.cmd.login_success"), false);

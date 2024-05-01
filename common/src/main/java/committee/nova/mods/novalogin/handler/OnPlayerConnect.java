@@ -21,6 +21,10 @@ import static committee.nova.mods.novalogin.Const.playerCacheMap;
 public class OnPlayerConnect {
     public static boolean listen(ServerPlayer player) {
         String name = player.getGameProfile().getName();
+        if (LoginUsers.INSTANCE.containsKey(name) && LoginUsers.INSTANCE.get(player).login) {
+            player.connection.disconnect(new TranslatableComponent("info.novalogin.is_in"));
+            return false;
+        }
         User user = new User();
         user.setName(name);
         user.setLastIp(player.getIpAddress());

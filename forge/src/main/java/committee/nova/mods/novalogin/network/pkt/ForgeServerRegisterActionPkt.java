@@ -1,6 +1,5 @@
 package committee.nova.mods.novalogin.network.pkt;
 
-import committee.nova.mods.novalogin.net.ServerLoginActionPkt;
 import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;

@@ -12,7 +12,7 @@ import committee.nova.mods.novalogin.network.NetWorkDispatcher;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.player.*;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 
@@ -70,8 +70,8 @@ public class FabricBusEvents {
 
     private static void onServerStopped() {
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
-            Const.SAVE.save();
-            Const.CONFIG.save();
+            Const.loginSave.save();
+            Const.configHandler.save();
         });
     }
 

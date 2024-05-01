@@ -2,9 +2,9 @@ package committee.nova.mods.novalogin.network;
 
 
 import committee.nova.mods.novalogin.Const;
-import committee.nova.mods.novalogin.net.ClientLoginActionPkt;
 import committee.nova.mods.novalogin.net.ServerLoginActionPkt;
 import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
+import committee.nova.mods.novalogin.network.pkt.ForgeClientCloseScreenPkt;
 import committee.nova.mods.novalogin.network.pkt.ForgeClientLoginActionPkt;
 import committee.nova.mods.novalogin.network.pkt.ForgeServerLoginActionPkt;
 import committee.nova.mods.novalogin.network.pkt.ForgeServerRegisterActionPkt;
@@ -24,20 +24,14 @@ import net.minecraftforge.network.simple.SimpleChannel;
  */
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class NetWorkDispatcher {
-    public static int id = 0;
-    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(Const.rl("main"), () -> {
-        return "1.0";
-    }, (s) -> {
-        return true;
-    }, (s) -> {
-        return true;
-    });;
+    public static final SimpleChannel CHANNEL = NetworkRegistry.newSimpleChannel(Const.rl("main"), () -> "1.0", (s) -> true, (s) -> true);;
 
     @SubscribeEvent
     public static void init(FMLCommonSetupEvent event) {
-        CHANNEL.registerMessage(id++, ServerRegisterActionPkt.class, ServerRegisterActionPkt::toBytes, ServerRegisterActionPkt::new, ForgeServerRegisterActionPkt::handle);
-        CHANNEL.registerMessage(id++, ServerLoginActionPkt.class, ServerLoginActionPkt::toBytes, ServerLoginActionPkt::new, ForgeServerLoginActionPkt::handle);
-        CHANNEL.registerMessage(id++, ClientLoginActionPkt.class, ClientLoginActionPkt::toBytes, ClientLoginActionPkt::new, ForgeClientLoginActionPkt::handle);
+        CHANNEL.registerMessage(0, ServerRegisterActionPkt.class, ServerRegisterActionPkt::toBytes, ServerRegisterActionPkt::new, ForgeServerRegisterActionPkt::handle);
+        CHANNEL.registerMessage(1, ServerLoginActionPkt.class, ServerLoginActionPkt::toBytes, ServerLoginActionPkt::new, ForgeServerLoginActionPkt::handle);
+        CHANNEL.registerMessage(2, ForgeClientLoginActionPkt.class, ForgeClientLoginActionPkt::toBytes, ForgeClientLoginActionPkt::new, ForgeClientLoginActionPkt::handle);
+        CHANNEL.registerMessage(3, ForgeClientCloseScreenPkt.class, ForgeClientCloseScreenPkt::toBytes, ForgeClientCloseScreenPkt::new, ForgeClientCloseScreenPkt::handle);
     }
 
 }

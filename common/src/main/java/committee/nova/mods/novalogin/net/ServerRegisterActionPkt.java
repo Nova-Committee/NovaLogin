@@ -44,18 +44,21 @@ public class ServerRegisterActionPkt {
         buf.writeUtf(confirmPassword);
     }
 
-    public static void run(String username, String password, String confirmPassword, ServerPlayer player) {
-        if (Const.SAVE.isReg(username)) {
+    public static boolean run(String username, String password, String confirmPassword, ServerPlayer player) {
+        if (Const.loginSave.isReg(username)) {
             player.sendMessage(new TranslatableComponent("info.novalogin.cmd.registered"), ChatType.SYSTEM, Util.NIL_UUID);
+            return false;
         }
         if (!password.equals(confirmPassword)) {
             player.sendMessage(new TranslatableComponent("info.novalogin.cmd.pwd_strict"), ChatType.SYSTEM, Util.NIL_UUID);
+            return false;
         }
-        Const.SAVE.reg(player, password);
+        Const.loginSave.reg(player, password);
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
         playerLogin.setLogin(true);
         player.setInvulnerable(false);
         player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING, SoundSource.MASTER, 100f, 0f);
         player.sendMessage(new TranslatableComponent("info.novalogin.cmd.register_success"), ChatType.SYSTEM, Util.NIL_UUID);
+        return true;
     }
 }

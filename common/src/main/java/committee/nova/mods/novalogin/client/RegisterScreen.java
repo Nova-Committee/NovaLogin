@@ -2,8 +2,11 @@ package committee.nova.mods.novalogin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.realmsclient.RealmsMainScreen;
+import committee.nova.mods.novalogin.Const;
+import committee.nova.mods.novalogin.save.LocalUserSave;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
@@ -30,6 +33,7 @@ public abstract class RegisterScreen extends Screen {
     private CycleButton<Boolean> pwdFormattedButton;
     private boolean pwdVisible = false;
 
+    public Checkbox rememberPassword;
     public EditBox usernameField;
     public EditBox passwordField;
     public EditBox confirmPasswordField;
@@ -53,10 +57,12 @@ public abstract class RegisterScreen extends Screen {
     @Override
     protected void init() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+        String username = this.minecraft.player.getGameProfile().getName();
+
         this.usernameField = new EditBox(this.font, this.width / 2 - 100, 60, 200, 20, USERNAME_LABEL);
         this.usernameField.setEditable(false);
         this.usernameField.setMaxLength(50);
-        this.usernameField.setValue(this.minecraft.player.getName().getString());
+        this.usernameField.setValue(username);
         this.usernameField.setResponder(string -> this.updateAddButtonStatus());
         this.addWidget(this.usernameField);
 
@@ -97,6 +103,10 @@ public abstract class RegisterScreen extends Screen {
 
         this.registerButton = this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20,
                 new TranslatableComponent("info.novalogin.gui.register_login"), button -> this.onRegister()));
+
+        this.rememberPassword = new Checkbox(this.width / 2 + 100, this.height / 4 + 96 + 18, 20, 20, new TranslatableComponent("info.novalogin.gui.remember_password"), true);
+        this.addRenderableWidget(this.rememberPassword);
+        Const.configHandler.config.getCommon().setLoadLocalPwd(this.rememberPassword.selected());
 
         this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120 + 18, 100, 20,
                 CommonComponents.GUI_BACK, button -> {
@@ -160,6 +170,9 @@ public abstract class RegisterScreen extends Screen {
     }
 
     protected void onRegister() {
-
+        if (this.rememberPassword.selected() && !LocalUserSave.containsUser(this.usernameField.getValue())) {
+            LocalUserSave.setUser(this.usernameField.getValue(), this.confirmPasswordField.getValue());
+            LocalUserSave.save();
+        }
     }
 }

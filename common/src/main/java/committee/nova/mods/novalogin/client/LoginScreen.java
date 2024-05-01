@@ -3,9 +3,11 @@ package committee.nova.mods.novalogin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.realmsclient.RealmsMainScreen;
 import committee.nova.mods.novalogin.Const;
+import committee.nova.mods.novalogin.save.LocalUserSave;
 import lombok.Data;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
@@ -52,10 +54,12 @@ public abstract class LoginScreen extends Screen {
     @Override
     protected void init() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+        String username = this.minecraft.player.getGameProfile().getName();
+
         this.usernameField = new EditBox(this.font, this.width / 2 - 100, 66, 200, 20, USERNAME_LABEL);
         this.usernameField.setEditable(false);
         this.usernameField.setMaxLength(50);
-        this.usernameField.setValue(this.minecraft.player.getName().getString());
+        this.usernameField.setValue(username);
         this.usernameField.setResponder(string -> this.updateAddButtonStatus());
         this.addWidget(this.usernameField);
 
@@ -67,6 +71,12 @@ public abstract class LoginScreen extends Screen {
 
         this.passwordField = new EditBox(this.font, this.width / 2 - 100, 106, 200, 20, PASSWORD_LABEL);
         this.passwordField.setMaxLength(50);
+        if (Const.configHandler.config.getCommon().isLoadLocalPwd()){
+            if (LocalUserSave.containsUser(username)) this.passwordField.setValue(LocalUserSave.getUserPwd(username) != null ? LocalUserSave.getUserPwd(username) : "password");
+            else this.passwordField.setValue("password");
+        } else {
+            this.passwordField.setValue("password");
+        }
         this.passwordField.setFormatter((s, integer) -> {
             if (this.pwdVisible) {
                return FormattedCharSequence.forward(s, Style.EMPTY);
@@ -75,7 +85,6 @@ public abstract class LoginScreen extends Screen {
             }
         });
         this.usernameField.setFocus(true);
-        this.passwordField.setValue("password");
         this.passwordField.setResponder(string -> this.updateAddButtonStatus());
         this.addWidget(this.passwordField);
 

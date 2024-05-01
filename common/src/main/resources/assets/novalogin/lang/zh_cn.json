@@ -15,9 +15,11 @@
   "info.novalogin.gui.username": "§a用户名",
   "info.novalogin.gui.password": "§a密码",
   "info.novalogin.gui.confirm_password": "§a确认密码",
+  "info.novalogin.gui.remember_password": "",
   "info.novalogin.gui.register": "§a注册",
   "info.novalogin.gui.register_login": "§a注册并登录",
   "info.novalogin.gui.pwd_visible_s": "[+]",
   "info.novalogin.gui.pwd_visible": "§9[√]",
-  "info.novalogin.gui.pwd_invisible": "§c[×]"
+  "info.novalogin.gui.pwd_invisible": "§c[×]",
+  "info.novalogin.is_in": "§c此用户名用户已经登陆了!"
 }
