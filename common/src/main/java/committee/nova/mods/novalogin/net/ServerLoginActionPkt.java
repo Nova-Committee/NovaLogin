@@ -38,20 +38,23 @@ public class ServerLoginActionPkt {
         buf.writeUtf(password);
     }
 
-    public static void run(String username, String password, ServerPlayer player) {
+    public static boolean run(String username, String password, ServerPlayer player) {
         if (!Const.loginSave.isReg(username)) {
-            player.sendSystemMessage(Component.translatable("info.novalogin.cmd.unregister"), false);
+            player.sendMessage(Component.translatable("info.novalogin.cmd.unregister"), ChatType.SYSTEM, Util.NIL_UUID);
+            return false;
         } else if (Const.loginSave.checkPwd(username, password)) {
             LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
             playerLogin.setLogin(true);
-            player.sendSystemMessage(Component.translatable("info.novalogin.cmd.login_success"), false);
+            player.sendMessage(Component.translatable("info.novalogin.cmd.login_success"), ChatType.SYSTEM, Util.NIL_UUID);
             if (!player.isCreative()) {
                 player.setInvulnerable(false);
             }
             player.playNotifySound(SoundEvents.NOTE_BLOCK_PLING, SoundSource.MASTER, 100f, 0f);
+            return true;
         } else {
             player.playNotifySound(SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.MASTER, 100f, 0.5f);
             player.sendSystemMessage(Component.translatable("info.novalogin.cmd.pwd_wrong"), false);
+            return false;
         }
     }
 }

@@ -36,8 +36,8 @@ public class JsonLoginSave implements LoginSave{
 
     @Override
     public boolean checkPwd(String name, String password) {
-        if (playerStorageMap.get(name).isRegister && !mojangAccountNamesCache.contains(name)) {
-            return BCrypt.checkpw(password, playerStorageMap.get(name).pwd);
+        if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name)) {
+            return BCrypt.checkpw(password, playerCacheMap.get(name).pwd);
         }
         return false;
     }
@@ -45,23 +45,24 @@ public class JsonLoginSave implements LoginSave{
     @Override
     public void unReg(String name) {
         dirty = true;
-        playerStorageMap.remove(name);
+        playerCacheMap.remove(name);
     }
 
     @Override
     public boolean isReg(String name) {
-        return playerStorageMap.get(name).isRegister && !mojangAccountNamesCache.contains(name);
+        return playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name);
     }
 
     @Override
     public void reg(ServerPlayer player, String password) {
         String name = player.getGameProfile().getName();
-        User user = playerStorageMap.get(name);
-        if (!user.isRegister && !mojangAccountNamesCache.contains(name)) {
+        User user = playerCacheMap.get(name);
+        if (!user.isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name)) {
             user.setPwd(BCrypt.hashpw(password, BCrypt.gensalt()));
-            user.setAuth(false);
+            user.setPremium(false);
+            user.setYggdrasil(false);
             user.setRegister(true);
-            playerStorageMap.put(name, user);
+            playerCacheMap.put(name, user);
             dirty = true;
         }
     }
@@ -69,11 +70,11 @@ public class JsonLoginSave implements LoginSave{
     @Override
     public void changePwd(ServerPlayer player, String newPassword) {
         String name = player.getGameProfile().getName();
-        if (playerStorageMap.get(name).isRegister && !mojangAccountNamesCache.contains(name)) {
+        if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name)) {
             dirty = true;
-            User user = playerStorageMap.get(name);
+            User user = playerCacheMap.get(name);
             user.setPwd(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
-            playerStorageMap.put(name, user);
+            playerCacheMap.put(name, user);
         }
     }
 
@@ -84,7 +85,7 @@ public class JsonLoginSave implements LoginSave{
 
     @Override
     public void save(){
-        playerStorageMap.forEach(((name, user) -> {
+        playerCacheMap.forEach(((name, user) -> {
             try {
                 if (!Files.exists(this.path.resolve(name + ".json"))) {
                     Files.createDirectories(path);
@@ -105,7 +106,7 @@ public class JsonLoginSave implements LoginSave{
             return;
         for (File f : files){
             User user = Const.GSON.fromJson(Files.newBufferedReader(f.toPath(), StandardCharsets.UTF_8), User.class);
-            playerStorageMap.put(user.name, user);
+            playerCacheMap.put(user.name, user);
         }
         } catch (IOException e) {
             Const.LOGGER.error("Load Error:", e);

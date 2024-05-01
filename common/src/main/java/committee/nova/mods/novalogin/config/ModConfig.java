@@ -40,6 +40,8 @@ public class ModConfig {
 
     @Data
     public static class CommonConfig {
+        @SerializedName("load_local_pwd")
+        private boolean loadLocalPwd = true;
         @SerializedName("uuid_trans")
         private boolean uuidTrans = true;
         @SerializedName("out_time")

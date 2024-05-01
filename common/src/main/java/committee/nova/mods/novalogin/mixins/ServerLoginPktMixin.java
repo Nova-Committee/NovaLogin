@@ -39,6 +39,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.security.PrivateKey;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
@@ -202,13 +203,15 @@ public abstract class ServerLoginPktMixin {
                 UUID id = gameProfile.getId();
 
                 try {
-                    gameProfile = server
-                            .getSessionService()
+                    GameProfile minecraftAuth = YggdrasilUtils
+                            .getMinecraftSessionService()
                             .hasJoinedServer(new GameProfile(null, playerName), session, this.getAddress());
-                    GameProfile yggdrasil = YggdrasilUtils
-                            .getSessionService()
+                    GameProfile yggdrasilAuth = YggdrasilUtils
+                            .getOtherSessionService()
                             .hasJoinedServer(new GameProfile(null, playerName), session, this.getAddress());
-                    if (gameProfile != null) {
+
+                    if (minecraftAuth != null) {
+                        gameProfile = minecraftAuth;
                         LOGGER
                                 .info(
                                         "UUID of player {} is {}",
@@ -217,10 +220,10 @@ public abstract class ServerLoginPktMixin {
                                 );
                         mojangAccountNamesCache.add(gameProfile.getName());
                         state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
-                    } else if (yggdrasil != null && YggdrasilUtils.isEnable()) {
-                        gameProfile = yggdrasil;
+                    } else if (YggdrasilUtils.isOtherEnable() && yggdrasilAuth != null) {
+                        gameProfile = yggdrasilAuth;
                         LOGGER
-                                .info("{}, UUID of player {} is {}", YggdrasilUtils.getName(), gameProfile.getName(), gameProfile.getId());
+                                .info("Other Auths, UUID of player {} is {}", gameProfile.getName(), gameProfile.getId());
                         yggdrasilNamesCache.add(gameProfile.getName());
                         state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
                     } else {

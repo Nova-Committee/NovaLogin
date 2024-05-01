@@ -43,7 +43,7 @@ public class ForgeBusEvents {
     @SubscribeEvent
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (OnPlayerConnect.listen(serverPlayer)) NetWorkDispatcher.CHANNEL.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ForgeClientLoginActionPkt());
+            if (OnPlayerConnect.listen(serverPlayer)) NetWorkDispatcher.CHANNEL.send(PacketDistributor.ALL.noArg(), new ForgeClientLoginActionPkt());
         }
     }
 

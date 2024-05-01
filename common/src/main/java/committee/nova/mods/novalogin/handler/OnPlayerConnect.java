@@ -33,13 +33,20 @@ public class OnPlayerConnect {
             return false;
         }
 
-        if (playerStorageMap.containsKey(name)) {
-            user = playerStorageMap.get(name);
+        if (OnPlayerPremium.canYggdrasil(player)){
+            user.setYggdrasil(true);
+            player.sendMessage(new TranslatableComponent("info.novalogin.yggdrasil", YggdrasilUtils.getOtherName()), ChatType.SYSTEM, Util.NIL_UUID);
+            playerCacheMap.put(name, user);
+            return false;
         }
-        playerStorageMap.put(name, user);
+
+        if (playerCacheMap.containsKey(name)) {
+            user = playerCacheMap.get(name);
+        }
+        playerCacheMap.put(name, user);
 
         if (OnPlayerReLogin.canReLogin(player)) {
-            player.sendSystemMessage(Component.translatable("info.novalogin.re_login"), false);
+            player.sendMessage(new TranslatableComponent("info.novalogin.re_login"), ChatType.SYSTEM, Util.NIL_UUID);
             return false;
         }
         LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);

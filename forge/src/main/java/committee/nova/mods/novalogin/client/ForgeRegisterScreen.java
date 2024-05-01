@@ -2,6 +2,7 @@ package committee.nova.mods.novalogin.client;
 
 import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
 import committee.nova.mods.novalogin.network.NetWorkDispatcher;
+import committee.nova.mods.novalogin.save.LocalUserSave;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,5 +24,6 @@ public class ForgeRegisterScreen extends RegisterScreen{
     @Override
     protected void onRegister() {
         NetWorkDispatcher.CHANNEL.sendToServer(new ServerRegisterActionPkt(this.usernameField.getValue(), this.passwordField.getValue(), this.confirmPasswordField.getValue()));
+        super.onRegister();
     }
 }
