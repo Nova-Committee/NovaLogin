@@ -21,7 +21,7 @@ public class ForgeServerRegisterActionPkt {
         ctx.enqueueWork(() -> {
             if(ctx.getDirection() == NetworkDirection.PLAY_TO_SERVER) {
                if (ServerRegisterActionPkt.run(msg.username, msg.password, msg.confirmPassword, ctx.getSender()))
-                   NetWorkDispatcher.CHANNEL.send(PacketDistributor.PLAYER.with(() -> ctx.getSender()), new ForgeClientCloseScreenPkt());
+                   NetWorkDispatcher.CHANNEL.send(new ForgeClientCloseScreenPkt(), PacketDistributor.PLAYER.with(ctx.getSender()));
             }
         });
 

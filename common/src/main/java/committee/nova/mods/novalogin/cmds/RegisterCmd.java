@@ -31,7 +31,7 @@ public class RegisterCmd {
                                     ServerPlayer player = ctx.getSource().getPlayerOrException();
                                     String username = player.getGameProfile().getName();
 
-                                    if (Const.SAVE.isReg(username)) {
+                                    if (Const.loginSave.isReg(username)) {
                                         ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.registered"), false);
                                         return 1;
                                     }
@@ -39,7 +39,7 @@ public class RegisterCmd {
                                         ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.pwd_strict"), false);
                                         return 1;
                                     }
-                                    Const.SAVE.reg(player, password);
+                                    Const.loginSave.reg(player, password);
                                     LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                                     playerLogin.setLogin(true);
                                     player.setInvulnerable(false);

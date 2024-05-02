@@ -3,6 +3,7 @@ package committee.nova.mods.novalogin.mixins;
 import committee.nova.mods.novalogin.handler.OnGameMessage;
 import committee.nova.mods.novalogin.handler.OnPlayerMove;
 import net.minecraft.network.protocol.game.ServerboundChatPacket;
+import net.minecraft.network.protocol.game.ServerboundChatSessionUpdatePacket;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,5 +43,14 @@ public abstract class ServerGamePacketListenerImplMixin {
         if (!OnGameMessage.canSendMessage(novaLogin$play.player, packet.message())) {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "handleChatSessionUpdate", at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/network/protocol/PacketUtils;ensureRunningOnSameThread(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketListener;Lnet/minecraft/server/level/ServerLevel;)V",
+            shift = At.Shift.AFTER
+    ), cancellable = true)
+    public void onChat(ServerboundChatSessionUpdatePacket packet, CallbackInfo ci) {
+        ci.cancel();
     }
 }

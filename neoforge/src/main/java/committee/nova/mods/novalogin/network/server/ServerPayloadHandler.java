@@ -2,6 +2,7 @@ package committee.nova.mods.novalogin.network.server;
 
 import committee.nova.mods.novalogin.net.ServerLoginActionPkt;
 import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
+import committee.nova.mods.novalogin.network.client.NeoClientLoginActionPkt;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
@@ -19,14 +20,24 @@ public class ServerPayloadHandler {
 
     public void handleServerLoginPacket(NeoServerLoginActionPkt msg, IPayloadContext context) {
         context.workHandler().execute(() -> {
-            context.player().ifPresent(player -> ServerLoginActionPkt.run(msg.username(), msg.pwd(), (ServerPlayer) player));
+            context.player().ifPresent(player -> {
+                if (player instanceof ServerPlayer serverPlayer){
+                    if (ServerLoginActionPkt.run(msg.username(), msg.pwd(), serverPlayer))
+                        serverPlayer.connection.send(new NeoClientLoginActionPkt(""));
+                }
+            });
             }
         );
     }
 
     public void handleServerRegisterPacket(NeoServerRegisterActionPkt msg, IPayloadContext context) {
         context.workHandler().execute(() -> {
-                    context.player().ifPresent(player -> ServerRegisterActionPkt.run(msg.username(), msg.pwd(), msg.confirmPwd(), (ServerPlayer) player));
+                    context.player().ifPresent(player -> {
+                        if (player instanceof ServerPlayer serverPlayer){
+                            if (ServerRegisterActionPkt.run(msg.username(), msg.pwd(), msg.confirmPwd(), serverPlayer))
+                                serverPlayer.connection.send(new NeoClientLoginActionPkt(""));
+                        }
+                    });
                 }
         );
     }

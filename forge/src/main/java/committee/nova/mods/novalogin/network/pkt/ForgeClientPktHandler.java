@@ -4,9 +4,7 @@ import committee.nova.mods.novalogin.client.ForgeLoginScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.function.Supplier;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 /**
  * ForgeClientLoginHandler
@@ -18,11 +16,11 @@ import java.util.function.Supplier;
  */
 @OnlyIn(Dist.CLIENT)
 public class ForgeClientPktHandler {
-    public static void handleLogin(ForgeClientLoginActionPkt msg, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleLogin(ForgeClientLoginActionPkt msg, CustomPayloadEvent.Context ctx) {
         Minecraft.getInstance().setScreen(new ForgeLoginScreen());
     }
 
-    public static void handleCloseScreen(ForgeClientCloseScreenPkt msg, Supplier<NetworkEvent.Context> ctx) {
+    public static void handleCloseScreen(ForgeClientCloseScreenPkt msg, CustomPayloadEvent.Context ctx) {
         Minecraft.getInstance().setScreen(null);
     }
 }

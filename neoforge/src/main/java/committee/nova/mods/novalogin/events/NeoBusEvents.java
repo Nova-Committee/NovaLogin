@@ -40,7 +40,7 @@ public class NeoBusEvents {
     @SubscribeEvent
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (OnPlayerConnect.listen(serverPlayer)) serverPlayer.connection.send(new NeoClientLoginActionPkt(""));
+            if (OnPlayerConnect.listen(serverPlayer)) serverPlayer.connection.send(new NeoClientLoginActionPkt("login"));
         }
     }
 
@@ -58,8 +58,8 @@ public class NeoBusEvents {
 
     @SubscribeEvent
     public static void onServerStopped(ServerStoppedEvent event) throws IOException {
-        Const.SAVE.save();
-        Const.CONFIG.save();
+        Const.loginSave.save();
+        Const.configHandler.save();
     }
 
     @SubscribeEvent

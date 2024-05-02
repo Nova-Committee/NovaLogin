@@ -14,6 +14,13 @@ import net.neoforged.neoforge.network.handling.PlayPayloadContext;
  */
 public class ClientPayloadHandler {
     public static void handleClientLogin(NeoClientLoginActionPkt msg, PlayPayloadContext ctx) {
-        ctx.workHandler().execute(() -> Minecraft.getInstance().setScreen(new NeoLoginScreen()));
+        ctx.workHandler().execute(() -> {
+            if (msg.screenId().equals("login")) {
+                Minecraft.getInstance().setScreen(new NeoLoginScreen());
+            } else {
+                Minecraft.getInstance().setScreen(null);
+            }
+        });
     }
+
 }

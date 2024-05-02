@@ -25,9 +25,7 @@ public class YggdrasilUtils {
     }
     public static MinecraftSessionService getOtherSessionService() {
         return new YggdrasilAuthenticationService(Proxy.NO_PROXY,
-                Environment.create(
-                        Const.configHandler.config.getYggdrasil().getApiUrl() + "/authserver",
-                        "https://api.mojang.com",
+                new Environment(
                         Const.configHandler.config.getYggdrasil().getApiUrl() + "/sessionserver",
                         "https://api.minecraftservices.com",
                         Const.configHandler.config.getYggdrasil().getApiName()
@@ -35,9 +33,7 @@ public class YggdrasilUtils {
     }
 
     public static MinecraftSessionService getMinecraftSessionService() {
-        return new YggdrasilAuthenticationService(Proxy.NO_PROXY, Environment.create(
-                "https://authserver.mojang.com",
-                "https://api.mojang.com",
+        return new YggdrasilAuthenticationService(Proxy.NO_PROXY, new  Environment(
                 "https://sessionserver.mojang.com",
                 "https://api.minecraftservices.com",
                 "Minecraft Official"

@@ -5,6 +5,7 @@ import committee.nova.mods.novalogin.network.NetWorkDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.PacketDistributor;
 
 /**
  * ForgeLoginScreen
@@ -18,7 +19,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ForgeLoginScreen extends LoginScreen{
     @Override
     protected void onAdd() {
-        NetWorkDispatcher.CHANNEL.sendToServer(new ServerLoginActionPkt(this.usernameField.getValue(), this.passwordField.getValue()));
+        NetWorkDispatcher.CHANNEL.send(new ServerLoginActionPkt(this.usernameField.getValue(), this.passwordField.getValue()), PacketDistributor.SERVER.noArg());
     }
 
     @Override

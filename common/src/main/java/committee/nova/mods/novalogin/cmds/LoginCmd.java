@@ -30,9 +30,9 @@ public class LoginCmd {
                             String password = StringArgumentType.getString(ctx, "password");
                             String username = player.getGameProfile().getName();
 
-                            if (!Const.SAVE.isReg(username)) {
+                            if (!Const.loginSave.isReg(username)) {
                                 ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.unregister"), false);
-                            } else if (Const.SAVE.checkPwd(username, password)) {
+                            } else if (Const.loginSave.checkPwd(username, password)) {
                                 LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                                 playerLogin.setLogin(true);
                                 ctx.getSource().sendSuccess(() ->Component.translatable("info.novalogin.cmd.login_success"), false);

@@ -23,5 +23,6 @@ public class NeoRegisterScreen extends RegisterScreen{
     @Override
     protected void onRegister() {
         NovaLoginNeo.proxy.sendToServer(new NeoServerRegisterActionPkt(this.usernameField.getValue(), this.passwordField.getValue(), this.confirmPasswordField.getValue()));
+        super.onRegister();
     }
 }

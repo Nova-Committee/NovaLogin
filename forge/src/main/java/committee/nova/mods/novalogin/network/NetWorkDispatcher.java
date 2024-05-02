@@ -4,6 +4,7 @@ package committee.nova.mods.novalogin.network;
 import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.net.ServerLoginActionPkt;
 import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
+import committee.nova.mods.novalogin.network.pkt.ForgeClientCloseScreenPkt;
 import committee.nova.mods.novalogin.network.pkt.ForgeClientLoginActionPkt;
 import committee.nova.mods.novalogin.network.pkt.ForgeServerLoginActionPkt;
 import committee.nova.mods.novalogin.network.pkt.ForgeServerRegisterActionPkt;
