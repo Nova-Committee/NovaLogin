@@ -52,10 +52,11 @@ public class NetWorkDispatcher {
                 .consumerMainThread(ForgeClientLoginActionPkt::handle)
                 .add()
         ;
+        CHANNEL.messageBuilder(ForgeClientCloseScreenPkt.class, NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(ForgeClientCloseScreenPkt::new)
+                .encoder(ForgeClientCloseScreenPkt::toBytes)
+                .consumerMainThread(ForgeClientCloseScreenPkt::handle)
+                .add()
+        ;
     }
-
-    @SubscribeEvent
-    public static void initClient(FMLClientSetupEvent event) {
-    }
-
 }

@@ -1,5 +1,6 @@
 {
   "info.novalogin.premium": "§9Dear premium user, welcome back.",
+  "info.novalogin.yggdrasil": "§9Dear %s user, welcome back.",
   "info.novalogin.re_login": "§9You've logged in for a short period of time, skipping verification for you",
   "info.novalogin.welcome":"§9Welcome to the server, in order to play, you must log in.\n§eLog in using /login and register using /register",
   "info.novalogin.verify": "§aIdentify yourself!",
@@ -15,9 +16,11 @@
   "info.novalogin.gui.username": "§aUserName",
   "info.novalogin.gui.password": "§aPassword",
   "info.novalogin.gui.confirm_password": "§aConfirm Password",
+  "info.novalogin.gui.remember_password": "",
   "info.novalogin.gui.register": "§aRegister",
   "info.novalogin.gui.register_login": "§aRegister And Login",
   "info.novalogin.gui.pwd_visible_s": "[+]",
   "info.novalogin.gui.pwd_visible": "§9[√]",
-  "info.novalogin.gui.pwd_invisible": "§c[×]"
+  "info.novalogin.gui.pwd_invisible": "§c[×]",
+  "info.novalogin.is_in": "§cPlayer with this name already logged in!"
 }

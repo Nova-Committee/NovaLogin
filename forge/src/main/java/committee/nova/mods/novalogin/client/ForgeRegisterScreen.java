@@ -5,7 +5,6 @@ import committee.nova.mods.novalogin.network.NetWorkDispatcher;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.network.PacketDistributor;
 
 /**
  * ForgeRegisterScreen
@@ -23,6 +22,7 @@ public class ForgeRegisterScreen extends RegisterScreen{
 
     @Override
     protected void onRegister() {
-        NetWorkDispatcher.CHANNEL.send(new ServerRegisterActionPkt(this.usernameField.getValue(), this.passwordField.getValue(), this.confirmPasswordField.getValue()), PacketDistributor.SERVER.noArg());
+        NetWorkDispatcher.CHANNEL.sendToServer(new ServerRegisterActionPkt(this.usernameField.getValue(), this.passwordField.getValue(), this.confirmPasswordField.getValue()));
+        super.onRegister();
     }
 }

@@ -9,6 +9,8 @@ import committee.nova.mods.novalogin.utils.HttpUtils;
 import net.minecraft.DefaultUncaughtExceptionHandler;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.login.ClientboundHelloPacket;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.login.ClientboundHelloPacket;
 import net.minecraft.network.protocol.login.ServerboundHelloPacket;
 import net.minecraft.network.protocol.login.ServerboundKeyPacket;
 import net.minecraft.server.MinecraftServer;
@@ -40,6 +42,7 @@ import java.security.PrivateKey;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static committee.nova.mods.novalogin.Const.*;
@@ -71,19 +74,16 @@ public abstract class ServerLoginPktMixin {
 
     @Shadow @Final private byte[] challenge;
 
-    @Shadow @Nullable
-    String requestedUsername;
+    @Shadow @Nullable private String requestedUsername;
 
     @Shadow @Nullable private GameProfile authenticatedProfile;
-
-    @Shadow abstract void startClientVerification(GameProfile p_301095_);
 
     @ModifyConstant(
             method = "tick",
             constant = @Constant(intValue = 600)
     )
     public int novalogin$tick(int constant){
-        return CONFIG.config.getCommon().getOutTime();
+        return configHandler.config.getCommon().getOutTime();
     }
 
 
@@ -200,15 +200,21 @@ public abstract class ServerLoginPktMixin {
                             .getSessionService()
                             .hasJoinedServer(s1, session, this.getAddress());
                     if (profileresult != null) {
-                        GameProfile gameprofile = profileresult.profile();
+                        authenticatedProfile = gameProfile;
                         LOGGER
                                 .info(
                                         "UUID of player {} is {}",
-                                        gameprofile.getName(),
-                                        gameprofile.getId()
+                                        authenticatedProfile.getName(),
+                                        authenticatedProfile.getId()
                                 );
                         mojangAccountNamesCache.add(authenticatedProfile.getName());
-                        startClientVerification(gameprofile);
+                        state = ServerLoginPacketListenerImpl.State.VERIFYING;
+                    } else if (YggdrasilUtils.isOtherEnable() && yggdrasilAuth != null) {
+                        gameProfile = yggdrasilAuth;
+                        LOGGER
+                                .info("Other Auths, UUID of player {} is {}", gameProfile.getName(), gameProfile.getId());
+                        yggdrasilNamesCache.add(authenticatedProfile.getName());
+                        state = ServerLoginPacketListenerImpl.State.VERIFYING;
                     } else {
                         if (CONFIG.config.getCommon().isUuidTrans()){
                             novaLogin$useOnlineProfile(playerName);

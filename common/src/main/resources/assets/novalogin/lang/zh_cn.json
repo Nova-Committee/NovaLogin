@@ -1,5 +1,6 @@
 {
   "info.novalogin.premium": "§9尊敬的正版用户，欢迎您回来",
+  "info.novalogin.yggdrasil": "§9尊敬的%s用户，欢迎您回来",
   "info.novalogin.re_login": "§9您已经在短时间内登陆过，为您跳过验证",
   "info.novalogin.welcome":"§9欢迎来到服务器，请先登录。\n§e请使用 /login 登录或者使用 /register 注册",
   "info.novalogin.verify": "§a验证你的身份!",
@@ -15,9 +16,11 @@
   "info.novalogin.gui.username": "§a用户名",
   "info.novalogin.gui.password": "§a密码",
   "info.novalogin.gui.confirm_password": "§a确认密码",
+  "info.novalogin.gui.remember_password": "",
   "info.novalogin.gui.register": "§a注册",
   "info.novalogin.gui.register_login": "§a注册并登录",
   "info.novalogin.gui.pwd_visible_s": "[+]",
   "info.novalogin.gui.pwd_visible": "§9[√]",
-  "info.novalogin.gui.pwd_invisible": "§c[×]"
+  "info.novalogin.gui.pwd_invisible": "§c[×]",
+  "info.novalogin.is_in": "§c此用户名用户已经登陆了!"
 }

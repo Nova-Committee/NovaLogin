@@ -43,7 +43,7 @@ public class ForgeBusEvents {
     @SubscribeEvent
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (OnPlayerConnect.listen(serverPlayer)) NetWorkDispatcher.CHANNEL.send(new ForgeClientLoginActionPkt(),PacketDistributor.PLAYER.noArg());
+            if (OnPlayerConnect.listen(serverPlayer)) NetWorkDispatcher.CHANNEL.send(PacketDistributor.ALL.noArg(), new ForgeClientLoginActionPkt());
         }
     }
 
@@ -60,8 +60,8 @@ public class ForgeBusEvents {
 
     @SubscribeEvent
     public static void onServerStopped(ServerStoppedEvent event) throws IOException {
-        Const.SAVE.save();
-        Const.CONFIG.save();
+        Const.loginSave.save();
+        Const.configHandler.save();
     }
 
     @SubscribeEvent

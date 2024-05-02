@@ -1,8 +1,12 @@
 package committee.nova.mods.novalogin.network.pkt;
 
 import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
-import net.minecraftforge.event.network.CustomPayloadEvent;
+import committee.nova.mods.novalogin.network.NetWorkDispatcher;
 import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.PacketDistributor;
+
+import java.util.function.Supplier;
 
 /**
  * ServerLoginModePkt
@@ -16,7 +20,8 @@ public class ForgeServerRegisterActionPkt {
     public static void handle(ServerRegisterActionPkt msg, CustomPayloadEvent.Context ctx){
         ctx.enqueueWork(() -> {
             if(ctx.getDirection() == NetworkDirection.PLAY_TO_SERVER) {
-                ServerRegisterActionPkt.run(msg.username, msg.password, msg.confirmPassword, ctx.getSender());
+               if (ServerRegisterActionPkt.run(msg.username, msg.password, msg.confirmPassword, ctx.getSender()))
+                   NetWorkDispatcher.CHANNEL.send(PacketDistributor.PLAYER.with(() -> ctx.getSender()), new ForgeClientCloseScreenPkt());
             }
         });
 

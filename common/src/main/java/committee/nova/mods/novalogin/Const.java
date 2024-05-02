@@ -3,13 +3,10 @@ package committee.nova.mods.novalogin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mojang.logging.LogUtils;
-import committee.nova.mods.novalogin.config.ConfigHandler;
 import committee.nova.mods.novalogin.models.User;
-import committee.nova.mods.novalogin.save.JsonLoginSave;
 import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -29,11 +26,12 @@ public class Const {
         return new ResourceLocation(MOD_ID, name);
     }
 
+    public static final HashSet<String> yggdrasilNamesCache = new HashSet<>();
     public static final HashSet<String> mojangAccountNamesCache = new HashSet<>();
     public static final HashMap<String, User> playerStorageMap = new HashMap<>();
 
 
-    public static ConfigHandler CONFIG;
-    public static JsonLoginSave SAVE;
+    public static ConfigHandler configHandler;
+    public static JsonLoginSave loginSave;
     public static Path novaPath;
 }

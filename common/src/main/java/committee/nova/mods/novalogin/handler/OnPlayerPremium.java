@@ -13,6 +13,10 @@ import net.minecraft.server.level.ServerPlayer;
  */
 public class OnPlayerPremium {
     public static boolean canPremium(ServerPlayer player) {
-        return Const.mojangAccountNamesCache.contains(player.getGameProfile().getName());
+        return Const.mojangAccountNamesCache.contains(player.getGameProfile().getName()) || Const.yggdrasilNamesCache.contains(player.getGameProfile().getName());
+    }
+
+    public static boolean canYggdrasil(ServerPlayer player) {
+        return Const.yggdrasilNamesCache.contains(player.getGameProfile().getName());
     }
 }

@@ -26,7 +26,7 @@ public class ForgeClientLoginActionPkt{
 
     public static void handle(ForgeClientLoginActionPkt msg, CustomPayloadEvent.Context ctx){
         ctx.enqueueWork(() -> {
-            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ForgeClientLoginHandler.handlePacket(msg, ctx));
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ForgeClientPktHandler.handleLogin(msg, ctx));
         });
         ctx.setPacketHandled(true);
     }

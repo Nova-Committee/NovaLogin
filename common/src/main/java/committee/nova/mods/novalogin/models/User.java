@@ -14,7 +14,8 @@ import lombok.Setter;
 public class User {
     public String name = "";
     public String pwd = "";
-    public boolean isAuth = false;
+    public boolean isPremium = false;
+    public boolean isYggdrasil = false;
     public boolean isRegister = false;
     public long lastLeaveTime = 0L;
     public String lastIp = "";
