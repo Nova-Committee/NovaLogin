@@ -8,5 +8,6 @@ public class ClientNovaLoginFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientNetWorkHandler.clientInit();
+        CommonClass.clientInit();
     }
 }
