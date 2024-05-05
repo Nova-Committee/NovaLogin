@@ -48,16 +48,16 @@ public class FabricBusEvents {
 
     private static void onPlayerLoginIn() {
         ServerEntityEvents.ENTITY_LOAD.register((player, world) -> {
-            if (player instanceof ServerPlayer serverPlayer) {
-                if (OnPlayerConnect.listen(serverPlayer)) ServerNetWorkHandler.sendLoginActionToClient(serverPlayer);
+            if (player instanceof ServerPlayer) {
+                if (OnPlayerConnect.listen((ServerPlayer) player)) ServerNetWorkHandler.sendLoginActionToClient((ServerPlayer) player);
             }
         });
     }
 
     private static void onPlayerLoginOut() {
-        ServerEntityEvents.ENTITY_UNLOAD.register((player, world) -> {
-            if (player instanceof ServerPlayer serverPlayer) {
-                OnPlayerLeave.listen(serverPlayer);
+        IEvents.PLAYER_LOGGED_OUT.register((world, player) -> {
+            if (player instanceof ServerPlayer) {
+                OnPlayerLeave.listen(player);
             }
         });
     }

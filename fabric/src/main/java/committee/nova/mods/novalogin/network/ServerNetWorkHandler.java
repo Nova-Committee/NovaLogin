@@ -34,7 +34,7 @@ public class ServerNetWorkHandler {
             String username = buf.readUtf();
             String password = buf.readUtf();
             server.execute(() -> {
-                if (ServerLoginActionPkt.run(username, password, player)) responseSender.sendPacket(CLOSE_SCREEN_CLIENT, buf);
+                if (ServerLoginActionPkt.run(username, password, player)) responseSender.sendPacket(CLOSE_SCREEN_CLIENT, new FriendlyByteBuf(Unpooled.buffer()));
             });
         });
     }
@@ -45,7 +45,7 @@ public class ServerNetWorkHandler {
             String password = buf.readUtf();
             String confirmPassword = buf.readUtf();
             server.execute(() -> {
-                if (ServerRegisterActionPkt.run(username, password, confirmPassword, player)) responseSender.sendPacket(CLOSE_SCREEN_CLIENT, buf);
+                if (ServerRegisterActionPkt.run(username, password, confirmPassword, player)) responseSender.sendPacket(CLOSE_SCREEN_CLIENT, new FriendlyByteBuf(Unpooled.buffer()));
             });
         });
     }

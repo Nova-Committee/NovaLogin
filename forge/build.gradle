@@ -7,6 +7,11 @@ base {
     archivesName = "${mod_name}-forge-${minecraft_version}"
 }
 
+configurations {
+    embed
+    forgeRuntimeLibrary.extendsFrom(embed)
+}
+
 loom {
     silentMojangMappingsLicense()
     mixin {
@@ -54,9 +59,8 @@ dependencies {
     forge "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
     compileOnly project(":common")
 
-    forgeRuntimeLibrary include("org.mindrot:jbcrypt:[0.4,)")
-    forgeRuntimeLibrary include("javax.mail:mail:[1.4.4,)")
-    //jarJar ("cn.evole.config:AtomConfig-Yaml:[0.2.0,)")
+    embed("org.mindrot:jbcrypt:0.4"){transitive = false}
+    embed("javax.mail:mail:1.4.4"){transitive = false}
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -69,6 +73,10 @@ tasks.withType(Javadoc).configureEach {
 }
 tasks.named("sourcesJar", Jar) {
     from(project(":common").sourceSets.main.allSource)
+}
+
+jar {
+    from(provider { configurations.embed.collect { it.isDirectory() ? it : zipTree(it) } })
 }
 
 processResources {

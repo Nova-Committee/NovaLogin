@@ -20,8 +20,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -29,7 +27,6 @@ import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
-@OnlyIn(Dist.CLIENT)
 public class CycleButton extends AbstractButton implements TooltipAccessor {
     static final BooleanSupplier DEFAULT_ALT_LIST_SELECTOR = Screen::hasAltDown;
     private static final List<Boolean> BOOLEAN_OPTIONS;
@@ -127,7 +124,6 @@ public class CycleButton extends AbstractButton implements TooltipAccessor {
         BOOLEAN_OPTIONS = ImmutableList.of(Boolean.TRUE, Boolean.FALSE);
     }
 
-    @OnlyIn(Dist.CLIENT)
     private interface ValueListSupplier {
         List<java.lang.Boolean> getSelectedList();
 
@@ -161,17 +157,14 @@ public class CycleButton extends AbstractButton implements TooltipAccessor {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     public interface OnValueChange{
         void onValueChange(CycleButton var1, Boolean var2);
     }
 
     @FunctionalInterface
-    @OnlyIn(Dist.CLIENT)
     public interface TooltipSupplier extends Function<Boolean, List<FormattedCharSequence>> {
     }
 
-    @OnlyIn(Dist.CLIENT)
     public static class Builder{
         private int initialIndex;
         @Nullable
