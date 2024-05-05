@@ -15,10 +15,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.item.ItemStack;
-
-import java.io.IOException;
 
 /**
  * ModBusEvents
@@ -35,7 +31,7 @@ public class FabricBusEvents {
         onPlayerLoginOut();
         onServerStarted();
         onServerStopped();
-        onPlayerInteract1();
+        //onPlayerInteract1();
         onPlayerInteract2();
         onPlayerInteract3();
         onPlayerInteract4();
