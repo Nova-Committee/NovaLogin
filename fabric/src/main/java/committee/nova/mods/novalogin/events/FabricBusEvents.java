@@ -31,7 +31,7 @@ public class FabricBusEvents {
         onPlayerLoginOut();
         onServerStarted();
         onServerStopped();
-        onPlayerInteract1();
+        //onPlayerInteract1();
         onPlayerInteract2();
         onPlayerInteract3();
         onPlayerInteract4();
