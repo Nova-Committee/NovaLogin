@@ -9,7 +9,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
+import net.minecraft.client.gui.screens.GenericMessageScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen;
@@ -114,7 +114,7 @@ public abstract class RegisterScreen extends Screen {
                     button.active = false;
                     this.minecraft.level.disconnect();
                     if (bl) {
-                        this.minecraft.disconnect(new GenericDirtMessageScreen(Component.translatable("menu.savingLevel")));
+                        this.minecraft.disconnect(new GenericMessageScreen(Component.translatable("menu.savingLevel")));
                     } else {
                         this.minecraft.disconnect();
                     }

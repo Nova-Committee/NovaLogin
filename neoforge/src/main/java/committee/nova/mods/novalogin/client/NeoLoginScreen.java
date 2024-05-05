@@ -1,10 +1,10 @@
 package committee.nova.mods.novalogin.client;
 
-import committee.nova.mods.novalogin.NovaLoginNeo;
-import committee.nova.mods.novalogin.network.server.NeoServerLoginActionPkt;
+import committee.nova.mods.novalogin.net.server.ServerLoginActionPkt;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * ForgeLoginScreen
@@ -18,7 +18,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 public class NeoLoginScreen extends LoginScreen{
     @Override
     protected void onAdd() {
-        NovaLoginNeo.proxy.sendToServer(new NeoServerLoginActionPkt(this.usernameField.getValue(), this.passwordField.getValue()));
+        PacketDistributor.sendToServer(new ServerLoginActionPkt(this.usernameField.getValue(), this.passwordField.getValue()));
     }
 
     @Override

@@ -5,10 +5,17 @@ plugins {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: 'idea'
 
-    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+    java.toolchain.languageVersion = JavaLanguageVersion.of(21)
     java.withSourcesJar()
     java.withJavadocJar()
+
+    idea {
+        module {
+            downloadSources = true
+        }
+    }
 
     jar {
         from(rootProject.file("LICENSE")) {
@@ -56,14 +63,14 @@ subprojects {
         implementation("org.mindrot:jbcrypt:0.4")
         implementation("javax.mail:mail:1.4.4")
         //implementation("cn.evole.config:AtomConfig-Yaml:0.2.0")
-        compileOnly ("org.projectlombok:lombok:1.18.24")
-        annotationProcessor ("org.projectlombok:lombok:1.18.24")
+        compileOnly ("org.projectlombok:lombok:1.18.30")
+        annotationProcessor ("org.projectlombok:lombok:1.18.30")
     }
 
     tasks.withType(JavaCompile).configureEach {
     
         it.options.encoding = 'UTF-8'
-        it.options.getRelease().set(17)
+        it.options.getRelease().set(21)
     }
 
     processResources {
@@ -86,11 +93,11 @@ subprojects {
                 "description": project.description,
                 "credits": credits
         ]
+        inputs.properties(expandProps)
 
-        filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/mods.toml', '*.mixins.json']) {
+        filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {
             expand expandProps
         }
-        inputs.properties(expandProps)
     }
 
     // Disables Gradle's custom module metadata from being published to maven. The

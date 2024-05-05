@@ -1,7 +1,7 @@
 plugins {
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.81'
+    id 'net.neoforged.gradle.userdev' version '7.0.109'
     id 'java-library'
 }
 base {
@@ -38,6 +38,10 @@ runs {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 jarJar.enable()
+
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
 
 dependencies {
     implementation "net.neoforged:neoforge:${neoforge_version}"

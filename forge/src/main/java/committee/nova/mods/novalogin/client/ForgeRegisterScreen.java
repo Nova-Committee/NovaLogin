@@ -1,6 +1,5 @@
 package committee.nova.mods.novalogin.client;
 
-import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
 import committee.nova.mods.novalogin.network.NetWorkDispatcher;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.api.distmarker.Dist;

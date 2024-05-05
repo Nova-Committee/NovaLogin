@@ -27,16 +27,15 @@ public abstract class PlayerMixin extends LivingEntity {
         super(entityType, level);
     }
 
-    @Inject(method = "interactOn",
+    @Inject(
+            method = "interactOn",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/entity/player/Player;getItemInHand(Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/item/ItemStack;",
-                    shift = At.Shift.BEFORE,
-                    ordinal = 0
+                    target = "Lnet/minecraft/world/entity/Entity;interact(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;)Lnet/minecraft/world/InteractionResult;"
             ),
             cancellable = true)
     public void novalogin$onEntityInteract(Entity entityToInteractOn, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         InteractionResult cancelResult = IEvents.PLAYER_INTERACT.invoker().onEntityInteract((Player) (Object) this, hand, entityToInteractOn);
-        if (cancelResult != null) {cir.setReturnValue(cancelResult);}
+        if (cancelResult != null) cir.setReturnValue(cancelResult);
     }
 }

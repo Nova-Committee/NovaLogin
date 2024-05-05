@@ -1,12 +1,9 @@
 package committee.nova.mods.novalogin.network.pkt;
 
-import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
 import committee.nova.mods.novalogin.network.NetWorkDispatcher;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.network.PacketDistributor;
-
-import java.util.function.Supplier;
 
 /**
  * ServerLoginModePkt

@@ -1,10 +1,10 @@
 package committee.nova.mods.novalogin.client;
 
-import committee.nova.mods.novalogin.NovaLoginNeo;
-import committee.nova.mods.novalogin.network.server.NeoServerRegisterActionPkt;
+import committee.nova.mods.novalogin.net.server.ServerRegisterActionPkt;
 import net.minecraft.client.gui.screens.Screen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * ForgeRegisterScreen
@@ -22,7 +22,7 @@ public class NeoRegisterScreen extends RegisterScreen{
 
     @Override
     protected void onRegister() {
-        NovaLoginNeo.proxy.sendToServer(new NeoServerRegisterActionPkt(this.usernameField.getValue(), this.passwordField.getValue(), this.confirmPasswordField.getValue()));
+        PacketDistributor.sendToServer(new ServerRegisterActionPkt(this.usernameField.getValue(), this.passwordField.getValue(), this.confirmPasswordField.getValue()));
         super.onRegister();
     }
 }

@@ -1,45 +1,40 @@
-package committee.nova.mods.novalogin.net;
+package committee.nova.mods.novalogin.net.server;
 
 import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * LoginPkt
+ * ServerLoginModePkt
  *
  * @author cnlimiter
  * @version 1.0
  * @description
- * @date 2024/4/28 上午12:14
+ * @date 2024/4/13 下午7:36
  */
-public class ServerRegisterActionPkt {
+public record ServerRegisterActionPkt(String username, String pwd, String confirmPwd) implements CustomPacketPayload {
+    public static final Type<ServerRegisterActionPkt> TYPE = new Type<>(Const.rl("server_register"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, ServerRegisterActionPkt> CODEC = StreamCodec.composite(
+            ByteBufCodecs.STRING_UTF8,
+            ServerRegisterActionPkt::username,
+            ByteBufCodecs.STRING_UTF8,
+            ServerRegisterActionPkt::pwd,
+            ByteBufCodecs.STRING_UTF8,
+            ServerRegisterActionPkt::confirmPwd,
+            ServerRegisterActionPkt::new
+    );
 
-    public String username;
-    public String password;
-    public String confirmPassword;
-
-    public ServerRegisterActionPkt() {}
-
-    public ServerRegisterActionPkt(String username, String password, String confirmPassword) {
-        this.username = username;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
-    }
-
-    public ServerRegisterActionPkt(FriendlyByteBuf buf) {
-        this.username = buf.readUtf();
-        this.password = buf.readUtf();
-        this.confirmPassword = buf.readUtf();
-    }
-
-    public void toBytes(FriendlyByteBuf buf) {
-        buf.writeUtf(username);
-        buf.writeUtf(password);
-        buf.writeUtf(confirmPassword);
+    @Override
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
     public static boolean run(String username, String password, String confirmPassword, ServerPlayer player) {

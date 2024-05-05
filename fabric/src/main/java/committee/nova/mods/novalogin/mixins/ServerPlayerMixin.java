@@ -32,8 +32,9 @@ public abstract class ServerPlayerMixin extends Player {
 
     @Inject(method = "openMenu",
             at = @At(
-                    value = "RETURN",
-                    opcode = 2
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;send(Lnet/minecraft/network/protocol/Packet;)V",
+                    shift = At.Shift.BEFORE
             ),
             cancellable = true
     )

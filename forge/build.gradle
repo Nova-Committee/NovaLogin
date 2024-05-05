@@ -1,7 +1,7 @@
 plugins {
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle' version '[6.0.24,6.2)'
     id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
 base {
@@ -16,7 +16,7 @@ mixin {
 
 minecraft {
     mappings channel: 'official', version: minecraft_version
-
+    reobf = false
     copyIdeResources = true //Calls processResources when in dev
 
     // Automatically enable forge AccessTransformers if the file exists
@@ -83,6 +83,7 @@ dependencies {
 
     jarJar ("org.mindrot:jbcrypt:[0.4,)")
     jarJar ("javax.mail:mail:[1.4.4,)")
+    implementation('net.sf.jopt-simple:jopt-simple:5.0.4') { version { strictly '5.0.4' } }
     //jarJar ("cn.evole.config:AtomConfig-Yaml:[0.2.0,)")
 }
 

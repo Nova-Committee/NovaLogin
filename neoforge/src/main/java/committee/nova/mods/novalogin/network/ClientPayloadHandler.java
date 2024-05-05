@@ -1,8 +1,9 @@
-package committee.nova.mods.novalogin.network.client;
+package committee.nova.mods.novalogin.network;
 
 import committee.nova.mods.novalogin.client.NeoLoginScreen;
+import committee.nova.mods.novalogin.net.client.ClientLoginActionPkt;
 import net.minecraft.client.Minecraft;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /**
  * ClientPayloadHandler
@@ -13,8 +14,8 @@ import net.neoforged.neoforge.network.handling.PlayPayloadContext;
  * @date 2024/4/30 上午1:31
  */
 public class ClientPayloadHandler {
-    public static void handleClientLogin(NeoClientLoginActionPkt msg, PlayPayloadContext ctx) {
-        ctx.workHandler().execute(() -> {
+    public static void handleClientLogin(ClientLoginActionPkt msg, IPayloadContext ctx) {
+        ctx.enqueueWork(() -> {
             if (msg.screenId().equals("login")) {
                 Minecraft.getInstance().setScreen(new NeoLoginScreen());
             } else {

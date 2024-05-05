@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -35,7 +36,7 @@ public class FabricBusEvents {
         onPlayerLoginOut();
         onServerStarted();
         onServerStopped();
-        onPlayerInteract1();
+        //onPlayerInteract1();
         onPlayerInteract2();
         onPlayerInteract3();
         onPlayerInteract4();
@@ -79,9 +80,6 @@ public class FabricBusEvents {
         });
     }
 
-    private static void onPlayerInteract1() {
-        IEvents.PLAYER_INTERACT.register((player, hand, target) -> InteractionResult.sidedSuccess(OnPlayerAction.canInteract((ServerPlayer) player)));
-    }
 
     private static void onPlayerInteract2() {
         IEvents.LIVING_USE_ITEM_FINISH.register((entity, item, duration, result) -> {

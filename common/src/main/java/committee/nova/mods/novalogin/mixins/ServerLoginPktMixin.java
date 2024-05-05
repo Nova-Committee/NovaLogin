@@ -16,6 +16,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraft.util.Crypt;
 import net.minecraft.util.CryptException;
+import net.minecraft.util.StringUtil;
 import net.minecraft.world.entity.player.Player;
 import org.apache.commons.lang3.Validate;
 import org.spongepowered.asm.mixin.Final;
@@ -97,8 +98,8 @@ public abstract class ServerLoginPktMixin {
             cancellable = true)
     public void novalogin$handleHello(ServerboundHelloPacket pPacket, CallbackInfo ci) {
         String playerName = pPacket.name();
-        Validate.validState(this.state == ServerLoginPacketListenerImpl.State.HELLO, "Unexpected hello packet", new Object[0]);
-        Validate.validState(Player.isValidUsername(playerName), "Invalid characters in username", new Object[0]);
+        Validate.validState(this.state == ServerLoginPacketListenerImpl.State.HELLO, "Unexpected hello packet");
+        Validate.validState(StringUtil.isValidPlayerName(playerName), "Invalid characters in username");
         this.requestedUsername = playerName;
         Pattern pattern = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-Z0-9]{6,25}$");
         //Validate.validState(!pattern.matcher(playerName).matches(), "Invalid characters in username");
@@ -111,7 +112,7 @@ public abstract class ServerLoginPktMixin {
             }
         } else if (this.server.usesAuthentication() && !this.connection.isMemoryConnection()) {
             this.state = ServerLoginPacketListenerImpl.State.KEY;
-            this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.challenge));
+            this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.challenge, true));
         } else {
             if (configHandler.config.getCommon().isUuidTrans()){
                 novaLogin$useOnlineProfile(playerName);
@@ -126,8 +127,7 @@ public abstract class ServerLoginPktMixin {
     @Unique
     private void novaLogin$useOfflineProfile(String playerName) {
         LOGGER.info("Username '{}' tried to join with an offline UUID", playerName);
-        this.state = ServerLoginPacketListenerImpl.State.VERIFYING;
-        this.authenticatedProfile = novaLogin$createOfflineProfile(playerName);
+        startClientVerification(novaLogin$createOfflineProfile(playerName));
     }
 
     @Unique
@@ -151,8 +151,7 @@ public abstract class ServerLoginPktMixin {
 
                 gameProfile = new GameProfile(UUID.fromString(uuid.toString()), playerName);
             }
-            this.state = ServerLoginPacketListenerImpl.State.VERIFYING;
-            this.authenticatedProfile = gameProfile;
+            startClientVerification(gameProfile);
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
         }
@@ -202,28 +201,29 @@ public abstract class ServerLoginPktMixin {
                 String playerName = Objects.requireNonNull(requestedUsername, "Player name not initialized");
 
                 try {
-                    ProfileResult minecraftAuth  = YggdrasilUtils
-                            .getMinecraftSessionService()
+                    ProfileResult minecraftAuth  = server
+                            .getSessionService()
                             .hasJoinedServer(playerName, session, this.getAddress());
                     ProfileResult yggdrasilAuth  = YggdrasilUtils
                             .getOtherSessionService()
                             .hasJoinedServer(playerName, session, this.getAddress());
                     if (minecraftAuth != null) {
+                        GameProfile gameProfile = minecraftAuth.profile();
                         authenticatedProfile = minecraftAuth.profile();
                         LOGGER
                                 .info(
                                         "UUID of player {} is {}",
-                                        authenticatedProfile.getName(),
-                                        authenticatedProfile.getId()
+                                        gameProfile.getName(),
+                                        gameProfile.getId()
                                 );
-                        mojangAccountNamesCache.add(authenticatedProfile.getName());
-                        state = ServerLoginPacketListenerImpl.State.VERIFYING;
+                        mojangAccountNamesCache.add(gameProfile.getName());
+                        startClientVerification(gameProfile);
                     } else if (YggdrasilUtils.isOtherEnable() && yggdrasilAuth != null) {
-                        authenticatedProfile = yggdrasilAuth.profile();
+                        GameProfile gameProfile = yggdrasilAuth.profile();
                         LOGGER
-                                .info("Other Auths, UUID of player {} is {}", authenticatedProfile.getName(), authenticatedProfile.getId());
-                        yggdrasilNamesCache.add(authenticatedProfile.getName());
-                        state = ServerLoginPacketListenerImpl.State.VERIFYING;
+                                .info("Other Auths, UUID of player {} is {}", gameProfile.getName(), gameProfile.getId());
+                        yggdrasilNamesCache.add(gameProfile.getName());
+                        startClientVerification(gameProfile);
                     } else {
                         if (configHandler.config.getCommon().isUuidTrans()){
                             novaLogin$useOnlineProfile(playerName);

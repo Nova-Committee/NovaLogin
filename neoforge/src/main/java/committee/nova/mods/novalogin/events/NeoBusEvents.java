@@ -7,15 +7,16 @@ import committee.nova.mods.novalogin.cmds.RegisterCmd;
 import committee.nova.mods.novalogin.handler.OnPlayerAction;
 import committee.nova.mods.novalogin.handler.OnPlayerConnect;
 import committee.nova.mods.novalogin.handler.OnPlayerLeave;
-import committee.nova.mods.novalogin.network.client.NeoClientLoginActionPkt;
+import committee.nova.mods.novalogin.net.client.ClientLoginActionPkt;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.io.IOException;
 
@@ -27,7 +28,7 @@ import java.io.IOException;
  * @description
  * @date 2024/3/18 2:11
  */
-@Mod.EventBusSubscriber
+@EventBusSubscriber
 public class NeoBusEvents {
 
     @SubscribeEvent
@@ -40,7 +41,7 @@ public class NeoBusEvents {
     @SubscribeEvent
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
         if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (OnPlayerConnect.listen(serverPlayer)) serverPlayer.connection.send(new NeoClientLoginActionPkt("login"));
+            if (OnPlayerConnect.listen(serverPlayer)) PacketDistributor.sendToPlayer(serverPlayer, new ClientLoginActionPkt("login"));
         }
     }
 
