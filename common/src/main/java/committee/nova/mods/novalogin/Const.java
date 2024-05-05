@@ -2,12 +2,12 @@ package committee.nova.mods.novalogin;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mojang.logging.LogUtils;
 import committee.nova.mods.novalogin.config.ConfigHandler;
 import committee.nova.mods.novalogin.models.User;
 import committee.nova.mods.novalogin.save.JsonLoginSave;
 import net.minecraft.resources.ResourceLocation;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.HashSet;
  */
 public class Const {
     public static final String MOD_ID = "novalogin";
-    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogManager.getLogger("Nova Login");
     public static Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     public static ResourceLocation rl(String name){
         return new ResourceLocation(MOD_ID, name);

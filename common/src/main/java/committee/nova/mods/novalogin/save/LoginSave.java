@@ -2,9 +2,6 @@ package committee.nova.mods.novalogin.save;
 
 import net.minecraft.server.level.ServerPlayer;
 
-import java.io.IOException;
-import java.util.UUID;
-
 /**
  * LoginSave
  *

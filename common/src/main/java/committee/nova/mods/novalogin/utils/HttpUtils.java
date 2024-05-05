@@ -36,7 +36,7 @@ public class HttpUtils {
     }
     public static int getResponseCode(HttpURLConnection con) {
         try {
-            var code = con.getResponseCode();
+            int code = con.getResponseCode();
             con.disconnect();
             return code;
         } catch (Exception e) {

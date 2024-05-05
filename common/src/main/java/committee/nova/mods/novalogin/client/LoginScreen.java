@@ -3,12 +3,10 @@ package committee.nova.mods.novalogin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.realmsclient.RealmsMainScreen;
 import committee.nova.mods.novalogin.Const;
+import committee.nova.mods.novalogin.client.widgets.CycleButton;
 import committee.nova.mods.novalogin.save.LocalUserSave;
-import lombok.Data;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -19,9 +17,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nonnull;
 
 /**
  * LoginScreen
@@ -33,7 +30,7 @@ import javax.annotation.Nonnull;
  */
 public abstract class LoginScreen extends Screen {
     private Button loginButton;
-    private CycleButton<Boolean> pwdFormattedButton;
+    private CycleButton  pwdFormattedButton;
     private boolean pwdVisible = false;
 
     public EditBox usernameField;
@@ -67,7 +64,7 @@ public abstract class LoginScreen extends Screen {
                 .displayOnlyValue()
                 .withInitialValue(pwdVisible)
                 .create(this.width / 2 + 100, 106, 20, 20, new TranslatableComponent("info.novalogin.gui.pwd_visible_s"), (cycleButton, aBoolean) -> this.pwdVisible = aBoolean);
-        this.addRenderableWidget(this.pwdFormattedButton);
+        this.addButton(this.pwdFormattedButton);
 
         this.passwordField = new EditBox(this.font, this.width / 2 - 100, 106, 200, 20, PASSWORD_LABEL);
         this.passwordField.setMaxLength(50);
@@ -81,21 +78,22 @@ public abstract class LoginScreen extends Screen {
             if (this.pwdVisible) {
                return FormattedCharSequence.forward(s, Style.EMPTY);
             } else {
-                return FormattedCharSequence.forward("•".repeat(s.length()), Style.EMPTY);
+                return FormattedCharSequence.forward(StringUtils.repeat("•", s.length())
+                       , Style.EMPTY);
             }
         });
         this.usernameField.setFocus(true);
         this.passwordField.setResponder(string -> this.updateAddButtonStatus());
         this.addWidget(this.passwordField);
 
-        this.loginButton = this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20,
+        this.loginButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20,
                 new TranslatableComponent("info.novalogin.gui.login"), button -> this.onAdd()));
 
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120 + 18, 100, 20,
+        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120 + 18, 100, 20,
                 new TranslatableComponent("info.novalogin.gui.register"), button -> this.onRegister(minecraft)
                 ));
 
-        this.addRenderableWidget(new Button(this.width / 2, this.height / 4 + 120 + 18, 100, 20,
+        this.addButton(new Button(this.width / 2, this.height / 4 + 120 + 18, 100, 20,
                 CommonComponents.GUI_CANCEL, button -> {
             boolean bl = this.minecraft.isLocalServer();
             boolean bl2 = this.minecraft.isConnectedToRealms();

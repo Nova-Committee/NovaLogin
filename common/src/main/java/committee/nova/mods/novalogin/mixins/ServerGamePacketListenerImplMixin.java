@@ -2,20 +2,14 @@ package committee.nova.mods.novalogin.mixins;
 
 import committee.nova.mods.novalogin.handler.OnGameMessage;
 import committee.nova.mods.novalogin.handler.OnPlayerMove;
-import net.minecraft.network.protocol.game.*;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.network.TextFilter;
-import org.apache.commons.lang3.StringUtils;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
 
 /**
  * ServerGamePacketListenerImplMixin
@@ -43,7 +37,7 @@ public abstract class ServerGamePacketListenerImplMixin {
     }
 
 
-    @Inject(method = "handleChat(Lnet/minecraft/server/network/TextFilter$FilteredText;)V",
+    @Inject(method = "handleChat(Ljava/lang/String;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Ljava/lang/String;startsWith(Ljava/lang/String;)Z",
@@ -51,8 +45,8 @@ public abstract class ServerGamePacketListenerImplMixin {
             ),
             cancellable = true
     )
-    public void onGameMessage(TextFilter.FilteredText text, CallbackInfo ci) {
-        if (!OnGameMessage.canSendMessage(novaLogin$play.player, text.getRaw())) {
+    public void onGameMessage(String string, CallbackInfo ci) {
+        if (!OnGameMessage.canSendMessage(novaLogin$play.player, string)) {
             ci.cancel();
         }
     }

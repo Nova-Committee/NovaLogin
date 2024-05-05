@@ -3,11 +3,11 @@ package committee.nova.mods.novalogin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.realmsclient.RealmsMainScreen;
 import committee.nova.mods.novalogin.Const;
+import committee.nova.mods.novalogin.client.widgets.CycleButton;
 import committee.nova.mods.novalogin.save.LocalUserSave;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public abstract class RegisterScreen extends Screen {
     private Button registerButton;
-    private CycleButton<Boolean> pwdFormattedButton;
+    private CycleButton  pwdFormattedButton;
     private boolean pwdVisible = false;
 
     public Checkbox rememberPassword;
@@ -72,7 +73,7 @@ public abstract class RegisterScreen extends Screen {
             if (this.pwdVisible) {
                return FormattedCharSequence.forward(s, Style.EMPTY);
             } else {
-                return FormattedCharSequence.forward("•".repeat(s.length()), Style.EMPTY);
+                return FormattedCharSequence.forward(StringUtils.repeat("•", s.length()), Style.EMPTY);
             }
         });
         this.usernameField.setFocus(true);
@@ -86,7 +87,7 @@ public abstract class RegisterScreen extends Screen {
             if (this.pwdVisible) {
                 return FormattedCharSequence.forward(s, Style.EMPTY);
             } else {
-                return FormattedCharSequence.forward("•".repeat(s.length()), Style.EMPTY);
+                return FormattedCharSequence.forward(StringUtils.repeat("•", s.length()), Style.EMPTY);
             }
         });
         this.confirmPasswordField.setValue("");
@@ -98,23 +99,23 @@ public abstract class RegisterScreen extends Screen {
                 .displayOnlyValue()
                 .withInitialValue(pwdVisible)
                 .create(this.width / 2 + 100, 140, 20, 20, new TranslatableComponent("info.novalogin.gui.pwd_visible_s"), (cycleButton, aBoolean) -> this.pwdVisible = aBoolean);
-        this.addRenderableWidget(this.pwdFormattedButton);
+        this.addButton(this.pwdFormattedButton);
 
 
-        this.registerButton = this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20,
+        this.registerButton = this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 96 + 18, 200, 20,
                 new TranslatableComponent("info.novalogin.gui.register_login"), button -> this.onRegister()));
 
         this.rememberPassword = new Checkbox(this.width / 2 + 100, this.height / 4 + 96 + 18, 20, 20, new TranslatableComponent("info.novalogin.gui.remember_password"), true);
-        this.addRenderableWidget(this.rememberPassword);
+        this.addButton(this.rememberPassword);
         Const.configHandler.config.getCommon().setLoadLocalPwd(this.rememberPassword.selected());
 
-        this.addRenderableWidget(new Button(this.width / 2 - 100, this.height / 4 + 120 + 18, 100, 20,
+        this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 120 + 18, 100, 20,
                 CommonComponents.GUI_BACK, button -> {
                     this.minecraft.setScreen(this.parentScreen);
                 })
         );
 
-        this.addRenderableWidget(new Button(this.width / 2, this.height / 4 + 120 + 18, 100, 20,
+        this.addButton(new Button(this.width / 2, this.height / 4 + 120 + 18, 100, 20,
                 CommonComponents.GUI_CANCEL, button -> {
             boolean bl = this.minecraft.isLocalServer();
             boolean bl2 = this.minecraft.isConnectedToRealms();

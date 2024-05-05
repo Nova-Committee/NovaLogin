@@ -9,7 +9,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
@@ -21,7 +20,9 @@ import java.util.Properties;
  * @date 2024/4/25 上午12:10
  */
 public class MailUtils {
-    public static record MailProperties(String protocol, String host, int port, boolean auth, boolean ssl, String username, String password) {}
+    public static class MailProperties{
+        String protocol;String host;int port;boolean auth;boolean ssl;String username;String password;
+    }
 
 
     public static void mailSend(MailProperties mailProperties, String title, Path html, String toAddress, String code){

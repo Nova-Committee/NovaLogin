@@ -90,7 +90,7 @@ public class JsonLoginSave implements LoginSave{
                     Files.createDirectories(path);
                     Files.createFile(this.path.resolve(name + ".json"));
                 }
-                Files.writeString(this.path.resolve(name + ".json"), Const.GSON.toJson(user), StandardOpenOption.TRUNCATE_EXISTING);
+                Files.write(this.path.resolve(name + ".json"), GSON.toJson(user).getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING);
             } catch (IOException e) {
                 Const.LOGGER.error("Save Error:", e);
             }

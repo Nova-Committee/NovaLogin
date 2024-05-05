@@ -14,11 +14,11 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.server.ServerStartedEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
+import net.minecraftforge.fml.event.server.FMLServerStoppedEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.io.IOException;
 
@@ -42,60 +42,60 @@ public class ForgeBusEvents {
 
     @SubscribeEvent
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (OnPlayerConnect.listen(serverPlayer)) NetWorkDispatcher.CHANNEL.send(PacketDistributor.ALL.noArg(), new ForgeClientLoginActionPkt());
+        if (event.getEntity() instanceof ServerPlayer){
+            if (OnPlayerConnect.listen((ServerPlayer) event.getEntity())) NetWorkDispatcher.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) event.getEntity()), new ForgeClientLoginActionPkt());
         }
     }
 
     @SubscribeEvent
     public static void onPlayerLoginOut(PlayerEvent.PlayerLoggedOutEvent event){
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            OnPlayerLeave.listen(serverPlayer);
+        if (event.getEntity() instanceof ServerPlayer){
+            OnPlayerLeave.listen((ServerPlayer) event.getEntity());
         }
     }
 
     @SubscribeEvent
-    public static void onServerStarted(ServerStartedEvent event) throws IOException {
+    public static void onServerStarted(FMLServerStartedEvent event) throws IOException {
     }
 
     @SubscribeEvent
-    public static void onServerStopped(ServerStoppedEvent event) throws IOException {
+    public static void onServerStopped(FMLServerStoppedEvent event) throws IOException {
         Const.loginSave.save();
         Const.configHandler.save();
     }
 
     @SubscribeEvent
     public static void onPlayerInteract1(PlayerInteractEvent.EntityInteract event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
+        if (event.getEntity() instanceof ServerPlayer){
+            if (!OnPlayerAction.canInteract((ServerPlayer) event.getEntity())) event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerInteract2(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
+        if (event.getEntity() instanceof ServerPlayer){
+            if (!OnPlayerAction.canInteract((ServerPlayer) event.getEntity())) event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerInteract3(PlayerInteractEvent.RightClickItem event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
+        if (event.getEntity() instanceof ServerPlayer){
+            if (!OnPlayerAction.canInteract((ServerPlayer) event.getEntity())) event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerInteract4(PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
+        if (event.getEntity() instanceof ServerPlayer){
+            if (!OnPlayerAction.canInteract((ServerPlayer) event.getEntity())) event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerInteract5(PlayerContainerEvent.Open event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer){
-            if (!OnPlayerAction.canInteract(serverPlayer)) event.setCanceled(true);
+        if (event.getEntity() instanceof ServerPlayer){
+            if (!OnPlayerAction.canInteract((ServerPlayer) event.getEntity())) event.setCanceled(true);
         }
     }
 

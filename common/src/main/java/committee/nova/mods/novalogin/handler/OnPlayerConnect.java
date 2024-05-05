@@ -6,7 +6,7 @@ import committee.nova.mods.novalogin.utils.YggdrasilUtils;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitlesPacket;
 import net.minecraft.server.level.ServerPlayer;
 
 import static committee.nova.mods.novalogin.Const.playerCacheMap;
@@ -56,7 +56,7 @@ public class OnPlayerConnect {
         playerLogin.setLogin(false);
         player.setInvulnerable(true);
         player.sendMessage(new TranslatableComponent("info.novalogin.welcome"), ChatType.SYSTEM, Util.NIL_UUID);
-        player.connection.send(new ClientboundSetTitleTextPacket(new TranslatableComponent("info.novalogin.verify")));
+        player.connection.send(new ClientboundSetTitlesPacket(ClientboundSetTitlesPacket.Type.TITLE, new TranslatableComponent("info.novalogin.verify")));
         return true;
     }
 }

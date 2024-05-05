@@ -2,7 +2,6 @@ package committee.nova.mods.novalogin.client;
 
 import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
 import committee.nova.mods.novalogin.network.NetWorkDispatcher;
-import committee.nova.mods.novalogin.save.LocalUserSave;
 import net.minecraft.client.gui.screens.Screen;
 
 /**

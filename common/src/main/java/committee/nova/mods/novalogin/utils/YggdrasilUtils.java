@@ -3,7 +3,6 @@ package committee.nova.mods.novalogin.utils;
 import com.mojang.authlib.Environment;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
-import com.mojang.authlib.yggdrasil.YggdrasilEnvironment;
 import committee.nova.mods.novalogin.Const;
 
 import java.net.Proxy;

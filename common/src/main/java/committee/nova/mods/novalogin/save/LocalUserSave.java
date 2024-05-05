@@ -12,9 +12,12 @@ import org.apache.logging.log4j.MarkerManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import static committee.nova.mods.novalogin.Const.GSON;
 
@@ -122,7 +125,7 @@ public class LocalUserSave {
         public void run() {
             try {
                 synchronized(LocalUserSave.saveFile) {
-                    Files.writeString(LocalUserSave.saveFile, this.data);
+                    Files.write(LocalUserSave.saveFile, this.data.getBytes(StandardCharsets.UTF_8));
                 }
             } catch (IOException var4) {
                 LocalUserSave.LOGGER.error(LocalUserSave.LOCALUSER, "Failed to save username cache to file!", var4);
