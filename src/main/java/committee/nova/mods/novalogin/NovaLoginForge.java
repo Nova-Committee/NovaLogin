@@ -37,6 +37,6 @@ public class NovaLoginForge {
 
     @Mod.EventHandler
     public static void onServerStopped(FMLServerStoppedEvent event) throws IOException {
-        CommonClass.SAVE.save();
+        Const.loginSave.save();
     }
 }

@@ -15,4 +15,8 @@ public class OnPlayerPremium {
     public static boolean canPremium(EntityPlayerMP player) {
         return Const.mojangAccountNamesCache.contains(player.getGameProfile().getName());
     }
+
+    public static boolean canYggdrasil(EntityPlayerMP player) {
+        return Const.yggdrasilNamesCache.contains(player.getGameProfile().getName());
+    }
 }

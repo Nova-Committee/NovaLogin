@@ -1,6 +1,7 @@
 package committee.nova.mods.novalogin.cmds;
 
 import committee.nova.mods.novalogin.CommonClass;
+import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -43,7 +44,7 @@ public class RegisterCmd extends CommandBase {
             EntityPlayerMP player = (EntityPlayerMP) sender;
             String username = player.getGameProfile().getName();
 
-            if (CommonClass.SAVE.isReg(username)) {
+            if (Const.loginSave.isReg(username)) {
                 player.connection.sendPacket(new SPacketChat(new TextComponentTranslation("info.novalogin.cmd.registered"), ChatType.SYSTEM));
                 return ;
             }
@@ -51,7 +52,7 @@ public class RegisterCmd extends CommandBase {
                 player.connection.sendPacket(new SPacketChat(new TextComponentTranslation("info.novalogin.cmd.pwd_strict"), ChatType.SYSTEM));
                 return ;
             }
-            CommonClass.SAVE.reg(player, password);
+            Const.loginSave.reg(player, password);
             LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
             playerLogin.setLogin(true);
             player.setEntityInvulnerable(false);

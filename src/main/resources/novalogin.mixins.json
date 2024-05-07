@@ -12,7 +12,6 @@
     "defaultRequire": 1
   },
   "client": [
-    "ClientPacketListenerMixin",
-    "SessionMixin"
+    "ClientHandshakePktMixin"
   ]
 }

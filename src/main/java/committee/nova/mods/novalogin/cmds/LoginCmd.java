@@ -1,6 +1,7 @@
 package committee.nova.mods.novalogin.cmds;
 
 import committee.nova.mods.novalogin.CommonClass;
+import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -43,9 +44,9 @@ public class LoginCmd extends CommandBase {
             String password = args[0];
             String username = sender.getName();
 
-            if (!CommonClass.SAVE.isReg(username)) {
+            if (!Const.loginSave.isReg(username)) {
                 player.connection.sendPacket(new SPacketChat(new TextComponentTranslation("info.novalogin.cmd.unregister"), ChatType.SYSTEM));
-            } else if (CommonClass.SAVE.checkPwd(username, password)) {
+            } else if (Const.loginSave.checkPwd(username, password)) {
                 LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
                 playerLogin.setLogin(true);
                 player.connection.sendPacket(new SPacketChat(new TextComponentTranslation("info.novalogin.cmd.login_success"), ChatType.SYSTEM));

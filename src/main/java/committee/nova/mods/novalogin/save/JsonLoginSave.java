@@ -3,7 +3,6 @@ package committee.nova.mods.novalogin.save;
 import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.User;
 import net.minecraft.entity.player.EntityPlayerMP;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -13,9 +12,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
-import static committee.nova.mods.novalogin.Const.mojangAccountNamesCache;
-import static committee.nova.mods.novalogin.Const.playerCacheMap;
+import static committee.nova.mods.novalogin.Const.*;
 
 /**
  * JsonLoginSave
@@ -29,18 +28,14 @@ public class JsonLoginSave implements LoginSave{
     private final Path path;
     private boolean dirty = false;
 
-    public JsonLoginSave(Path gamePath){
-        this.path = gamePath.resolve("nova").resolve("login");
-        try {
-            load();
-        }catch (IOException e){
-            Const.LOGGER.error("Loading Error:", e);
-        }
+    public JsonLoginSave(Path novaPath){
+        this.path = novaPath;
+        load();
     }
 
     @Override
     public boolean checkPwd(String name, String password) {
-        if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name)) {
+        if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name)) {
             return BCrypt.checkpw(password, playerCacheMap.get(name).pwd);
         }
         return false;
@@ -54,16 +49,17 @@ public class JsonLoginSave implements LoginSave{
 
     @Override
     public boolean isReg(String name) {
-        return playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name);
+        return playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name);
     }
 
     @Override
     public void reg(EntityPlayerMP player, String password) {
         String name = player.getGameProfile().getName();
         User user = playerCacheMap.get(name);
-        if (!user.isRegister && !mojangAccountNamesCache.contains(name)) {
+        if (!user.isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name)) {
             user.setPwd(BCrypt.hashpw(password, BCrypt.gensalt()));
-            user.setAuth(false);
+            user.setPremium(false);
+            user.setYggdrasil(false);
             user.setRegister(true);
             playerCacheMap.put(name, user);
             dirty = true;
@@ -73,7 +69,7 @@ public class JsonLoginSave implements LoginSave{
     @Override
     public void changePwd(EntityPlayerMP player, String newPassword) {
         String name = player.getGameProfile().getName();
-        if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name)) {
+        if (playerCacheMap.get(name).isRegister && !mojangAccountNamesCache.contains(name) && !yggdrasilNamesCache.contains(name)) {
             dirty = true;
             User user = playerCacheMap.get(name);
             user.setPwd(BCrypt.hashpw(newPassword, BCrypt.gensalt()));
@@ -87,14 +83,14 @@ public class JsonLoginSave implements LoginSave{
     }
 
     @Override
-    public void save() throws IOException {
+    public void save(){
         playerCacheMap.forEach(((name, user) -> {
             try {
                 if (!Files.exists(this.path.resolve(name + ".json"))) {
                     Files.createDirectories(path);
                     Files.createFile(this.path.resolve(name + ".json"));
                 }
-                FileUtils.writeStringToFile(this.path.resolve(name + ".json").toFile(), Const.GSON.toJson(user), StandardCharsets.UTF_8);
+                Files.write(this.path.resolve(name + ".json"), GSON.toJson(user).getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING);
             } catch (IOException e) {
                 Const.LOGGER.error("Save Error:", e);
             }
@@ -102,14 +98,17 @@ public class JsonLoginSave implements LoginSave{
     }
 
     @Override
-    public void load() throws IOException {
-        if (!Files.exists(this.path)) Files.createDirectories(path);
+    public void load(){
+        try {
         File[] files = path.toFile().listFiles((FileFilter) FileFilterUtils.suffixFileFilter(".json"));
         if (files == null)
             return;
         for (File f : files){
             User user = Const.GSON.fromJson(Files.newBufferedReader(f.toPath(), StandardCharsets.UTF_8), User.class);
             playerCacheMap.put(user.name, user);
+        }
+        } catch (IOException e) {
+            Const.LOGGER.error("Load Error:", e);
         }
     }
 
