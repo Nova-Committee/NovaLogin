@@ -1,14 +1,14 @@
 plugins {
     id 'idea'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'net.minecraftforge.gradle' version '5.1+'
     id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
 
 base {
     archivesName = "${mod_name}-forge-${minecraft_version}"
 }
-
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
 minecraft {
     mappings channel: 'stable', version: '39-1.12'
 
@@ -72,17 +72,13 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-14.23.5.2860"
 
-    embed("org.mindrot:jbcrypt:0.4")
-    embed("javax.mail:mail:1.4.4")
+    embed("org.mindrot:jbcrypt:0.4"){transitive = false}
+    embed("javax.mail:mail:1.4.4"){transitive = false}
     annotationProcessor 'org.ow2.asm:asm-debug-all:5.2'
 
     // Apply Mixin AP.
-    implementation ('zone.rong:mixinbooter:9.1') {
-        transitive = false
-    }
-    annotationProcessor ('zone.rong:mixinbooter:9.1') {
-        transitive = false
-    }
+    implementation ('zone.rong:mixinbooter:9.1') {transitive = false}
+    annotationProcessor ('zone.rong:mixinbooter:9.1') {transitive = false}
 
     compileOnly ("org.projectlombok:lombok:1.18.24")
     annotationProcessor ("org.projectlombok:lombok:1.18.24")
@@ -128,6 +124,7 @@ jar.finalizedBy('reobfJar')
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
+//    options.release.set(8)
 }
 
 publishing {

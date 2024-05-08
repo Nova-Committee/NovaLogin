@@ -1,8 +1,6 @@
 package committee.nova.mods.novalogin.utils.yggdrasil.response;
 
 import com.mojang.authlib.GameProfile;
-import committee.nova.mods.novalogin.utils.yggdrasil.response.Response;
-import committee.nova.mods.novalogin.utils.yggdrasil.response.User;
 
 public class AuthenticationResponse extends Response {
     private String accessToken;

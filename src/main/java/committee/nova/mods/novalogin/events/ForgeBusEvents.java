@@ -4,6 +4,8 @@ import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.handler.OnPlayerAction;
 import committee.nova.mods.novalogin.handler.OnPlayerConnect;
 import committee.nova.mods.novalogin.handler.OnPlayerLeave;
+import committee.nova.mods.novalogin.network.NetWorkDispatcher;
+import committee.nova.mods.novalogin.network.pkt.ClientLoginPkt;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -25,7 +27,7 @@ public class ForgeBusEvents {
     public static void onPlayerLoginIn(PlayerEvent.PlayerLoggedInEvent event){
         if (event.player instanceof EntityPlayerMP){
             EntityPlayerMP serverPlayer = (EntityPlayerMP) event.player;
-            OnPlayerConnect.listen(serverPlayer);
+            if (OnPlayerConnect.listen(serverPlayer)) NetWorkDispatcher.INSTANCE.sendTo(new ClientLoginPkt("login"), serverPlayer);
         }
     }
 
@@ -37,8 +39,6 @@ public class ForgeBusEvents {
         }
 
     }
-
-
 
     @SubscribeEvent
     public static void onPlayerInteract1(PlayerInteractEvent.EntityInteract event) {

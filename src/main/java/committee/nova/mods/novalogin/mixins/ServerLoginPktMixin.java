@@ -13,7 +13,6 @@ import net.minecraft.network.login.server.SPacketEncryptionRequest;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.NetHandlerLoginServer;
 import net.minecraft.util.CryptManager;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.thread.SidedThreadGroups;
 import org.apache.commons.lang3.Validate;
 import org.spongepowered.asm.mixin.Final;
@@ -37,8 +36,6 @@ import java.security.PrivateKey;
 import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static committee.nova.mods.novalogin.Const.*;
 

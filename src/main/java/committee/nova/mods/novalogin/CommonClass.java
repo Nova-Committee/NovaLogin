@@ -3,6 +3,8 @@ package committee.nova.mods.novalogin;
 import committee.nova.mods.novalogin.config.ConfigHandler;
 import committee.nova.mods.novalogin.save.JsonLoginSave;
 import committee.nova.mods.novalogin.save.LocalUserSave;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,6 +24,7 @@ public class CommonClass {
         }
     }
 
+    @SideOnly(Side.CLIENT)
     public static void clientInit() {
         LocalUserSave.load();
     }

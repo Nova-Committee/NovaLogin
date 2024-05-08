@@ -22,42 +22,46 @@ import javax.annotation.Nonnull;
  * @description
  * @date 2024/4/12 上午11:46
  */
-public class RegisterCmd extends CommandBase {
+public class ChangePwdCmd extends CommandBase {
 
     @Override
     @Nonnull
     public String getName() {
-        return "register";
+        return "changepwd";
     }
 
     @Override
     @Nonnull
     public String getUsage(@Nonnull ICommandSender sender) {
-        return "/register";
+        return "/changepwd";
     }
 
     @Override
     public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] args) throws CommandException {
         if (sender instanceof EntityPlayerMP) {
-            String password = args[0];
             EntityPlayerMP player = (EntityPlayerMP) sender;
-            String username = player.getGameProfile().getName();
+            String newPassword = args[0];
+            String confirmPassword = args[1];
+            String username = sender.getName();
 
-            if (Const.loginSave.isReg(username)) {
-                player.connection.sendPacket(new SPacketChat(new TextComponentTranslation("info.novalogin.cmd.registered"), ChatType.SYSTEM));
-                return ;
+            if (!Const.loginSave.isReg(username)) {
+                player.connection.sendPacket(new SPacketChat(new TextComponentTranslation("info.novalogin.cmd.unregister"), ChatType.SYSTEM));
             }
-            if (!password.equals(args[1])) {
+
+            if (!newPassword.equals(confirmPassword)) {
                 player.connection.sendPacket(new SPacketChat(new TextComponentTranslation("info.novalogin.cmd.pwd_strict"), ChatType.SYSTEM));
-                return ;
             }
-            Const.loginSave.reg(player, password);
-            LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
-            playerLogin.setLogin(true);
-            player.setEntityInvulnerable(false);
-            player.playSound(SoundEvents.BLOCK_NOTE_PLING,100f, 0f);
-            player.connection.sendPacket(new SPacketChat(new TextComponentTranslation("info.novalogin.cmd.register_success"), ChatType.SYSTEM));
-        }
 
+            LoginUsers.LoginUser playerLogin = LoginUsers.INSTANCE.get(player);
+            if (playerLogin.login) {
+                Const.loginSave.changePwd(player, newPassword);
+                player.playSound(SoundEvents.BLOCK_NOTE_PLING, 100f, 0f);
+                player.connection.sendPacket(new SPacketChat(new TextComponentTranslation("info.novalogin.cmd.change_pwd_success"), ChatType.SYSTEM));
+            } else {
+                player.playSound(SoundEvents.ENTITY_ZOMBIE_ATTACK_IRON_DOOR,  100f, 0.5f);
+                player.connection.sendPacket(new SPacketChat(new TextComponentTranslation("info.novalogin.cmd.change_pwd_failed"), ChatType.SYSTEM));
+            }
+
+        }
     }
 }

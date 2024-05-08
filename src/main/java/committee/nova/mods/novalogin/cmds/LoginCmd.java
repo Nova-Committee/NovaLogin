@@ -1,6 +1,5 @@
 package committee.nova.mods.novalogin.cmds;
 
-import committee.nova.mods.novalogin.CommonClass;
 import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.models.LoginUsers;
 import net.minecraft.command.CommandBase;

@@ -1,10 +1,6 @@
 package committee.nova.mods.novalogin.utils.yggdrasil;
 
-import com.mojang.authlib.Agent;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.HttpAuthenticationService;
-import com.mojang.authlib.HttpUserAuthentication;
-import com.mojang.authlib.UserType;
+import com.mojang.authlib.*;
 import com.mojang.authlib.exceptions.AuthenticationException;
 import com.mojang.authlib.exceptions.InvalidCredentialsException;
 import committee.nova.mods.novalogin.utils.yggdrasil.request.AuthenticationRequest;
