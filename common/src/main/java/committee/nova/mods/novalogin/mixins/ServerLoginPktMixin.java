@@ -94,7 +94,7 @@ public abstract class ServerLoginPktMixin {
     public void novalogin$handleHello(ServerboundHelloPacket pPacket, CallbackInfo ci) {
         Validate.validState(this.state == ServerLoginPacketListenerImpl.State.HELLO, "Unexpected hello packet");
         String playerName = pPacket.name();
-        Pattern pattern = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-Z0-9]{6,25}$");
+        Pattern pattern = Pattern.compile("^[\\u4E00-\\u9FA5A-Za-z0-9_]{3,20}$");
         if (!pattern.matcher(playerName).matches()){
             disconnect(Component.translatable("info.novalogin.disconnect.invalid_name"));
         }
