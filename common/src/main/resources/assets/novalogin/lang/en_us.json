@@ -22,5 +22,6 @@
   "info.novalogin.gui.pwd_visible_s": "[+]",
   "info.novalogin.gui.pwd_visible": "§9[√]",
   "info.novalogin.gui.pwd_invisible": "§c[×]",
-  "info.novalogin.is_in": "§cPlayer with this name already logged in!"
+  "info.novalogin.is_in": "§cPlayer with this name already logged in!",
+  "info.novalogin.disconnect.invalid_name": "Invalid User Name!"
 }

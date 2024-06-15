@@ -88,24 +88,31 @@ public abstract class ServerLoginPktMixin {
     @Inject(
             method = "handleHello",
             at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/MinecraftServer;usesAuthentication()Z",
-                    shift = At.Shift.BEFORE
+                    value = "HEAD"
             ),
             cancellable = true)
     public void novalogin$handleHello(ServerboundHelloPacket pPacket, CallbackInfo ci) {
+        Validate.validState(this.state == ServerLoginPacketListenerImpl.State.HELLO, "Unexpected hello packet");
         String playerName = pPacket.name();
-        this.gameProfile = new GameProfile(null, playerName);
         Pattern pattern = Pattern.compile("^[\\u4e00-\\u9fa5a-zA-Z0-9]{6,25}$");
-        //Validate.validState(!pattern.matcher(playerName).matches(), "Invalid characters in username");
-        if (this.server.usesAuthentication() && !this.connection.isMemoryConnection()) {
-            this.state = ServerLoginPacketListenerImpl.State.KEY;
-            this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.challenge));
+        if (!pattern.matcher(playerName).matches()){
+            disconnect(Component.translatable("info.novalogin.disconnect.invalid_name"));
+        }
+        GameProfile profile = this.server.getSingleplayerProfile();
+        if (profile != null && pPacket.name().equalsIgnoreCase(profile.getName())) {
+            this.gameProfile = profile;
+            this.state = ServerLoginPacketListenerImpl.State.READY_TO_ACCEPT;
         } else {
-            if (configHandler.config.getCommon().isUuidTrans()){
-                novaLogin$useOnlineProfile(playerName);
+            this.gameProfile = new GameProfile(null, pPacket.name());
+            if (this.server.usesAuthentication() && !this.connection.isMemoryConnection()) {
+                this.state = ServerLoginPacketListenerImpl.State.KEY;
+                this.connection.send(new ClientboundHelloPacket("", this.server.getKeyPair().getPublic().getEncoded(), this.challenge));
             } else {
-                novaLogin$useOfflineProfile(playerName);
+                if (configHandler.config.getCommon().isUuidTrans()){
+                    novaLogin$useOnlineProfile(playerName);
+                } else {
+                    novaLogin$useOfflineProfile(playerName);
+                }
             }
         }
         ci.cancel();

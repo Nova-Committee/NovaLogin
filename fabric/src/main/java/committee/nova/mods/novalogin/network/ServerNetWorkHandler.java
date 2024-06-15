@@ -4,6 +4,7 @@ import committee.nova.mods.novalogin.Const;
 import committee.nova.mods.novalogin.net.ServerLoginActionPkt;
 import committee.nova.mods.novalogin.net.ServerRegisterActionPkt;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -34,7 +35,7 @@ public class ServerNetWorkHandler {
             String username = buf.readUtf();
             String password = buf.readUtf();
             server.execute(() -> {
-                if (ServerLoginActionPkt.run(username, password, player)) responseSender.sendPacket(CLOSE_SCREEN_CLIENT, buf);
+                if (ServerLoginActionPkt.run(username, password, player)) responseSender.sendPacket(CLOSE_SCREEN_CLIENT, PacketByteBufs.create());
             });
         });
     }
@@ -45,7 +46,7 @@ public class ServerNetWorkHandler {
             String password = buf.readUtf();
             String confirmPassword = buf.readUtf();
             server.execute(() -> {
-                if (ServerRegisterActionPkt.run(username, password, confirmPassword, player)) responseSender.sendPacket(CLOSE_SCREEN_CLIENT, buf);
+                if (ServerRegisterActionPkt.run(username, password, confirmPassword, player)) responseSender.sendPacket(CLOSE_SCREEN_CLIENT, PacketByteBufs.create());
             });
         });
     }
