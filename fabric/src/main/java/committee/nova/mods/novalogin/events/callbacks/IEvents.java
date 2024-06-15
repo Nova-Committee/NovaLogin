@@ -55,11 +55,9 @@ public final class IEvents {
 
     public static final Event<PlayerOpenMenu> PLAYER_OPEN_MENU = EventFactory.createArrayBacked(PlayerOpenMenu.class, callbacks -> (player, menu) -> {
         for (PlayerOpenMenu callback : callbacks) {
-            if (!callback.onOpenMenu(player, menu)) {
-                return false;
-            }
+            return callback.onOpenMenu(player, menu);
         }
-        return true;
+        return false;
     });
 
     @FunctionalInterface
@@ -84,7 +82,7 @@ public final class IEvents {
 
     @FunctionalInterface
     public interface PlayerOpenMenu {
-        boolean onOpenMenu(Player player, AbstractContainerMenu container);
+        boolean onOpenMenu(ServerPlayer player, AbstractContainerMenu container);
     }
 
 }

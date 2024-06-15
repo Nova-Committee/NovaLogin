@@ -76,8 +76,12 @@ public class FabricBusEvents {
 
     private static void onPlayerInteract2() {
         IEvents.LIVING_USE_ITEM_FINISH.register((entity, item, duration, result) -> {
-            if (OnPlayerAction.canInteract((ServerPlayer) entity)) {
-                return item;
+            if (entity instanceof ServerPlayer serverPlayer){
+                if (OnPlayerAction.canInteract(serverPlayer)) {
+                    return item;
+                } else {
+                    return result;
+                }
             } else {
                 return result;
             }
@@ -85,11 +89,16 @@ public class FabricBusEvents {
     }
 
     private static void onPlayerInteract3() {
-        PlayerBlockBreakEvents.BEFORE.register((world, player, pos, state, entity) -> OnPlayerAction.canInteract((ServerPlayer) player));
+        PlayerBlockBreakEvents.BEFORE.register((world, player, pos, state, entity) -> {
+            if (player instanceof ServerPlayer serverPlayer){
+                return OnPlayerAction.canInteract(serverPlayer);
+            }
+            return true;
+        });
     }
 
     private static void onPlayerInteract4() {
-        IEvents.PLAYER_OPEN_MENU.register((player, menu) -> OnPlayerAction.canInteract((ServerPlayer) player));
+        IEvents.PLAYER_OPEN_MENU.register((player, menu) -> OnPlayerAction.canInteract(player));
     }
 
 }
