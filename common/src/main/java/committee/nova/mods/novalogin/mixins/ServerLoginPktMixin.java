@@ -131,10 +131,11 @@ public abstract class ServerLoginPktMixin {
             if (code == HttpURLConnection.HTTP_OK) {
                 var re = GSON.fromJson(JsonParser.parseString(msg), MojangResponse.class);
                 StringBuilder uuid = new StringBuilder(re.getId());
-                uuid.insert(8,"-");
-                uuid.insert(12,"-");
-                uuid.insert(16,"-");
                 uuid.insert(20,"-");
+                uuid.insert(16,"-");
+                uuid.insert(12,"-");
+                uuid.insert(8,"-");
+
 
                 LOGGER.info("Player {} has a Mojang account, use online UUID {}", playerName, uuid);
 

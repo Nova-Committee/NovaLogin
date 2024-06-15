@@ -58,10 +58,12 @@ subprojects {
         //implementation("cn.evole.config:AtomConfig-Yaml:0.2.0")
         compileOnly ("org.projectlombok:lombok:1.18.24")
         annotationProcessor ("org.projectlombok:lombok:1.18.24")
+        testCompileOnly 'org.projectlombok:lombok:1.18.24'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
     }
 
     tasks.withType(JavaCompile).configureEach {
-    
+
         it.options.encoding = 'UTF-8'
         it.options.getRelease().set(17)
     }
@@ -99,3 +101,4 @@ subprojects {
         enabled = false
     }
 }
+

@@ -1,7 +1,6 @@
 package committee.nova.mods.novalogin.models;
 
 import lombok.Setter;
-
 /**
  * LoginPlayer
  *
