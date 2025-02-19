@@ -26,7 +26,7 @@ public class Const {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static Gson GSON = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
     public static ResourceLocation rl(String name){
-        return new ResourceLocation(MOD_ID, name);
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, name);
     }
 
     public static final HashSet<String> yggdrasilNamesCache = new HashSet<>();
